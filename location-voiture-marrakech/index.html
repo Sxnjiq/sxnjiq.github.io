@@ -1,0 +1,1327 @@
+<!doctype html>
+<!--
+DESIGN PLAN · Atlas Drive (location de voitures, Marrakech)
+
+Palette
+  Sable de midi     #EFD9AE  page background: sunlit dust of the Haouz plain, deliberately yellower than "cream"
+  Terre rouge       #A23B1C  red-ochre earth of the south: headings, milestone caps, the itinerary section
+  Asphalte          #262120  text, header, the estimator "night road" section, the road itself
+  Jaune marquage    #F5B700  road-marking yellow: centre line, primary buttons, focus on dark
+  Blanc panneau     #FFFFFF  road signs, milestones, the "feuille de route" ticket
+  Brun piste        #5B4636  secondary text on sand
+
+Type
+  Barlow Condensed 600/700: display. Its letterforms come from highway signage, so headings read like road signs.
+  Barlow 400–600: body, same family = one coherent voice.
+  Noto Kufi Arabic 600: Arabic place names on the signs, because Moroccan road signs are bilingual.
+
+Layout
+  [header: asphalt bar, logo = red-ochre sign plate, FR/EN]
+  [HERO full-bleed photo, parallax | h1 left | bilingual direction-sign stack on a post, right]
+  [facts strip on asphalt, yellow dashed "road marking" rules]
+  ROUTE (left gutter holds an SVG road that draws itself while you scroll, a small car drives at its tip)
+    |o  Borne "Marrakech 0 km"   Flotte: filters + 8 vehicle plates
+    |o  Borne "Ourika 35 km"     Estimateur (asphalt) : form left, ticket "feuille de route" right (sticky)
+    ==  Itinéraires (red earth, pinned horizontal scroll; the road goes under it like a tunnel,
+        a horizontal road strip + car carry on inside)
+    |S  hairpins "Tizi n'Tichka"
+    |o  Borne "Ouarzazate 195 km" Documents + FAQ
+    |o  Borne "Essaouira 190 km"  Contact + map: end of the road
+  [footer asphalt]
+  Left-aligned throughout, content always to the right of the road gutter.
+
+Signature element
+  The road: an SVG path built from the real positions of the milestones, with white edge lines and a
+  dashed centre line, revealed by a mask as you scroll, with a top-view car following its tangent.
+  Milestones are drawn as Moroccan "bornes kilométriques" (red cap with the Arabic name, white body).
+
+Review against the brief (what I changed)
+  - First instinct was a cream page + serif display + terracotta: the generic default. Replaced by a
+    sun-bleached sand, a deep red ochre and road-marking yellow, with signage type.
+  - Vehicles were first a 3-column rounded card grid with shadows. Now: flat white "plates" with a
+    yellow price tag, two columns, no shadows.
+  - No eyebrow labels; distances are the only numbers, and they are real (km from Marrakech).
+  - Scroll moments limited to: hero parallax + sign stack entrance, the road, the pinned horizontal trips.
+-->
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atlas Drive, location de voitures à Marrakech</title>
+<meta name="description" content="Location de voitures à Marrakech livrées gratuitement à l'aéroport Menara et à votre riad. Citadines, SUV, 4x4 et minibus, avec ou sans chauffeur.">
+<meta name="theme-color" content="#262120">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://images.unsplash.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=Noto+Kufi+Arabic:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sand:#EFD9AE;
+  --sand-deep:#E5C88F;
+  --earth:#A23B1C;
+  --earth-deep:#7A2B12;
+  --asphalt:#262120;
+  --asphalt-2:#35302C;
+  --signal:#F5B700;
+  --chalk:#FFFFFF;
+  --ink:#262120;
+  --ink-soft:#5B4636;
+  --display:"Barlow Condensed","Arial Narrow",sans-serif;
+  --body:"Barlow",system-ui,sans-serif;
+  --arabic:"Noto Kufi Arabic","Segoe UI",sans-serif;
+  --gutter:clamp(16px,4vw,48px);
+  --max:1200px;
+  --focus:var(--asphalt);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--sand);color:var(--ink);font:400 1.0625rem/1.55 var(--body);-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:inherit}
+button,input,select{font:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:3px}
+section[id]{scroll-margin-top:72px}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:.95;margin:0;letter-spacing:-.005em}
+h2{font-size:clamp(2.3rem,5.2vw,4rem);color:var(--earth);max-width:16ch}
+h3{font-size:1.6rem;font-weight:600;line-height:1}
+p{margin:0}
+[lang=ar]{font-family:var(--arabic)}
+.wrap{max-width:var(--max);margin-inline:auto;padding-inline:var(--gutter)}
+.vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:12px;top:-60px;z-index:100;background:var(--signal);color:var(--asphalt);padding:12px 16px;border-radius:4px;font-weight:600}
+.skip:focus{top:12px}
+
+/* dark zones get a yellow focus ring */
+header,.hero,.facts,.est,.itin,footer{--focus:var(--signal)}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.55em;min-height:48px;padding:.7em 1.3em;border-radius:6px;border:0;cursor:pointer;font:600 1.05rem/1.1 var(--body);text-decoration:none;text-align:center}
+.btn svg{width:1.25em;height:1.25em;flex:none}
+.btn-signal{background:var(--signal);color:var(--asphalt)}
+.btn-signal:hover{background:#FFC633}
+.btn-line{color:#fff;box-shadow:inset 0 0 0 2px rgba(255,255,255,.75);background:rgba(38,33,32,.25)}
+.btn-line:hover{background:rgba(38,33,32,.55)}
+.btn-dark{background:var(--asphalt);color:var(--sand)}
+.btn-dark:hover{background:#000}
+
+/* ---------- header ---------- */
+header{position:sticky;top:0;z-index:40;background:var(--asphalt);color:var(--sand)}
+.nav{display:flex;align-items:center;gap:22px;height:64px}
+.logo{display:inline-flex;align-items:center;gap:8px;margin-inline-end:auto;padding:7px 12px 6px;border-radius:5px;background:var(--earth);color:#fff;text-decoration:none;font:700 1.35rem/1 var(--display);letter-spacing:.01em;box-shadow:inset 0 0 0 2px var(--earth),inset 0 0 0 3.5px #fff}
+.logo svg{width:22px;height:16px;flex:none}
+.nav-links{display:flex;gap:22px}
+.nav-links a{text-decoration:none;font-weight:500;padding:10px 0;color:var(--sand)}
+.nav-links a:hover{color:#fff;text-decoration:underline;text-decoration-color:var(--signal);text-decoration-thickness:2px;text-underline-offset:6px}
+.lang{display:flex;border-radius:6px;box-shadow:inset 0 0 0 1.5px rgba(239,217,174,.45)}
+.lang button{min-width:44px;height:44px;background:none;border:0;color:var(--sand);font:600 .95rem/1 var(--body);cursor:pointer;border-radius:6px}
+.lang button[aria-pressed=true]{background:var(--signal);color:var(--asphalt)}
+.nav .btn{min-height:44px;padding:.55em 1em;font-size:.98rem}
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;color:#fff;background:var(--asphalt);min-height:min(88svh,860px);display:flex;align-items:flex-end}
+.hero-media{position:absolute;inset:0;overflow:hidden}
+.hero-img{position:absolute;left:0;top:-9%;width:100%;height:118%;object-fit:cover;object-position:60% 55%;scale:-1 1}
+.hero::after{content:"";position:absolute;inset:0;background:
+  linear-gradient(90deg,rgba(38,33,32,.86) 0%,rgba(38,33,32,.62) 38%,rgba(38,33,32,0) 68%),
+  linear-gradient(0deg,rgba(38,33,32,.75) 0%,rgba(38,33,32,0) 45%);pointer-events:none}
+.hero-in{position:relative;z-index:1;width:100%;display:grid;grid-template-columns:1.25fr .75fr;gap:32px;align-items:end;padding-block:clamp(56px,9vw,110px) clamp(40px,6vw,72px)}
+.hero h1{font-size:clamp(3rem,7.4vw,6.6rem);line-height:.9;max-width:11ch;text-wrap:balance}
+.hero .lead{max-width:44ch;margin-top:1.3em;font-size:clamp(1.05rem,1.4vw,1.2rem);color:#F6E8CC}
+.hero .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:2em}
+
+/* direction signs */
+.signpost{position:relative;justify-self:end;width:min(320px,100%);padding-bottom:0}
+.plates{list-style:none;margin:0;padding:0;display:grid;gap:8px;position:relative;z-index:1}
+.plate{--tip:24px;position:relative;height:60px;background:var(--asphalt);filter:drop-shadow(0 6px 10px rgba(0,0,0,.35))}
+.plate,.plate .face{clip-path:polygon(0 0,calc(100% - var(--tip)) 0,100% 50%,calc(100% - var(--tip)) 100%,0 100%)}
+.plate.l,.plate.l .face{clip-path:polygon(var(--tip) 0,100% 0,100% 100%,var(--tip) 100%,0 50%)}
+.plate .face{position:absolute;inset:3px;background:#fff;color:var(--asphalt);display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding:0 calc(var(--tip) + 4px) 0 14px}
+.plate.l .face{padding:0 14px 0 calc(var(--tip) + 4px)}
+.plate .nm{display:flex;flex-direction:column;line-height:1}
+.plate .nm [lang=ar]{font-size:.78rem;line-height:1.3;color:#3d3633}
+.plate .nm b{font:600 1.45rem/1 var(--display)}
+.plate .km{font:700 1.65rem/1 var(--display)}
+.post{position:absolute;left:46%;top:20px;bottom:-200px;width:10px;background:linear-gradient(90deg,#6f6a66,#a9a39d 45%,#5b5652);z-index:0}
+
+.facts{background:var(--asphalt);color:var(--sand)}
+.facts ul{list-style:none;margin:0;padding-block:34px 40px;display:grid;grid-template-columns:repeat(3,1fr);gap:28px 40px}
+.facts li{padding-top:18px;background:linear-gradient(90deg,var(--signal) 0 26px,transparent 26px 46px) top left/46px 3px repeat-x}
+.facts strong{display:block;font:600 1.45rem/1.05 var(--display);color:#fff}
+.facts p{margin-top:.4em;font-size:.98rem;max-width:36ch}
+
+/* ---------- the route & road ---------- */
+.route{position:relative;--road-w:34px;--pl:max(var(--gutter),calc(var(--road-w) + 10px - max(0px,(100vw - var(--max)) / 2)))}
+.route .wrap{padding-left:var(--pl)}
+.road{position:absolute;left:0;top:0;z-index:2;pointer-events:none;overflow:visible}
+.road .r-plan{stroke:var(--asphalt);stroke-opacity:.28;stroke-width:1.6;stroke-dasharray:1 7;stroke-linecap:round;fill:none}
+.road .r-edge{stroke:#fff;fill:none}
+.road .r-asph{stroke:var(--asphalt);fill:none}
+.road .r-line{stroke:var(--signal);fill:none}
+.road .car{transition:opacity .3s}
+.sec{position:relative;padding-block:clamp(72px,10vw,128px)}
+.sec-head{display:flex;gap:clamp(16px,2.6vw,28px);align-items:flex-start;margin-bottom:clamp(32px,4vw,48px)}
+.sec-head .sub{margin-top:.9em;max-width:52ch;color:var(--ink-soft)}
+
+/* milestone (borne kilométrique) */
+.borne{flex:none;width:78px;margin:0;text-align:center;background:var(--chalk);color:var(--asphalt);border-radius:39px 39px 6px 6px/34px 34px 6px 6px;overflow:hidden;box-shadow:inset 0 0 0 1.5px rgba(38,33,32,.22),0 9px 0 -5px rgba(38,33,32,.2);font-family:var(--display)}
+.borne .cap{display:block;background:var(--earth);color:#fff;font:600 .8rem/1.2 var(--arabic);padding:12px 4px 8px}
+.borne .name{display:block;font-weight:600;font-size:1rem;line-height:1.05;padding:9px 3px 0}
+.borne .km{display:block;font-weight:700;font-size:1.6rem;line-height:1;padding:2px 3px 11px}
+.borne .km small{font-size:.9rem;font-weight:600}
+
+/* ---------- fleet ---------- */
+.filters{display:flex;flex-wrap:wrap;gap:14px 30px;margin-bottom:22px}
+.fgroup{border:0;margin:0;padding:0;min-width:0}
+.fgroup legend{padding:0;margin-bottom:6px;font-weight:600;font-size:.92rem;color:var(--ink-soft)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{min-height:44px;padding:0 14px;border-radius:6px;border:1.5px solid rgba(38,33,32,.35);background:transparent;color:var(--ink);font-weight:600;font-size:.95rem;cursor:pointer}
+.chip:hover{border-color:var(--asphalt)}
+.chip[aria-pressed=true]{background:var(--asphalt);border-color:var(--asphalt);color:var(--signal)}
+.count{font-weight:600;margin-bottom:16px;color:var(--ink-soft)}
+.cars{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr;gap:16px}
+.car{display:grid;grid-template-columns:minmax(120px,38%) 1fr;background:var(--chalk);border-radius:4px;overflow:hidden}
+.car-img{position:relative;min-height:100%}
+.car-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.car-body{padding:18px 18px 16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.car-cat{font-weight:600;font-size:.88rem;color:var(--earth)}
+.car h3{font-size:clamp(1.35rem,2.2vw,1.65rem);font-weight:700}
+.car-desc{font-size:.96rem;color:var(--ink-soft);max-width:46ch}
+.specs{list-style:none;margin:2px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.9rem;font-weight:500}
+.specs li{display:inline-flex;align-items:center;gap:5px}
+.specs svg{width:17px;height:17px;flex:none;fill:none;stroke:var(--earth);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.car-foot{margin-top:auto;padding-top:14px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1.5px dashed rgba(38,33,32,.22)}
+.tag{display:inline-block;background:var(--signal);color:var(--asphalt);padding:6px 10px 5px;border-radius:3px;line-height:1}
+.tag strong{font:700 1.9rem/1 var(--display)}
+.tag span{font:600 .85rem/1 var(--body);margin-left:3px}
+.long{display:block;margin-top:6px;font-size:.84rem;color:var(--ink-soft)}
+.car-foot .btn{min-height:44px;padding:.5em 1.1em;font-size:.98rem}
+.empty{padding:28px;background:rgba(255,255,255,.5);border-radius:4px}
+.empty .btn{margin-top:12px}
+
+/* ---------- estimator ---------- */
+.est{background:var(--asphalt);color:var(--sand);color-scheme:dark}
+.est h2{color:#fff}
+.est .sec-head .sub{color:#D9C5A0}
+.est-grid{display:grid;grid-template-columns:1fr;gap:36px;align-items:start}
+.est form{display:grid;gap:26px}
+.est fieldset{border:0;margin:0;padding:0;min-width:0}
+.est legend,.lbl{display:block;padding:0;margin-bottom:8px;font-weight:600;font-size:.95rem;color:#fff}
+.est select,.est input[type=date],.est input[type=time]{width:100%;min-height:48px;padding:0 12px;border-radius:6px;border:1.5px solid rgba(239,217,174,.3);background:var(--asphalt-2);color:#fff;font-weight:500;font-size:1rem}
+.est select:hover,.est input:hover{border-color:rgba(239,217,174,.6)}
+.est select option{background:var(--asphalt-2);color:#fff}
+.places{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.place{position:relative;display:block;padding:14px 14px 13px;border-radius:6px;border:1.5px solid rgba(239,217,174,.3);cursor:pointer}
+.place input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.place b{display:block;font:600 1.2rem/1.05 var(--display);color:#fff}
+.place span{display:block;margin-top:5px;font-size:.86rem;line-height:1.35;color:#D9C5A0}
+.place:has(input:checked){border-color:var(--signal);background:rgba(245,183,0,.1)}
+.place:has(input:checked) b::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--signal);margin-right:7px;vertical-align:.12em}
+.place:has(input:focus-visible){outline:3px solid var(--signal);outline-offset:3px}
+.when{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.dt{display:grid;grid-template-columns:1.4fr 1fr;gap:8px}
+.dt label{display:grid;gap:4px;font-size:.85rem;color:#D9C5A0}
+.opts{display:grid;gap:8px}
+.opt{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;min-height:52px;padding:8px 14px;border-radius:6px;border:1.5px solid rgba(239,217,174,.22);cursor:pointer}
+.opt input{width:22px;height:22px;margin:0;accent-color:var(--signal)}
+.opt b{font-weight:600;color:#fff;display:block}
+.opt small{display:block;font-size:.85rem;color:#D9C5A0}
+.opt .p{font-weight:600;white-space:nowrap;color:var(--signal)}
+.opt:has(input:checked){border-color:rgba(245,183,0,.7)}
+.ticket{position:relative;background:var(--chalk);color:var(--ink);border-radius:4px;padding:24px 22px 22px}
+.ticket::before{content:"";position:absolute;left:0;right:0;top:-7px;height:8px;background:radial-gradient(circle at 7px 0,transparent 6px,var(--chalk) 6.5px) -1px 0/14px 8px repeat-x}
+.tk-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding-bottom:12px;border-bottom:1.5px dashed rgba(38,33,32,.25)}
+.tk-top h3{font-size:1.5rem;color:var(--earth)}
+.tk-top span{font:600 1rem/1 var(--display);color:var(--ink-soft)}
+.tk-car{font:700 1.5rem/1.05 var(--display);margin-top:14px}
+.tk-trip{margin-top:10px;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:.93rem}
+.tk-trip dt{color:var(--ink-soft)}
+.tk-trip dd{margin:0;font-weight:500}
+.tk-lines{list-style:none;margin:14px 0 0;padding:12px 0 0;border-top:1.5px dashed rgba(38,33,32,.25);display:grid;gap:6px;font-size:.95rem}
+.tk-lines li{display:flex;justify-content:space-between;gap:12px}
+.tk-lines li span:last-child{font-weight:600;white-space:nowrap}
+.tk-lines .muted{color:var(--ink-soft);font-size:.86rem}
+.tk-total{margin-top:14px;padding-top:12px;border-top:3px solid var(--asphalt);display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.tk-total span{font-weight:600}
+.tk-total output{font:700 clamp(2.2rem,4vw,2.8rem)/1 var(--display)}
+.tk-hint{margin-top:10px;font-size:.9rem;background:#FFF4D1;padding:8px 10px;border-radius:4px}
+.tk-err{margin-top:12px;font-weight:600;color:var(--earth)}
+.tk-dep{margin-top:10px;font-size:.88rem;color:var(--ink-soft)}
+.ticket .btn{width:100%;margin-top:16px}
+.tk-note{margin-top:10px;font-size:.84rem;color:var(--ink-soft)}
+
+/* ---------- itineraries (horizontal) ---------- */
+.itin{position:relative;z-index:3;background:var(--earth);color:#fff;padding-block:clamp(64px,8vw,104px)}
+.itin h2{color:#fff}
+.itin .sec-head .sub{color:#F6D9C9}
+.itin-scroller{overflow-x:auto;scroll-snap-type:x mandatory;padding-left:calc(max(0px,(100vw - var(--max)) / 2) + var(--pl));scroll-padding-left:calc(max(0px,(100vw - var(--max)) / 2) + var(--pl));scrollbar-color:var(--signal) var(--earth-deep)}
+.itin-track{position:relative;display:flex;gap:24px;width:max-content;padding:0 var(--gutter) 74px 0}
+.trip{scroll-snap-align:start;flex:none;width:min(80vw,560px);display:grid;grid-template-columns:44% 1fr;background:var(--earth-deep);border-radius:4px;overflow:hidden}
+.trip-img{position:relative;aspect-ratio:3/4}
+.trip-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.trip-body{padding:20px 20px 18px;display:flex;flex-direction:column;gap:9px}
+.trip .dist{font:700 2.6rem/1 var(--display);color:var(--signal)}
+.trip .dist small{font:600 .95rem/1 var(--body);color:#F6D9C9;margin-left:4px}
+.trip h3{font-size:1.65rem;font-weight:700}
+.trip .dur{font-size:.92rem;font-weight:500;color:#F6D9C9}
+.trip p.txt{font-size:.96rem}
+.trip .rec{margin-top:auto;padding-top:10px;border-top:1.5px dashed rgba(255,255,255,.3);font-size:.9rem}
+.trip .rec b{display:block;font:600 1.15rem/1.1 var(--display)}
+.trip .rec .btn{margin-top:10px;min-height:44px;padding:.45em 1em;font-size:.95rem}
+.itin-road{position:absolute;left:0;right:0;bottom:18px;height:36px;background:var(--asphalt);box-shadow:inset 0 2px 0 rgba(255,255,255,.8),inset 0 -2px 0 rgba(255,255,255,.8)}
+.itin-road::after{content:"";position:absolute;left:0;right:0;top:50%;height:3px;margin-top:-1.5px;background:repeating-linear-gradient(90deg,var(--signal) 0 26px,transparent 26px 50px)}
+.itin-car{display:none;position:absolute;bottom:22px;left:max(var(--gutter),8vw);width:52px;height:28px;z-index:2}
+.itin.h-on{height:100vh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;padding-block:32px}
+.itin.h-on .itin-scroller{overflow:visible;scroll-snap-type:none}
+.itin.h-on .itin-car{display:block;bottom:54px}
+.itin.h-on .trip-img{aspect-ratio:auto;height:min(46vh,340px)}
+.itin.h-on .sec-head{margin-bottom:28px}
+
+/* ---------- docs & faq ---------- */
+.docs{padding-top:calc(clamp(72px,10vw,128px) + 110px)}
+.pass{position:absolute;top:clamp(40px,5vw,64px);display:flex;align-items:center;gap:12px;font:600 1.15rem/1.1 var(--display);color:var(--ink-soft)}
+.pass svg{width:46px;height:41px;flex:none}
+.docs-grid{display:grid;grid-template-columns:1fr;gap:48px}
+.doc-photo{aspect-ratio:3/2;width:100%;object-fit:cover;border-radius:4px;margin-bottom:22px}
+.doclist{list-style:none;margin:0;padding:0}
+.doclist li{display:grid;grid-template-columns:26px 1fr;gap:12px;padding:14px 0;border-top:1.5px dashed rgba(38,33,32,.25)}
+.doclist svg{width:22px;height:22px;margin-top:2px;fill:none;stroke:var(--earth);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.doclist b{display:block;font:600 1.25rem/1.1 var(--display)}
+.doclist p{font-size:.96rem;color:var(--ink-soft);margin-top:3px}
+.faq h3{font-size:2rem;color:var(--earth);margin-bottom:14px}
+.faq details{border-top:1.5px solid rgba(38,33,32,.22)}
+.faq details:last-child{border-bottom:1.5px solid rgba(38,33,32,.22)}
+.faq summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:1fr 24px;gap:14px;align-items:center;min-height:56px;padding:12px 0;font-weight:600;font-size:1.06rem}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"";width:22px;height:22px;background:linear-gradient(var(--earth),var(--earth)) center/14px 2.5px no-repeat,linear-gradient(var(--earth),var(--earth)) center/2.5px 14px no-repeat;transition:transform .25s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{padding:0 30px 18px 0;color:var(--ink-soft);max-width:60ch}
+
+/* ---------- contact ---------- */
+.contact{background:var(--sand-deep)}
+.contact-grid{display:grid;grid-template-columns:1fr;gap:36px;align-items:start}
+.contact dl{margin:0}
+.contact dt{font:600 1.25rem/1.1 var(--display);color:var(--earth);margin-top:20px}
+.contact dt:first-child{margin-top:0}
+.contact dd{margin:4px 0 0;max-width:44ch}
+.contact dd a{font-weight:600;text-underline-offset:4px}
+.contact .btn{margin-top:26px}
+.map{width:100%;aspect-ratio:4/3;border:0;border-radius:4px;background:var(--sand);filter:saturate(.8) sepia(.12)}
+
+/* ---------- footer ---------- */
+footer{background:var(--asphalt);color:#D9C5A0;padding-block:40px 96px;font-size:.93rem}
+.foot{display:flex;flex-wrap:wrap;gap:16px 48px;justify-content:space-between}
+.foot strong{display:block;font:700 1.4rem/1 var(--display);color:#fff;margin-bottom:6px}
+.foot a{color:#fff}
+
+/* floating bits */
+.demo-pill{position:fixed;left:12px;bottom:12px;z-index:50;display:inline-flex;align-items:center;min-height:44px;padding:0 14px;border-radius:999px;background:rgba(38,33,32,.88);color:var(--sand);font:500 .8rem/1 var(--body);text-decoration:none;box-shadow:inset 0 0 0 1px rgba(239,217,174,.25);backdrop-filter:blur(6px)}
+.demo-pill:hover{color:#fff}
+.demo-pill:focus-visible{outline-color:var(--signal)}
+.fab{position:fixed;right:14px;bottom:14px;z-index:50;width:58px;height:58px;border-radius:50%;background:#179A4C;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(38,33,32,.35)}
+.fab svg{width:30px;height:30px}
+.fab:focus-visible{outline-color:var(--asphalt)}
+
+/* ---------- responsive ---------- */
+@media (min-width:700px){
+  .route{--road-w:92px}
+  .places{grid-template-columns:repeat(3,1fr)}
+}
+@media (min-width:1000px){
+  .cars{grid-template-columns:1fr 1fr;gap:18px}
+  .est-grid{grid-template-columns:1.15fr .85fr;gap:clamp(32px,4vw,56px)}
+  .ticket{position:sticky;top:88px}
+  .docs-grid{grid-template-columns:.85fr 1.15fr;gap:clamp(40px,6vw,88px)}
+  .contact-grid{grid-template-columns:.8fr 1.2fr;gap:clamp(40px,6vw,80px)}
+  .fab{display:none}
+}
+@media (min-width:1100px){
+  .route{--road-w:120px}
+}
+@media (max-width:1000px){
+  .nav-links{display:none}
+}
+@media (max-width:820px){
+  .hero{min-height:calc(100svh - 64px)}
+  .hero-in{grid-template-columns:1fr;gap:28px;padding-top:28px}
+  .signpost{order:-1;justify-self:end;width:230px}
+  .plate{height:46px;--tip:18px}
+  .plate .face{gap:6px;padding-left:10px}
+  .plate.l .face{padding-right:10px}
+  .plate .nm b{font-size:1.15rem}
+  .plate .nm [lang=ar]{font-size:.66rem}
+  .plate .km{font-size:1.3rem}
+  .post{display:none}
+  .hero-img{object-position:88% 50%}
+  .facts ul{grid-template-columns:1fr;gap:22px}
+}
+@media (max-width:699px){
+  .nav{gap:10px}
+  .nav .btn-wa-nav{display:none}
+  .logo{font-size:1.2rem}
+  .sec-head{gap:14px}
+  .borne{width:62px}
+  .borne .cap{font-size:.68rem;padding:10px 2px 6px}
+  .borne .name{font-size:.84rem}
+  .borne .km{font-size:1.3rem}
+  .car{grid-template-columns:112px 1fr}
+  .car-body{padding:14px 14px 14px}
+  .car-desc{font-size:.9rem}
+  .car-foot{flex-direction:column;align-items:stretch}
+  .car-foot .btn{width:100%}
+  .places{grid-template-columns:1fr}
+  .when{grid-template-columns:1fr}
+  .trip{grid-template-columns:1fr;width:82vw}
+  .trip-img{aspect-ratio:16/10}
+  .docs{padding-top:calc(72px + 90px)}
+  .pass{font-size:1rem}
+  .hero .ctas .btn{flex:1 1 100%}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .faq summary::after,.road .car{transition:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#flotte" data-i18n="skip">Aller au contenu</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="wa" viewBox="0 0 24 24"><path fill="currentColor" d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Zm5.8 14.03c-.24.68-1.42 1.3-1.95 1.35-.5.05-.97.23-3.26-.68-2.75-1.08-4.5-3.9-4.63-4.08-.13-.18-1.1-1.47-1.1-2.8 0-1.34.7-2 .95-2.27.24-.27.53-.34.71-.34h.51c.16 0 .39-.06.6.46.24.56.8 1.93.87 2.07.07.14.11.3.02.48-.09.18-.14.3-.27.46-.14.16-.29.36-.41.48-.14.13-.28.28-.12.55.16.27.71 1.17 1.52 1.9 1.05.93 1.93 1.22 2.2 1.36.27.13.43.11.59-.07.16-.18.68-.8.86-1.07.18-.27.36-.23.61-.14.25.09 1.58.75 1.85.88.27.14.45.2.52.32.07.11.07.66-.17 1.33Z"/></symbol>
+  <symbol id="i-seat" viewBox="0 0 24 24"><circle cx="12" cy="7" r="3.5"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="6" cy="5" r="1.6"/><circle cx="12" cy="5" r="1.6"/><circle cx="18" cy="5" r="1.6"/><circle cx="6" cy="19" r="1.6"/><circle cx="12" cy="19" r="1.6"/><path d="M6 6.6v10.8M12 6.6v10.8M18 6.6V12H6"/></symbol>
+  <symbol id="i-fuel" viewBox="0 0 24 24"><path d="M4 20V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v15M3 20h12M6 8h6"/><path d="M14 10h2a2 2 0 0 1 2 2v4a1.5 1.5 0 0 0 3 0V8l-3-3"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="13" rx="2"/><path d="M9 7V4h6v3M9 11v5M15 11v5"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6"/></symbol>
+</svg>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#top" aria-label="Atlas Drive">
+      <svg viewBox="0 0 22 16" aria-hidden="true"><path d="M0 16 7 4l4 6 3-4 8 10Z" fill="#F5B700"/><path d="M7 4l2.2 3.4L7 6.6 5.3 7.2Z" fill="#fff"/></svg>
+      Atlas Drive
+    </a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#flotte" data-i18n="nav_fleet">Flotte</a>
+      <a href="#estimation" data-i18n="nav_est">Estimation</a>
+      <a href="#itineraires" data-i18n="nav_trips">Itinéraires</a>
+      <a href="#infos" data-i18n="nav_info">Infos pratiques</a>
+      <a href="#contact" data-i18n="nav_contact">Contact</a>
+    </nav>
+    <div class="lang" role="group" aria-label="Langue / Language">
+      <button type="button" lang="fr" data-lang="fr" aria-pressed="true">FR</button>
+      <button type="button" lang="en" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+    <a class="btn btn-signal btn-wa-nav wa-link" href="https://wa.me/212600000000" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#wa"/></svg><span>WhatsApp</span></a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-media">
+      <img class="hero-img" fetchpriority="high" width="2000" height="1333"
+        src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1600&q=75&auto=format&fit=crop"
+        srcset="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=900&q=75&auto=format&fit=crop 900w,
+                https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1400&q=75&auto=format&fit=crop 1400w,
+                https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=2000&q=75&auto=format&fit=crop 2000w"
+        sizes="100vw" alt="Van jaune sur une route droite entre des falaises de roche rouge" data-i18n-alt="alt_hero">
+    </div>
+    <div class="wrap hero-in">
+      <div class="hero-copy">
+        <h1 id="hero-title" data-i18n="h1">La route du Sud commence à Menara.</h1>
+        <p class="lead" data-i18n="hero_lead">Location de voitures à Marrakech, livrées gratuitement à l'aéroport Menara et devant votre riad ou votre hôtel. Citadines, SUV, 4x4 pour le désert et minibus, avec ou sans chauffeur.</p>
+        <div class="ctas">
+          <a class="btn btn-signal" href="#estimation" data-i18n="cta_est">Estimer ma location</a>
+          <a class="btn btn-line wa-link" href="https://wa.me/212600000000" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#wa"/></svg><span data-i18n="cta_wa">Écrire sur WhatsApp</span></a>
+        </div>
+      </div>
+      <div class="signpost">
+        <ul class="plates" aria-label="Distances depuis Marrakech" data-i18n-aria="signs_label">
+          <li class="plate r"><div class="face"><span class="nm"><span lang="ar">أوريكا</span><b>Ourika</b></span><span class="km">35</span></div><span class="vh"> km</span></li>
+          <li class="plate l"><div class="face"><span class="nm"><span lang="ar">أكفاي</span><b>Agafay</b></span><span class="km">40</span></div><span class="vh"> km</span></li>
+          <li class="plate r"><div class="face"><span class="nm"><span lang="ar">ورزازات</span><b>Ouarzazate</b></span><span class="km">195</span></div><span class="vh"> km</span></li>
+          <li class="plate l"><div class="face"><span class="nm"><span lang="ar">الصويرة</span><b>Essaouira</b></span><span class="km">190</span></div><span class="vh"> km</span></li>
+        </ul>
+        <div class="post" aria-hidden="true"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="facts" aria-label="L'essentiel" data-i18n-aria="facts_label">
+    <ul class="wrap">
+      <li><strong data-i18n="f1_t">Livraison offerte à l'aéroport</strong><p data-i18n="f1_p">24 h/24. Votre agent vous attend à la sortie du terminal, même si l'avion a du retard.</p></li>
+      <li><strong data-i18n="f2_t">Kilométrage illimité</strong><p data-i18n="f2_p">De l'Ourika à Merzouga, on ne compte pas les kilomètres.</p></li>
+      <li><strong data-i18n="f3_t">Avec ou sans chauffeur</strong><p data-i18n="f3_p">Un chauffeur bilingue qui connaît chaque piste, 500 MAD par jour.</p></li>
+    </ul>
+  </section>
+
+  <div class="route" id="route">
+    <svg class="road" id="road" aria-hidden="true" focusable="false" width="0" height="0">
+      <defs>
+        <mask id="roadMask" maskUnits="userSpaceOnUse" x="0" y="0" width="0" height="0">
+          <path id="roadMaskPath" class="rp" fill="none" stroke="#fff"/>
+        </mask>
+      </defs>
+      <path class="rp r-plan"/>
+      <g mask="url(#roadMask)">
+        <path class="rp r-edge"/>
+        <path class="rp r-asph"/>
+        <path class="rp r-line"/>
+      </g>
+      <g class="car" id="roadCar" style="opacity:0">
+        <g id="roadCarIn">
+          <rect x="-16" y="-8.5" width="32" height="17" rx="5" fill="#F5B700" stroke="#262120" stroke-width="1.6"/>
+          <rect x="2.5" y="-6.6" width="7" height="13.2" rx="2.2" fill="#262120"/>
+          <rect x="-12.5" y="-6" width="4.5" height="12" rx="1.6" fill="#262120" opacity=".85"/>
+          <rect x="-7" y="-6.4" width="9" height="12.8" rx="1.4" fill="#E2A400"/>
+          <circle cx="14.6" cy="-5.4" r="1.4" fill="#fff"/>
+          <circle cx="14.6" cy="5.4" r="1.4" fill="#fff"/>
+        </g>
+      </g>
+    </svg>
+
+    <!-- STOP 1 · Marrakech : la flotte -->
+    <section class="sec fleet" id="flotte" aria-labelledby="fleet-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="borne" data-stop><span class="cap" lang="ar">مراكش</span><span class="name">Marrakech</span><span class="km">0<small> km</small></span></p>
+          <div>
+            <h2 id="fleet-title" data-i18n="fleet_t">Huit véhicules, un pour chaque route</h2>
+            <p class="sub" data-i18n="fleet_sub">Tous climatisés, livrés le plein fait, assurance de base incluse. Prix par jour ; dès 7 jours, le tarif baisse de 15 %.</p>
+          </div>
+        </div>
+
+        <div class="filters" id="filters">
+          <fieldset class="fgroup"><legend data-i18n="flt_cat">Catégorie</legend>
+            <div class="chips" data-f="cat">
+              <button type="button" class="chip" data-v="all" aria-pressed="true" data-i18n="all">Tous</button>
+              <button type="button" class="chip" data-v="city" aria-pressed="false" data-i18n="cat_city">Citadine</button>
+              <button type="button" class="chip" data-v="sedan" aria-pressed="false" data-i18n="cat_sedan">Berline</button>
+              <button type="button" class="chip" data-v="suv" aria-pressed="false" data-i18n="cat_suv">SUV</button>
+              <button type="button" class="chip" data-v="4x4" aria-pressed="false" data-i18n="cat_4x4">4x4</button>
+              <button type="button" class="chip" data-v="van" aria-pressed="false" data-i18n="cat_van">Minibus</button>
+            </div>
+          </fieldset>
+          <fieldset class="fgroup"><legend data-i18n="flt_trans">Boîte</legend>
+            <div class="chips" data-f="trans">
+              <button type="button" class="chip" data-v="all" aria-pressed="true" data-i18n="all">Tous</button>
+              <button type="button" class="chip" data-v="man" aria-pressed="false" data-i18n="tr_man">Manuelle</button>
+              <button type="button" class="chip" data-v="auto" aria-pressed="false" data-i18n="tr_auto">Automatique</button>
+            </div>
+          </fieldset>
+          <fieldset class="fgroup"><legend data-i18n="flt_seats">Places</legend>
+            <div class="chips" data-f="seats">
+              <button type="button" class="chip" data-v="all" aria-pressed="true" data-i18n="all">Tous</button>
+              <button type="button" class="chip" data-v="5" aria-pressed="false">5</button>
+              <button type="button" class="chip" data-v="7" aria-pressed="false" data-i18n="seats_7">7 et plus</button>
+            </div>
+          </fieldset>
+          <fieldset class="fgroup"><legend data-i18n="flt_fuel">Carburant</legend>
+            <div class="chips" data-f="fuel">
+              <button type="button" class="chip" data-v="all" aria-pressed="true" data-i18n="all">Tous</button>
+              <button type="button" class="chip" data-v="petrol" aria-pressed="false" data-i18n="fu_petrol">Essence</button>
+              <button type="button" class="chip" data-v="diesel" aria-pressed="false" data-i18n="fu_diesel">Diesel</button>
+              <button type="button" class="chip" data-v="hybrid" aria-pressed="false" data-i18n="fu_hybrid">Hybride</button>
+            </div>
+          </fieldset>
+        </div>
+        <p class="count" id="count" aria-live="polite"></p>
+        <ul class="cars" id="cars"></ul>
+        <div class="empty" id="empty" hidden>
+          <p data-i18n="empty">Aucun véhicule ne correspond à ces filtres.</p>
+          <button type="button" class="btn btn-dark" id="reset" data-i18n="reset">Réinitialiser les filtres</button>
+        </div>
+        <noscript><p>Notre flotte : citadines, berline hybride, SUV, 4x4 et minibus 9 places. Écrivez-nous sur WhatsApp au +212 6 00 00 00 00.</p></noscript>
+      </div>
+    </section>
+
+    <!-- STOP 2 · Ourika : l'estimateur -->
+    <section class="sec est" id="estimation" aria-labelledby="est-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="borne" data-stop><span class="cap" lang="ar">أوريكا</span><span class="name">Ourika</span><span class="km">35<small> km</small></span></p>
+          <div>
+            <h2 id="est-title" data-i18n="est_t">Estimez votre location</h2>
+            <p class="sub" data-i18n="est_sub">Le total se met à jour pendant que vous choisissez. Rien n'est payé en ligne : vous confirmez sur WhatsApp.</p>
+          </div>
+        </div>
+
+        <div class="est-grid">
+          <form id="estForm" novalidate>
+            <div>
+              <label class="lbl" for="fCar" data-i18n="l_car">Véhicule</label>
+              <select id="fCar" name="car"></select>
+            </div>
+
+            <fieldset>
+              <legend data-i18n="l_pick">Lieu de prise en charge</legend>
+              <div class="places">
+                <label class="place"><input type="radio" name="pick" value="airport" checked><b data-i18n="pl_airport">Aéroport Menara</b><span data-i18n="pl_airport_n">Offerte, 24 h/24. On suit votre vol.</span></label>
+                <label class="place"><input type="radio" name="pick" value="riad"><b data-i18n="pl_riad">Riad ou hôtel</b><span data-i18n="pl_riad_n">Offerte dans Marrakech. En médina, rendez-vous à la porte la plus proche.</span></label>
+                <label class="place"><input type="radio" name="pick" value="agency"><b data-i18n="pl_agency">Agence Guéliz</b><span data-i18n="pl_agency_n">Rue Ibn Aïcha, de 8 h à 21 h.</span></label>
+              </div>
+            </fieldset>
+
+            <div>
+              <label class="lbl" for="fRet" data-i18n="l_ret">Lieu de retour</label>
+              <select id="fRet" name="ret">
+                <option value="airport" data-i18n="pl_airport">Aéroport Menara</option>
+                <option value="riad" data-i18n="pl_riad">Riad ou hôtel</option>
+                <option value="agency" data-i18n="pl_agency">Agence Guéliz</option>
+              </select>
+            </div>
+
+            <div class="when">
+              <fieldset>
+                <legend data-i18n="l_from">Départ</legend>
+                <div class="dt">
+                  <label><span data-i18n="l_date">Date</span><input type="date" id="dFrom" name="dFrom" required></label>
+                  <label><span data-i18n="l_time">Heure</span><input type="time" id="tFrom" name="tFrom" value="10:00" step="1800" required></label>
+                </div>
+              </fieldset>
+              <fieldset>
+                <legend data-i18n="l_to">Retour</legend>
+                <div class="dt">
+                  <label><span data-i18n="l_date">Date</span><input type="date" id="dTo" name="dTo" required></label>
+                  <label><span data-i18n="l_time">Heure</span><input type="time" id="tTo" name="tTo" value="10:00" step="1800" required></label>
+                </div>
+              </fieldset>
+            </div>
+
+            <fieldset>
+              <legend data-i18n="l_opts">Options</legend>
+              <div class="opts">
+                <label class="opt"><input type="checkbox" name="seat"><span><b data-i18n="o_seat">Siège enfant</b><small data-i18n="o_seat_n">Bébé ou rehausseur, posé avant la livraison</small></span><span class="p" data-price="seat"></span></label>
+                <label class="opt"><input type="checkbox" name="driver2"><span><b data-i18n="o_driver2">Conducteur additionnel</b><small data-i18n="o_driver2_n">Pour se relayer sur les longues routes</small></span><span class="p" data-price="driver2"></span></label>
+                <label class="opt"><input type="checkbox" name="chauffeur"><span><b data-i18n="o_chauffeur">Chauffeur</b><small data-i18n="o_chauffeur_n">10 h par jour, parle français et anglais</small></span><span class="p" data-price="chauffeur"></span></label>
+                <label class="opt"><input type="checkbox" name="ins"><span><b data-i18n="o_ins">Assurance tous risques</b><small data-i18n="o_ins_n">Franchise ramenée à zéro</small></span><span class="p" data-price="ins"></span></label>
+              </div>
+            </fieldset>
+          </form>
+
+          <aside class="ticket" aria-labelledby="tk-title">
+            <div class="tk-top"><h3 id="tk-title" data-i18n="tk_title">Feuille de route</h3><span>Atlas Drive</span></div>
+            <div id="tkBody" aria-live="polite"></div>
+            <a class="btn btn-signal" id="tkBook" href="https://wa.me/212600000000" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#wa"/></svg><span data-i18n="tk_book">Réserver sur WhatsApp</span></a>
+            <p class="tk-note" data-i18n="tk_note">Estimation indicative. Nous confirmons la disponibilité et le prix par message.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- Itinéraires : la route passe dessous (tunnel), une route horizontale prend le relais -->
+    <section class="itin" id="itineraires" aria-labelledby="trips-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="borne"><span class="cap" lang="ar">أكفاي</span><span class="name">Agafay</span><span class="km">40<small> km</small></span></p>
+          <div>
+            <h2 id="trips-title" data-i18n="trips_t">Six routes au départ de Marrakech</h2>
+            <p class="sub" data-i18n="trips_sub">Nos itinéraires préférés, avec le véhicule que nous vous conseillerions pour chacun.</p>
+          </div>
+        </div>
+      </div>
+      <div class="itin-scroller" id="itinScroller" tabindex="0" aria-label="Itinéraires" data-i18n-aria="trips_scroller">
+        <div class="itin-track" id="itinTrack">
+          <div class="itin-road" aria-hidden="true"></div>
+        </div>
+      </div>
+      <svg class="itin-car" viewBox="-20 -11 40 22" aria-hidden="true" focusable="false">
+        <rect x="-16" y="-8.5" width="32" height="17" rx="5" fill="#F5B700" stroke="#262120" stroke-width="1.6"/>
+        <rect x="2.5" y="-6.6" width="7" height="13.2" rx="2.2" fill="#262120"/>
+        <rect x="-12.5" y="-6" width="4.5" height="12" rx="1.6" fill="#262120" opacity=".85"/>
+        <rect x="-7" y="-6.4" width="9" height="12.8" rx="1.4" fill="#E2A400"/>
+        <circle cx="14.6" cy="-5.4" r="1.4" fill="#fff"/><circle cx="14.6" cy="5.4" r="1.4" fill="#fff"/>
+      </svg>
+    </section>
+
+    <!-- STOP 3 · Ouarzazate (après les lacets du Tichka) : documents + FAQ -->
+    <section class="sec docs" id="infos" aria-labelledby="docs-title">
+      <div class="wrap">
+        <p class="pass">
+          <svg viewBox="0 0 60 54" aria-hidden="true"><path d="M30 4 56 50H4Z" fill="#fff" stroke="#A23B1C" stroke-width="5" stroke-linejoin="round"/><path d="M27 43c0-5 7-5 7-10s-7-5-7-10 6-5 6-5" fill="none" stroke="#262120" stroke-width="3.4" stroke-linecap="round"/><path d="M29.5 15.5 34 18l-3.6 3.4" fill="none" stroke="#262120" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span data-i18n="pass_note">Col du Tizi n'Tichka, 2 260 m</span>
+        </p>
+        <div class="sec-head">
+          <p class="borne" data-stop data-hairpins><span class="cap" lang="ar">ورزازات</span><span class="name">Ouarzazate</span><span class="km">195<small> km</small></span></p>
+          <div>
+            <h2 id="docs-title" data-i18n="docs_t">Avant de prendre le volant</h2>
+            <p class="sub" data-i18n="docs_sub">Ce que l'agent vous demandera à la livraison. Prévoyez les originaux, pas des photocopies.</p>
+          </div>
+        </div>
+        <div class="docs-grid">
+          <div>
+            <img class="doc-photo" loading="lazy" width="1000" height="667" src="https://images.unsplash.com/photo-1504598318550-17eba1008a68?w=1000&q=75&auto=format&fit=crop" alt="Carte routière dépliée sur le tableau de bord d'une voiture, au soleil" data-i18n-alt="alt_map">
+            <ul class="doclist" id="doclist"></ul>
+          </div>
+          <div class="faq">
+            <h3 data-i18n="faq_t">Questions fréquentes</h3>
+            <div id="faq"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STOP 4 · Essaouira : fin de la route, contact -->
+    <section class="sec contact" id="contact" aria-labelledby="contact-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="borne" data-stop><span class="cap" lang="ar">الصويرة</span><span class="name">Essaouira</span><span class="km">190<small> km</small></span></p>
+          <div>
+            <h2 id="contact-title" data-i18n="contact_t">Où nous trouver</h2>
+            <p class="sub" data-i18n="contact_sub">La route s'arrête ici, mais nous venons à vous : aéroport, riad ou hôtel, partout dans Marrakech.</p>
+          </div>
+        </div>
+        <div class="contact-grid">
+          <div>
+            <dl>
+              <dt data-i18n="c_agency">Agence</dt>
+              <dd data-i18n="c_agency_v">27, rue Ibn Aïcha, Guéliz, Marrakech. Tous les jours, de 8 h à 21 h.</dd>
+              <dt data-i18n="c_airport">Aéroport Marrakech-Menara</dt>
+              <dd data-i18n="c_airport_v">Livraison et restitution 24 h/24, à la sortie du terminal 1. Votre agent tient un panneau à votre nom.</dd>
+              <dt data-i18n="c_phone">Téléphone et WhatsApp</dt>
+              <dd><a href="tel:+212600000000">+212 6 00 00 00 00</a></dd>
+              <dt data-i18n="c_mail">E-mail</dt>
+              <dd><a href="mailto:contact@example.com">contact@example.com</a></dd>
+            </dl>
+            <a class="btn btn-dark wa-link" href="https://wa.me/212600000000" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#wa"/></svg><span data-i18n="cta_wa">Écrire sur WhatsApp</span></a>
+          </div>
+          <iframe class="map" title="Carte : aéroport Marrakech-Menara" data-i18n-title="map_title" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps?q=Aeroport+Marrakech+Menara&z=13&output=embed"></iframe>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div><strong>Atlas Drive</strong><span data-i18n="foot_tag">Location de voitures à Marrakech, avec ou sans chauffeur.</span><br>+212 6 00 00 00 00 · <a href="mailto:contact@example.com">contact@example.com</a></div>
+    <div><p data-i18n="demo">Site de démonstration : entreprise fictive. Photos Unsplash.</p></div>
+  </div>
+</footer>
+
+<a href="../" class="demo-pill">Démo réalisée par Ghali</a>
+<a class="fab wa-link" href="https://wa.me/212600000000" target="_blank" rel="noopener" aria-label="WhatsApp" data-i18n-aria="fab_label"><svg aria-hidden="true"><use href="#wa"/></svg></a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<script>
+/* ============ CONFIG ============ */
+const WHATSAPP = "212600000000";   // client's WhatsApp number: international format, no "+" or spaces
+const BRAND = "Atlas Drive";
+
+const img = (id, w) => `https://images.unsplash.com/photo-${id}?w=${w}&q=75&auto=format&fit=crop`;
+const waURL = text => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+/* ---------- data ---------- */
+const CARS = [
+  {id:"c1",cat:"city",trans:"man",seats:5,fuel:"petrol",bags:2,price:250,ins:80,dep:3000,img:"1572401611152-cf63d874b019",
+   name:{fr:"Citadine manuelle",en:"Manual city car"},
+   desc:{fr:"Petite, économe et facile à garer près des remparts. Le bon choix pour Marrakech et l'Ourika.",en:"Small, thrifty and easy to park by the city walls. Right for Marrakech and the Ourika valley."},
+   alt:{fr:"Citadine rouge sur une longue route droite entre des collines",en:"Red hatchback on a long straight road between hills"}},
+  {id:"c2",cat:"city",trans:"auto",seats:5,fuel:"petrol",bags:2,price:350,ins:90,dep:4000,img:"1541570213932-8cd806e3f8f6",
+   name:{fr:"Citadine automatique",en:"Automatic city car"},
+   desc:{fr:"La boîte automatique pour la circulation de Guéliz et les ronds-points, sans stress.",en:"An automatic gearbox for Guéliz traffic and the roundabouts, without the stress."},
+   alt:{fr:"Passagère à la fenêtre d'une voiture sur une route boisée",en:"Passenger at the window of a car on a wooded road"}},
+  {id:"b1",cat:"sedan",trans:"auto",seats:5,fuel:"hybrid",bags:3,price:550,ins:120,dep:6000,img:"1551952237-954a0e68786c",
+   name:{fr:"Berline hybride automatique",en:"Automatic hybrid sedan"},
+   desc:{fr:"Silencieuse et sobre sur la longue route droite vers Essaouira.",en:"Quiet and frugal on the long straight road to Essaouira."},
+   alt:{fr:"Berline grise sur une route au pied des montagnes, au crépuscule",en:"Grey sedan on a road below the mountains at dusk"}},
+  {id:"s1",cat:"suv",trans:"man",seats:5,fuel:"diesel",bags:3,price:450,ins:110,dep:5000,img:"1529369623266-f5264b696110",
+   name:{fr:"SUV compact",en:"Compact SUV"},
+   desc:{fr:"Garde au sol plus haute pour les pistes roulantes d'Agafay et les routes de montagne.",en:"Higher ground clearance for the smooth tracks of Agafay and mountain roads."},
+   alt:{fr:"SUV blanc arrêté au bord d'une route dans un paysage aride",en:"White SUV stopped by a road in a dry landscape"}},
+  {id:"s2",cat:"suv",trans:"auto",seats:5,fuel:"diesel",bags:3,price:600,ins:130,dep:6000,img:"1532931899774-fbd4de0008fb",
+   name:{fr:"SUV compact automatique",en:"Automatic compact SUV"},
+   desc:{fr:"Le confort de l'automatique pour enchaîner les lacets du Tizi n'Tichka.",en:"The ease of an automatic for the hairpins of the Tizi n'Tichka pass."},
+   alt:{fr:"SUV gris garé au-dessus d'une mer de nuages",en:"Grey SUV parked above a sea of clouds"}},
+  {id:"x1",cat:"4x4",trans:"man",seats:5,fuel:"diesel",bags:4,price:900,ins:180,dep:10000,img:"1632990250352-74ff384d37d2",
+   name:{fr:"4x4 tout-terrain 5 places",en:"5-seat off-road 4x4"},
+   desc:{fr:"Quatre roues motrices et boîte courte pour les pistes caillouteuses et les dunes de Merzouga.",en:"Four-wheel drive with low range for rocky tracks and the Merzouga dunes."},
+   alt:{fr:"4x4 argenté vu de profil dans le désert au coucher du soleil",en:"Silver 4x4 seen side-on in the desert at sunset"}},
+  {id:"x2",cat:"4x4",trans:"auto",seats:7,fuel:"diesel",bags:5,price:1300,ins:220,dep:12000,img:"1632990251650-ef8eb84a9ce0",
+   name:{fr:"4x4 7 places automatique",en:"7-seat automatic 4x4"},
+   desc:{fr:"Trois rangées de sièges, un grand coffre et quatre roues motrices : toute la famille part au désert.",en:"Three rows of seats, a big boot and four-wheel drive: the whole family heads for the desert."},
+   alt:{fr:"Grand 4x4 beige garé sur des pavés sous un ciel rose du soir",en:"Large beige 4x4 parked on paving under a pink evening sky"}},
+  {id:"v1",cat:"van",trans:"man",seats:9,fuel:"diesel",bags:8,price:1100,ins:200,dep:10000,img:"1534540378968-85a7b8fde19f",
+   name:{fr:"Minibus 9 places",en:"9-seat minibus"},
+   desc:{fr:"Pour les groupes, les familles nombreuses et les mariages. À louer de préférence avec chauffeur.",en:"For groups, big families and weddings. Best booked with a driver."},
+   alt:{fr:"Flanc d'un minibus sur une route au soleil couchant",en:"Side of a minibus on a road at sunset"}}
+];
+const longPrice = p => Math.round(p * 0.85 / 10) * 10;   // 7 days and more: -15 %
+const OPTS = { seat: 40, driver2: 30, chauffeur: 500 };    // MAD per day; insurance depends on the car (CARS[].ins)
+
+const TRIPS = [
+  {car:"c2",km:130,img:"1509895846073-1c731f9f0950",
+   name:{fr:"Vallée de l'Ourika",en:"Ourika valley"},
+   dur:{fr:"Une journée, 1 h 15 de route par trajet",en:"One day, 1 h 15 each way"},
+   txt:{fr:"La route remonte l'oued entre noyers, villages en pisé et cafés posés sur l'eau, jusqu'aux cascades de Setti Fatma.",en:"The road follows the river past walnut trees, mud-brick villages and cafés set right on the water, up to the Setti Fatma waterfalls."},
+   alt:{fr:"Pieds posés à la fenêtre d'une voiture face à une vallée boisée dans la brume",en:"Feet resting out of a car window facing a misty wooded valley"}},
+  {car:"s1",km:80,img:"1584849418394-359426ec6685",
+   name:{fr:"Désert d'Agafay",en:"Agafay desert"},
+   dur:{fr:"Une demi-journée, 45 min de route par trajet",en:"Half a day, 45 min each way"},
+   txt:{fr:"Un désert de pierre et de collines nues face aux sommets enneigés. Les dernières pistes sont roulantes, un SUV suffit. Restez pour le coucher du soleil.",en:"A desert of stone and bare hills facing the snowy peaks. The last tracks are smooth, so an SUV is enough. Stay for the sunset."},
+   alt:{fr:"SUV noir garé au pied d'un piton rocheux sous un ciel bleu",en:"Black SUV parked below a rock pinnacle under a blue sky"}},
+  {car:"s2",km:130,img:"1547233598-6891e69da46f",
+   name:{fr:"Imlil et le Toubkal",en:"Imlil and Mount Toubkal"},
+   dur:{fr:"Une journée, 1 h 30 de route par trajet",en:"One day, 1 h 30 each way"},
+   txt:{fr:"Par Asni jusqu'au village au pied du plus haut sommet d'Afrique du Nord. Les derniers kilomètres enchaînent les lacets serrés.",en:"Through Asni to the village below North Africa's highest peak. The last few kilometres are one tight bend after another."},
+   alt:{fr:"SUV jaune chargé de bagages devant un sommet enneigé",en:"Yellow SUV loaded with luggage in front of a snowy peak"}},
+  {car:"s2",km:400,img:"1635965453398-121ed3ea7c24",
+   name:{fr:"Ouarzazate par le Tichka",en:"Ouarzazate over the Tichka"},
+   dur:{fr:"Deux jours, 4 h de route par trajet",en:"Two days, 4 h each way"},
+   txt:{fr:"Le col du Tizi n'Tichka à 2 260 m, puis le ksar d'Aït Ben Haddou. Route refaite mais sinueuse : gardez du temps pour les arrêts photo.",en:"The Tizi n'Tichka pass at 2,260 m, then the Aït Ben Haddou ksar. The road is newly surfaced but winding: keep time for photo stops."},
+   alt:{fr:"Voiture dans un virage de route de montagne sous un ciel chargé",en:"Car on a bend of a mountain road under a heavy sky"}},
+  {car:"b1",km:380,img:"1526478512290-5397e7d2ca6a",
+   name:{fr:"Essaouira par la route de l'argan",en:"Essaouira on the argan road"},
+   dur:{fr:"Deux jours, 2 h 45 de route par trajet",en:"Two days, 2 h 45 each way"},
+   txt:{fr:"Une longue route droite à travers les arganiers, chèvres perchées comprises. Au bout, les remparts et le vent de l'Atlantique.",en:"A long straight road through the argan trees, goats up in the branches included. At the end: the ramparts and the Atlantic wind."},
+   alt:{fr:"Route qui descend vers une mer de nuages au soleil couchant",en:"Road running down towards a sea of clouds at sunset"}},
+  {car:"x1",km:1100,loop:true,img:"1596602932647-36c88650de9e",
+   name:{fr:"Merzouga et l'Erg Chebbi",en:"Merzouga and Erg Chebbi"},
+   dur:{fr:"Quatre jours ou plus",en:"Four days or more"},
+   txt:{fr:"Les gorges du Todra, la vallée du Dadès, puis les grandes dunes. Pour ce circuit, prenez un 4x4 ou ajoutez un chauffeur.",en:"The Todra gorges, the Dadès valley, then the great dunes. For this loop, take a 4x4 or add a driver."},
+   alt:{fr:"SUV blanc arrêté près d'un palmier dans le sable du désert",en:"White SUV stopped by a palm tree in desert sand"}}
+];
+
+const DOCS = [
+  {t:{fr:"Permis de conduire",en:"Driving licence"},p:{fr:"Valide depuis au moins 2 ans. Si votre permis n'est pas en alphabet latin, ajoutez un permis international.",en:"Held for at least 2 years. If your licence is not in the Latin alphabet, bring an international driving permit too."}},
+  {t:{fr:"Passeport ou carte d'identité",en:"Passport or ID card"},p:{fr:"Passeport pour les visiteurs, CIN pour les résidents au Maroc.",en:"Passport for visitors, national ID card for residents of Morocco."}},
+  {t:{fr:"Carte bancaire du conducteur principal",en:"Main driver's bank card"},p:{fr:"Pour l'empreinte de caution, de 3 000 à 12 000 MAD selon le véhicule. Caution en espèces possible.",en:"For the deposit hold, 3,000 to 12,000 MAD depending on the vehicle. A cash deposit is also possible."}},
+  {t:{fr:"Âge minimum",en:"Minimum age"},p:{fr:"21 ans, et 25 ans pour les 4x4 et le minibus.",en:"21, or 25 for the 4x4s and the minibus."}},
+  {t:{fr:"Conducteur additionnel",en:"Additional driver"},p:{fr:"Son permis et sa pièce d'identité, présentés à la livraison.",en:"Their licence and ID, shown at delivery."}}
+];
+
+const FAQ = [
+  {q:{fr:"Et si mon vol arrive en retard ?",en:"What if my flight is late?"},a:{fr:"Nous suivons votre vol. L'agent vous attend à la sortie du terminal avec un panneau à votre nom, même à 3 h du matin, sans frais.",en:"We track your flight. Your agent waits at the terminal exit with a sign bearing your name, even at 3 am, at no extra cost."}},
+  {q:{fr:"Le kilométrage est-il vraiment illimité ?",en:"Is mileage really unlimited?"},a:{fr:"Oui, sur tous nos véhicules, y compris pour un circuit jusqu'à Merzouga.",en:"Yes, on every vehicle, including a loop all the way to Merzouga."}},
+  {q:{fr:"Comment fonctionne la caution ?",en:"How does the deposit work?"},a:{fr:"Une empreinte bancaire de 3 000 à 12 000 MAD selon le véhicule, débloquée au retour de la voiture. Les espèces sont acceptées.",en:"A card hold of 3,000 to 12,000 MAD depending on the vehicle, released when the car comes back. Cash is accepted."}},
+  {q:{fr:"Peut-on rouler sur les pistes du désert ?",en:"Can I drive on desert tracks?"},a:{fr:"Les pistes d'Agafay passent en SUV. Pour les dunes de Merzouga et les pistes caillouteuses, prenez un 4x4 : l'assurance ne couvre pas les citadines hors goudron.",en:"The Agafay tracks are fine in an SUV. For the Merzouga dunes and rocky tracks, take a 4x4: insurance does not cover city cars off tarmac."}},
+  {q:{fr:"Quelle règle pour le carburant ?",en:"What is the fuel policy?"},a:{fr:"Plein à la livraison, plein au retour. Sinon, le carburant manquant est facturé au prix de la pompe, sans frais de service.",en:"Full at delivery, full on return. Otherwise missing fuel is charged at pump price, with no service fee."}},
+  {q:{fr:"Puis-je annuler ?",en:"Can I cancel?"},a:{fr:"Gratuitement jusqu'à 48 h avant la prise en charge. Aucun acompte n'est demandé pour réserver.",en:"Free of charge up to 48 hours before pick-up. No advance payment is needed to book."}},
+  {q:{fr:"Comment se passe l'option chauffeur ?",en:"How does the driver option work?"},a:{fr:"Un chauffeur qui parle français et anglais, 10 h par jour. Sur les circuits de plusieurs jours, son hébergement et ses repas sont inclus.",en:"A driver who speaks French and English, 10 hours a day. On multi-day trips, their lodging and meals are included."}},
+  {q:{fr:"Et en cas de panne ?",en:"What if the car breaks down?"},a:{fr:"Assistance 24 h/24 au +212 6 00 00 00 00 et véhicule de remplacement sous 24 h sur les grands axes.",en:"24/7 assistance on +212 6 00 00 00 00 and a replacement vehicle within 24 hours on main roads."}}
+];
+
+/* ---------- translations ---------- */
+const T = {
+fr:{
+  title:"Atlas Drive, location de voitures à Marrakech",
+  meta:"Location de voitures à Marrakech livrées gratuitement à l'aéroport Menara et à votre riad. Citadines, SUV, 4x4 et minibus, avec ou sans chauffeur.",
+  skip:"Aller au contenu",
+  nav_fleet:"Flotte",nav_est:"Estimation",nav_trips:"Itinéraires",nav_info:"Infos pratiques",nav_contact:"Contact",
+  h1:"La route du Sud commence à Menara.",
+  hero_lead:"Location de voitures à Marrakech, livrées gratuitement à l'aéroport Menara et devant votre riad ou votre hôtel. Citadines, SUV, 4x4 pour le désert et minibus, avec ou sans chauffeur.",
+  cta_est:"Estimer ma location",cta_wa:"Écrire sur WhatsApp",
+  signs_label:"Distances depuis Marrakech",facts_label:"L'essentiel",
+  alt_hero:"Van jaune sur une route droite entre des falaises de roche rouge",
+  f1_t:"Livraison offerte à l'aéroport",f1_p:"24 h/24. Votre agent vous attend à la sortie du terminal, même si l'avion a du retard.",
+  f2_t:"Kilométrage illimité",f2_p:"De l'Ourika à Merzouga, on ne compte pas les kilomètres.",
+  f3_t:"Avec ou sans chauffeur",f3_p:"Un chauffeur bilingue qui connaît chaque piste, 500 MAD par jour.",
+  fleet_t:"Huit véhicules, un pour chaque route",
+  fleet_sub:"Tous climatisés, livrés le plein fait, assurance de base incluse. Prix par jour ; dès 7 jours, le tarif baisse de 15 %.",
+  flt_cat:"Catégorie",flt_trans:"Boîte",flt_seats:"Places",flt_fuel:"Carburant",all:"Tous",
+  cat_city:"Citadine",cat_sedan:"Berline",cat_suv:"SUV",cat_4x4:"4x4",cat_van:"Minibus",
+  tr_man:"Manuelle",tr_auto:"Automatique",seats_7:"7 et plus",
+  fu_petrol:"Essence",fu_diesel:"Diesel",fu_hybrid:"Hybride",
+  count:n => n > 1 ? `${n} véhicules disponibles` : `${n} véhicule disponible`,
+  empty:"Aucun véhicule ne correspond à ces filtres.",reset:"Réinitialiser les filtres",
+  per_day:"MAD / jour",long:p => `${p} MAD / jour dès 7 jours`,choose:"Choisir",
+  seats_n:n => `${n} places`,bags_n:n => `${n} valises`,
+  est_t:"Estimez votre location",
+  est_sub:"Le total se met à jour pendant que vous choisissez. Rien n'est payé en ligne : vous confirmez sur WhatsApp.",
+  l_car:"Véhicule",l_pick:"Lieu de prise en charge",l_ret:"Lieu de retour",l_from:"Départ",l_to:"Retour",l_date:"Date",l_time:"Heure",l_opts:"Options",
+  pl_airport:"Aéroport Menara",pl_airport_n:"Offerte, 24 h/24. On suit votre vol.",
+  pl_riad:"Riad ou hôtel",pl_riad_n:"Offerte dans Marrakech. En médina, rendez-vous à la porte la plus proche.",
+  pl_agency:"Agence Guéliz",pl_agency_n:"Rue Ibn Aïcha, de 8 h à 21 h.",
+  o_seat:"Siège enfant",o_seat_n:"Bébé ou rehausseur, posé avant la livraison",
+  o_driver2:"Conducteur additionnel",o_driver2_n:"Pour se relayer sur les longues routes",
+  o_chauffeur:"Chauffeur",o_chauffeur_n:"10 h par jour, parle français et anglais",
+  o_ins:"Assurance tous risques",o_ins_n:"Franchise ramenée à zéro",
+  per_day_short:"/ jour",
+  tk_title:"Feuille de route",tk_from:"Départ",tk_to:"Retour",tk_len:"Durée",
+  days:n => n > 1 ? `${n} jours` : `${n} jour`,
+  tk_rent:(n,r) => `Location, ${n} × ${r} MAD`,tk_long:"Tarif 7 jours et plus",
+  tk_deliv:"Livraison et reprise",tk_free:"Offertes",tk_total:"Total estimé",
+  tk_dep:d => `Caution : ${d} MAD en empreinte bancaire, non débitée.`,
+  tk_hint:(n,p) => `Encore ${n} ${n > 1 ? "jours" : "jour"} et le prix passe à ${p} MAD par jour.`,
+  tk_err:"La date de retour doit être après le départ.",tk_err_date:"Choisissez les dates de départ et de retour.",
+  tk_book:"Réserver sur WhatsApp",tk_note:"Estimation indicative. Nous confirmons la disponibilité et le prix par message.",
+  at:"à",
+  trips_t:"Six routes au départ de Marrakech",
+  trips_sub:"Nos itinéraires préférés, avec le véhicule que nous vous conseillerions pour chacun.",
+  trips_scroller:"Itinéraires, faites défiler horizontalement",
+  km_rt:"km aller-retour",km_loop:"km en boucle",trip_car:"Véhicule conseillé",trip_pick:"Estimer avec ce véhicule",
+  pass_note:"Col du Tizi n'Tichka, 2 260 m",
+  docs_t:"Avant de prendre le volant",docs_sub:"Ce que l'agent vous demandera à la livraison. Prévoyez les originaux, pas des photocopies.",
+  alt_map:"Carte routière dépliée sur le tableau de bord d'une voiture, au soleil",
+  faq_t:"Questions fréquentes",
+  contact_t:"Où nous trouver",contact_sub:"La route s'arrête ici, mais nous venons à vous : aéroport, riad ou hôtel, partout dans Marrakech.",
+  c_agency:"Agence",c_agency_v:"27, rue Ibn Aïcha, Guéliz, Marrakech. Tous les jours, de 8 h à 21 h.",
+  c_airport:"Aéroport Marrakech-Menara",c_airport_v:"Livraison et restitution 24 h/24, à la sortie du terminal 1. Votre agent tient un panneau à votre nom.",
+  c_phone:"Téléphone et WhatsApp",c_mail:"E-mail",map_title:"Carte : aéroport Marrakech-Menara",
+  foot_tag:"Location de voitures à Marrakech, avec ou sans chauffeur.",
+  demo:"Site de démonstration : entreprise fictive. Photos Unsplash.",
+  fab_label:"Écrire à Atlas Drive sur WhatsApp",
+  msg_hello:`Bonjour ${BRAND}, je voudrais louer une voiture à Marrakech.`,
+  msg:o => `Bonjour ${BRAND},\nJe souhaite réserver :\n• Véhicule : ${o.car}\n• Prise en charge : ${o.pick}, ${o.from}\n• Retour : ${o.ret}, ${o.to}\n• Durée : ${o.days}\n• Options : ${o.opts || "aucune"}\n• Total estimé : ${o.total} MAD\nPouvez-vous me confirmer la disponibilité ? Merci !`
+},
+en:{
+  title:"Atlas Drive, car rental in Marrakech",
+  meta:"Car rental in Marrakech, delivered free to Menara airport and to your riad. City cars, SUVs, 4x4s and minibuses, with or without a driver.",
+  skip:"Skip to content",
+  nav_fleet:"Fleet",nav_est:"Estimate",nav_trips:"Road trips",nav_info:"Good to know",nav_contact:"Contact",
+  h1:"The road south starts at Menara.",
+  hero_lead:"Car rental in Marrakech, delivered free to Menara airport and to the door of your riad or hotel. City cars, SUVs, 4x4s for the desert and minibuses, with or without a driver.",
+  cta_est:"Estimate my rental",cta_wa:"Message us on WhatsApp",
+  signs_label:"Distances from Marrakech",facts_label:"The essentials",
+  alt_hero:"Yellow van on a straight road between red rock cliffs",
+  f1_t:"Free airport delivery",f1_p:"24/7. Your agent waits at the terminal exit, even if your flight is late.",
+  f2_t:"Unlimited mileage",f2_p:"From the Ourika valley to Merzouga, nobody counts the kilometres.",
+  f3_t:"With or without a driver",f3_p:"A bilingual driver who knows every track, 500 MAD a day.",
+  fleet_t:"Eight vehicles, one for every road",
+  fleet_sub:"All air-conditioned, delivered with a full tank, basic insurance included. Prices per day; from 7 days, the rate drops by 15%.",
+  flt_cat:"Category",flt_trans:"Gearbox",flt_seats:"Seats",flt_fuel:"Fuel",all:"All",
+  cat_city:"City car",cat_sedan:"Sedan",cat_suv:"SUV",cat_4x4:"4x4",cat_van:"Minibus",
+  tr_man:"Manual",tr_auto:"Automatic",seats_7:"7 or more",
+  fu_petrol:"Petrol",fu_diesel:"Diesel",fu_hybrid:"Hybrid",
+  count:n => n > 1 ? `${n} vehicles available` : `${n} vehicle available`,
+  empty:"No vehicle matches these filters.",reset:"Clear filters",
+  per_day:"MAD / day",long:p => `${p} MAD / day from 7 days`,choose:"Choose",
+  seats_n:n => `${n} seats`,bags_n:n => `${n} suitcases`,
+  est_t:"Estimate your rental",
+  est_sub:"The total updates as you choose. Nothing is paid online: you confirm on WhatsApp.",
+  l_car:"Vehicle",l_pick:"Pick-up place",l_ret:"Return place",l_from:"Pick-up",l_to:"Return",l_date:"Date",l_time:"Time",l_opts:"Extras",
+  pl_airport:"Menara airport",pl_airport_n:"Free, 24/7. We track your flight.",
+  pl_riad:"Riad or hotel",pl_riad_n:"Free within Marrakech. In the medina, we meet you at the nearest gate.",
+  pl_agency:"Guéliz office",pl_agency_n:"Rue Ibn Aïcha, 8 am to 9 pm.",
+  o_seat:"Child seat",o_seat_n:"Baby seat or booster, fitted before delivery",
+  o_driver2:"Additional driver",o_driver2_n:"Take turns on the long roads",
+  o_chauffeur:"Driver",o_chauffeur_n:"10 hours a day, speaks French and English",
+  o_ins:"Full insurance",o_ins_n:"Excess reduced to zero",
+  per_day_short:"/ day",
+  tk_title:"Trip sheet",tk_from:"Pick-up",tk_to:"Return",tk_len:"Length",
+  days:n => n > 1 ? `${n} days` : `${n} day`,
+  tk_rent:(n,r) => `Rental, ${n} × ${r} MAD`,tk_long:"7-day-plus rate",
+  tk_deliv:"Delivery and collection",tk_free:"Free",tk_total:"Estimated total",
+  tk_dep:d => `Deposit: ${d} MAD card hold, not charged.`,
+  tk_hint:(n,p) => `${n} more ${n > 1 ? "days" : "day"} and the price drops to ${p} MAD a day.`,
+  tk_err:"The return date must be after pick-up.",tk_err_date:"Choose your pick-up and return dates.",
+  tk_book:"Book on WhatsApp",tk_note:"Indicative estimate. We confirm availability and price by message.",
+  at:"at",
+  trips_t:"Six drives from Marrakech",
+  trips_sub:"Our favourite routes, each with the vehicle we would recommend.",
+  trips_scroller:"Road trips, scroll horizontally",
+  km_rt:"km round trip",km_loop:"km loop",trip_car:"Recommended vehicle",trip_pick:"Estimate with this vehicle",
+  pass_note:"Tizi n'Tichka pass, 2,260 m",
+  docs_t:"Before you drive off",docs_sub:"What your agent will ask for at delivery. Bring the originals, not photocopies.",
+  alt_map:"Road map unfolded on a car dashboard in the sun",
+  faq_t:"Common questions",
+  contact_t:"Find us",contact_sub:"The road ends here, but we come to you: airport, riad or hotel, anywhere in Marrakech.",
+  c_agency:"Office",c_agency_v:"27 rue Ibn Aïcha, Guéliz, Marrakech. Every day, 8 am to 9 pm.",
+  c_airport:"Marrakech-Menara airport",c_airport_v:"Delivery and return 24/7 at the Terminal 1 exit. Your agent holds a sign with your name.",
+  c_phone:"Phone and WhatsApp",c_mail:"Email",map_title:"Map: Marrakech-Menara airport",
+  foot_tag:"Car rental in Marrakech, with or without a driver.",
+  demo:"Demo website: fictional business. Photos from Unsplash.",
+  fab_label:"Message Atlas Drive on WhatsApp",
+  msg_hello:`Hello ${BRAND}, I'd like to rent a car in Marrakech.`,
+  msg:o => `Hello ${BRAND},\nI'd like to book:\n• Vehicle: ${o.car}\n• Pick-up: ${o.pick}, ${o.from}\n• Return: ${o.ret}, ${o.to}\n• Length: ${o.days}\n• Extras: ${o.opts || "none"}\n• Estimated total: ${o.total} MAD\nCould you confirm availability? Thank you!`
+}};
+
+let lang = "fr";
+const t = k => T[lang][k];
+const fmt = n => n.toLocaleString(lang === "fr" ? "fr-FR" : "en-GB");
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const CAT_KEY = {city:"cat_city",sedan:"cat_sedan",suv:"cat_suv","4x4":"cat_4x4",van:"cat_van"};
+const TR_KEY = {man:"tr_man",auto:"tr_auto"};
+const FU_KEY = {petrol:"fu_petrol",diesel:"fu_diesel",hybrid:"fu_hybrid"};
+const icon = id => `<svg aria-hidden="true"><use href="#${id}"/></svg>`;
+
+/* ---------- fleet ---------- */
+const filters = {cat:"all",trans:"all",seats:"all",fuel:"all"};
+const carsEl = $("#cars");
+function renderFleet(){
+  const list = CARS.filter(c =>
+    (filters.cat === "all" || c.cat === filters.cat) &&
+    (filters.trans === "all" || c.trans === filters.trans) &&
+    (filters.seats === "all" || (filters.seats === "5" ? c.seats === 5 : c.seats >= 7)) &&
+    (filters.fuel === "all" || c.fuel === filters.fuel));
+  carsEl.innerHTML = list.map(c => `
+    <li class="car">
+      <div class="car-img"><img loading="lazy" width="700" height="700" src="${img(c.img,700)}" alt="${c.alt[lang]}"></div>
+      <div class="car-body">
+        <p class="car-cat">${t(CAT_KEY[c.cat])}</p>
+        <h3>${c.name[lang]}</h3>
+        <p class="car-desc">${c.desc[lang]}</p>
+        <ul class="specs">
+          <li>${icon("i-seat")}${t("seats_n")(c.seats)}</li>
+          <li>${icon("i-gear")}${t(TR_KEY[c.trans])}</li>
+          <li>${icon("i-fuel")}${t(FU_KEY[c.fuel])}</li>
+          <li>${icon("i-bag")}${t("bags_n")(c.bags)}</li>
+        </ul>
+        <div class="car-foot">
+          <p><span class="tag"><strong>${fmt(c.price)}</strong><span>${t("per_day")}</span></span><span class="long">${t("long")(fmt(longPrice(c.price)))}</span></p>
+          <button type="button" class="btn btn-dark" data-choose="${c.id}">${t("choose")}<span class="vh"> : ${c.name[lang]}</span></button>
+        </div>
+      </div>
+    </li>`).join("");
+  $("#count").textContent = t("count")(list.length);
+  $("#empty").hidden = list.length > 0;
+  Layout.schedule();
+}
+$$("#filters .chips").forEach(group => {
+  group.addEventListener("click", e => {
+    const b = e.target.closest(".chip"); if(!b) return;
+    filters[group.dataset.f] = b.dataset.v;
+    $$(".chip", group).forEach(c => c.setAttribute("aria-pressed", c === b));
+    renderFleet();
+  });
+});
+$("#reset").addEventListener("click", () => {
+  Object.keys(filters).forEach(k => filters[k] = "all");
+  $$("#filters .chip").forEach(c => c.setAttribute("aria-pressed", c.dataset.v === "all"));
+  renderFleet();
+  $("#filters .chip").focus();
+});
+function chooseCar(id){
+  fCar.value = id;
+  updateEstimate();
+  const target = $("#estimation");
+  target.scrollIntoView({behavior: reduceMotion ? "auto" : "smooth", block:"start"});
+  setTimeout(() => fCar.focus({preventScroll:true}), reduceMotion ? 0 : 700);
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-choose]");
+  if(b) chooseCar(b.dataset.choose);
+});
+
+/* ---------- estimator ---------- */
+const form = $("#estForm"), fCar = $("#fCar"), fRet = $("#fRet");
+const dFrom = $("#dFrom"), tFrom = $("#tFrom"), dTo = $("#dTo"), tTo = $("#tTo");
+const iso = d => { const z = new Date(d); z.setMinutes(z.getMinutes() - z.getTimezoneOffset()); return z.toISOString().slice(0,10); };
+(function initDates(){
+  const now = new Date();
+  const start = new Date(now); start.setDate(start.getDate() + 1);
+  const end = new Date(start); end.setDate(end.getDate() + 5);
+  dFrom.value = iso(start); dTo.value = iso(end);
+  dFrom.min = iso(now); dTo.min = iso(now);
+})();
+function fillCarSelect(){
+  const v = fCar.value || "c2";
+  fCar.innerHTML = CARS.map(c => `<option value="${c.id}">${c.name[lang]} (${fmt(c.price)} ${t("per_day")})</option>`).join("");
+  fCar.value = v;
+}
+const placeName = v => t("pl_" + v);
+const fmtWhen = (d) => {
+  const loc = lang === "fr" ? "fr-FR" : "en-GB";
+  const day = d.toLocaleDateString(loc, {weekday:"short", day:"numeric", month:"short"});
+  const time = d.toLocaleTimeString(loc, {hour:"2-digit", minute:"2-digit"});
+  return `${day} ${t("at")} ${time}`;
+};
+let lastMessage = "";
+function updateEstimate(){
+  const car = CARS.find(c => c.id === fCar.value) || CARS[0];
+  $$("[data-price]").forEach(el => {
+    const k = el.dataset.price;
+    el.textContent = `${fmt(k === "ins" ? car.ins : OPTS[k])} MAD ${t("per_day_short")}`;
+  });
+  const body = $("#tkBody"), book = $("#tkBook");
+  if(dTo.value) dTo.min = dFrom.value || dTo.min;
+  const from = dFrom.value ? new Date(`${dFrom.value}T${tFrom.value || "10:00"}`) : null;
+  const to = dTo.value ? new Date(`${dTo.value}T${tTo.value || "10:00"}`) : null;
+  const err = !from || !to ? t("tk_err_date") : (to <= from ? t("tk_err") : "");
+  if(err){
+    body.innerHTML = `<p class="tk-car">${car.name[lang]}</p><p class="tk-err" role="alert">${err}</p>`;
+    book.setAttribute("aria-disabled","true"); book.style.opacity = ".5"; book.dataset.off = "1";
+    Layout.schedule();
+    return;
+  }
+  book.removeAttribute("aria-disabled"); book.style.opacity = ""; delete book.dataset.off;
+  const HOUR = 36e5;
+  const days = Math.max(1, Math.ceil((to - from - HOUR) / (24 * HOUR)));   // billed per 24 h, 1 h grace on return
+  const isLong = days >= 7;
+  const rate = isLong ? longPrice(car.price) : car.price;
+  const f = form.elements;
+  const picked = [];
+  let perDayOpts = 0;
+  const lines = [`<li><span>${t("tk_rent")(days, fmt(rate))}</span><span>${fmt(days * rate)} MAD</span></li>`];
+  if(isLong) lines.push(`<li class="muted"><span>${t("tk_long")}${lang === "fr" ? " :" : ":"} <s>${fmt(car.price)}</s> ${fmt(rate)} MAD</span><span></span></li>`);
+  [["seat",OPTS.seat],["driver2",OPTS.driver2],["chauffeur",OPTS.chauffeur],["ins",car.ins]].forEach(([k,p]) => {
+    if(f[k].checked){
+      perDayOpts += p;
+      picked.push(t("o_" + k));
+      lines.push(`<li><span>${t("o_" + k)}, ${days} × ${fmt(p)}</span><span>${fmt(days * p)} MAD</span></li>`);
+    }
+  });
+  lines.push(`<li><span>${t("tk_deliv")}</span><span>${t("tk_free")}</span></li>`);
+  const total = days * (rate + perDayOpts);
+  const pick = form.querySelector("input[name=pick]:checked").value;
+  const hint = !isLong ? `<p class="tk-hint">${t("tk_hint")(7 - days, fmt(longPrice(car.price)))}</p>` : "";
+  body.innerHTML = `
+    <p class="tk-car">${car.name[lang]}</p>
+    <dl class="tk-trip">
+      <dt>${t("tk_from")}</dt><dd>${placeName(pick)}, ${fmtWhen(from)}</dd>
+      <dt>${t("tk_to")}</dt><dd>${placeName(fRet.value)}, ${fmtWhen(to)}</dd>
+      <dt>${t("tk_len")}</dt><dd>${t("days")(days)}</dd>
+    </dl>
+    <ul class="tk-lines">${lines.join("")}</ul>
+    <div class="tk-total"><span>${t("tk_total")}</span><output>${fmt(total)} MAD</output></div>
+    ${hint}
+    <p class="tk-dep">${t("tk_dep")(fmt(car.dep))}</p>`;
+  lastMessage = t("msg")({
+    car: car.name[lang], pick: placeName(pick), ret: placeName(fRet.value),
+    from: fmtWhen(from), to: fmtWhen(to), days: t("days")(days),
+    opts: picked.join(", ").toLowerCase(), total: fmt(total)
+  });
+  book.href = waURL(lastMessage);
+  Layout.schedule();
+}
+form.addEventListener("input", updateEstimate);
+form.addEventListener("change", updateEstimate);
+form.addEventListener("submit", e => e.preventDefault());
+$("#tkBook").addEventListener("click", e => { if(e.currentTarget.dataset.off){ e.preventDefault(); dTo.focus(); } });
+
+/* ---------- itineraries ---------- */
+function renderTrips(){
+  const track = $("#itinTrack"), road = $(".itin-road", track);
+  $$(".trip", track).forEach(n => n.remove());
+  TRIPS.forEach(tr => {
+    const car = CARS.find(c => c.id === tr.car);
+    const el = document.createElement("article");
+    el.className = "trip";
+    el.innerHTML = `
+      <div class="trip-img"><img loading="lazy" width="600" height="800" src="${img(tr.img,800)}" alt="${tr.alt[lang]}"></div>
+      <div class="trip-body">
+        <p class="dist">${fmt(tr.km)}<small>${tr.loop ? t("km_loop") : t("km_rt")}</small></p>
+        <h3>${tr.name[lang]}</h3>
+        <p class="dur">${tr.dur[lang]}</p>
+        <p class="txt">${tr.txt[lang]}</p>
+        <div class="rec">${t("trip_car")}<b>${car.name[lang]}</b>
+          <button type="button" class="btn btn-signal" data-choose="${car.id}">${t("trip_pick")}<span class="vh"> : ${car.name[lang]}</span></button>
+        </div>
+      </div>`;
+    track.insertBefore(el, road);
+  });
+}
+
+/* ---------- docs & faq ---------- */
+function renderInfo(){
+  $("#doclist").innerHTML = DOCS.map(d => `<li><svg aria-hidden="true"><use href="#i-check"/></svg><div><b>${d.t[lang]}</b><p>${d.p[lang]}</p></div></li>`).join("");
+  const open = $$("#faq details").map(d => d.open);
+  $("#faq").innerHTML = FAQ.map((f,i) => `<details${open[i] ? " open" : ""}><summary>${f.q[lang]}</summary><p>${f.a[lang]}</p></details>`).join("");
+  $$("#faq details").forEach(d => d.addEventListener("toggle", () => Layout.schedule()));
+}
+
+/* ---------- language ---------- */
+function setLang(l){
+  lang = T[l] ? l : "fr";
+  const d = T[lang];
+  document.documentElement.lang = lang;
+  document.title = d.title;
+  $('meta[name="description"]').content = d.meta;
+  $$("[data-i18n]").forEach(el => { const v = d[el.dataset.i18n]; if(typeof v === "string") el.textContent = v; });
+  $$("[data-i18n-alt]").forEach(el => el.alt = d[el.dataset.i18nAlt] || "");
+  $$("[data-i18n-aria]").forEach(el => el.setAttribute("aria-label", d[el.dataset.i18nAria] || ""));
+  $$("[data-i18n-title]").forEach(el => el.title = d[el.dataset.i18nTitle] || "");
+  $$(".lang button").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === lang));
+  $$(".wa-link").forEach(a => a.href = waURL(d.msg_hello));
+  fillCarSelect();
+  renderFleet();
+  renderTrips();
+  renderInfo();
+  updateEstimate();
+  try{ localStorage.setItem("atlasdrive-lang", lang); }catch(e){}
+  Layout.schedule();
+}
+$$(".lang button").forEach(b => b.addEventListener("click", () => setLang(b.dataset.lang)));
+
+/* ---------- the road (signature) ---------- */
+const Road = (() => {
+  const route = $("#route"), svg = $("#road");
+  const paths = $$(".rp", svg), ref = $(".r-asph", svg);
+  const mask = $("#roadMask"), maskPath = $("#roadMaskPath"), car = $("#roadCar"), carIn = $("#roadCarIn");
+  const STEP = 8;
+  let len = 0, ys = null, routeTop = 0, cur = 0, target = 0, raf = 0;
+
+  function build(){
+    const cs = getComputedStyle(route);
+    const rw = parseFloat(cs.getPropertyValue("--road-w")) || 34;
+    const wrap = $(".wrap", route);
+    const wr = wrap.getBoundingClientRect();
+    const contentX = wr.left + parseFloat(getComputedStyle(wrap).paddingLeft);
+    routeTop = route.getBoundingClientRect().top + window.scrollY;
+    const H = route.offsetHeight;
+    const W = Math.max(20, Math.ceil(contentX));
+    const sw = Math.max(7, rw * 0.19);
+    const cx = contentX - rw * 0.52;
+    const amp = rw * 0.17, hpAmp = rw * 0.3;
+    const absTop = el => el.getBoundingClientRect().top + window.scrollY - routeTop;
+
+    const stops = $$("[data-stop]", route).map(el => {
+      const sec = el.closest("section");
+      const box = sec.parentElement.classList.contains("pin-spacer") ? sec.parentElement : sec;
+      const secTop = absTop(box);
+      const y = secTop + (el.getBoundingClientRect().top - sec.getBoundingClientRect().top) + el.offsetHeight * 0.5;
+      return {y, hp: el.hasAttribute("data-hairpins") ? secTop : null};
+    });
+
+    const pts = [[cx, 0]];
+    let y0 = 0, side = 1;
+    const wiggle = (a, b) => {
+      const span = b - a, n = Math.floor(span / 360);
+      for(let j = 1; j <= n; j++){ pts.push([cx + side * amp, a + span * j / (n + 1)]); side *= -1; }
+    };
+    stops.forEach(s => {
+      if(s.hp !== null && s.y - 60 - (s.hp + 24) > sw * 5){
+        const a = s.hp + 24, b = s.y - 56;
+        wiggle(y0, a - 40);
+        const n = Math.max(3, Math.round((b - a) / (sw * 2.9)));
+        for(let k = 0; k <= n; k++) pts.push([cx + (k % 2 ? 1 : -1) * hpAmp, a + (b - a) * k / n]);
+      } else {
+        wiggle(y0, s.y);
+      }
+      pts.push([cx, s.y]);
+      y0 = s.y;
+    });
+    pts.push([cx, y0 + 46]);
+
+    // Catmull-Rom → cubic Bézier
+    let d = `M${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
+    for(let i = 0; i < pts.length - 1; i++){
+      const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+      const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6];
+      const c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+      d += ` C${c1[0].toFixed(1)} ${c1[1].toFixed(1)} ${c2[0].toFixed(1)} ${c2[1].toFixed(1)} ${p2[0].toFixed(1)} ${p2[1].toFixed(1)}`;
+    }
+
+    svg.setAttribute("width", W); svg.setAttribute("height", H);
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    mask.setAttribute("width", W); mask.setAttribute("height", H);
+    paths.forEach(p => p.setAttribute("d", d));
+    $(".r-edge", svg).setAttribute("stroke-width", sw + 4);
+    $(".r-asph", svg).setAttribute("stroke-width", sw);
+    const line = $(".r-line", svg);
+    line.setAttribute("stroke-width", Math.max(1, sw * 0.09));
+    line.setAttribute("stroke-dasharray", `${(sw * 0.55).toFixed(1)} ${(sw * 0.5).toFixed(1)}`);
+    maskPath.setAttribute("stroke-width", sw + 12);
+    carIn.setAttribute("transform", `scale(${(sw / 21).toFixed(3)})`);
+
+    len = ref.getTotalLength();
+    const n = Math.ceil(len / STEP) + 1;
+    ys = new Float32Array(n);
+    for(let i = 0; i < n; i++) ys[i] = ref.getPointAtLength(Math.min(len, i * STEP)).y;
+    maskPath.style.strokeDasharray = `${len} ${len + 20}`;
+
+    if(reduceMotion){
+      maskPath.style.strokeDashoffset = 0;
+      car.style.opacity = 0;
+      return;
+    }
+    target = lengthFor(window.scrollY);
+    cur = target;
+    draw(cur);
+  }
+  function lengthFor(scrollY){
+    if(!ys) return 0;
+    const y = scrollY + window.innerHeight * 0.62 - routeTop;
+    if(y <= 0) return 0;
+    if(y >= ys[ys.length - 1]) return len;
+    let lo = 0, hi = ys.length - 1;
+    while(lo < hi){ const m = (lo + hi) >> 1; if(ys[m] < y) lo = m + 1; else hi = m; }
+    return Math.min(len, lo * STEP);
+  }
+  function draw(L){
+    maskPath.style.strokeDashoffset = (len - L).toFixed(1);
+    if(L < 2){ car.style.opacity = 0; return; }
+    car.style.opacity = 1;
+    const p = ref.getPointAtLength(L), q = ref.getPointAtLength(Math.max(0, L - 4));
+    const a = Math.atan2(p.y - q.y, p.x - q.x) * 180 / Math.PI;
+    car.setAttribute("transform", `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${a.toFixed(1)})`);
+  }
+  function loop(){
+    cur += (target - cur) * 0.18;
+    if(Math.abs(target - cur) < 0.6) cur = target;
+    draw(cur);
+    raf = cur !== target ? requestAnimationFrame(loop) : 0;
+  }
+  function onScroll(){
+    if(reduceMotion || !ys) return;
+    target = lengthFor(window.scrollY);
+    if(!raf) raf = requestAnimationFrame(loop);
+  }
+  window.addEventListener("scroll", onScroll, {passive:true});
+  return {build, height: () => route.offsetHeight};
+})();
+
+/* ---------- layout refresh (road + ScrollTrigger) ---------- */
+const Layout = (() => {
+  let timer = 0, lastH = 0;
+  const run = () => {
+    timer = 0;
+    if(window.ScrollTrigger) window.ScrollTrigger.refresh();   // fires "refresh" → Road.build
+    else Road.build();
+    lastH = Road.height();
+  };
+  return {
+    schedule(){ clearTimeout(timer); timer = setTimeout(run, 120); },
+    watch(){
+      if("ResizeObserver" in window){
+        new ResizeObserver(() => { if(Math.abs(Road.height() - lastH) > 2) this.schedule(); }).observe($("#route"));
+      }
+      if(!window.ScrollTrigger) window.addEventListener("resize", () => this.schedule());
+    }
+  };
+})();
+
+/* ---------- scroll moments (GSAP) ---------- */
+function initMotion(){
+  const hasGsap = window.gsap && window.ScrollTrigger;
+  if(!hasGsap){ Road.build(); return; }
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.addEventListener("refresh", Road.build);
+  if(reduceMotion){ ScrollTrigger.refresh(); return; }
+
+  // 1 · hero: parallax photo, sign stack slides in once
+  gsap.to(".hero-img", {yPercent: 14, ease: "none",
+    scrollTrigger: {trigger: ".hero", start: "top top", end: "bottom top", scrub: true}});
+  gsap.to(".signpost", {y: -70, ease: "none",
+    scrollTrigger: {trigger: ".hero", start: "top top", end: "bottom top", scrub: true}});
+  gsap.from(".plate", {xPercent: i => (i % 2 ? -1 : 1) * 30, opacity: 0, duration: .8, stagger: .12, ease: "power3.out", delay: .25});
+
+  // 2 · itineraries: pinned horizontal drive on wide screens
+  const sec = $("#itineraires"), track = $("#itinTrack"), scroller = $("#itinScroller");
+  const mm = gsap.matchMedia();
+  mm.add("(min-width: 900px) and (min-height: 620px)", () => {
+    sec.classList.add("h-on");
+    const dist = () => Math.max(0, track.scrollWidth - scroller.clientWidth + parseFloat(getComputedStyle(scroller).paddingLeft));
+    const tween = gsap.to(track, {x: () => -dist(), ease: "none",
+      scrollTrigger: {trigger: sec, start: "top top", end: () => "+=" + dist(), pin: true, scrub: .6, invalidateOnRefresh: true}});
+    const onFocus = e => {   // keyboard users: bring the focused trip into view
+      const trip = e.target.closest(".trip"); if(!trip) return;
+      const trips = $$(".trip", track), i = trips.indexOf(trip), st = tween.scrollTrigger;
+      scroller.scrollLeft = 0;
+      window.scrollTo({top: st.start + (st.end - st.start) * (i / Math.max(1, trips.length - 1)), behavior: "auto"});
+    };
+    track.addEventListener("focusin", onFocus);
+    scroller.removeAttribute("tabindex");
+    return () => { sec.classList.remove("h-on"); track.removeEventListener("focusin", onFocus); scroller.setAttribute("tabindex","0"); };
+  });
+  // 3 · the road is driven by Road (scroll listener + rAF), rebuilt on every refresh
+  ScrollTrigger.refresh();
+}
+
+/* ---------- start ---------- */
+let start = new URLSearchParams(location.search).get("lang");
+if(!start){ try{ start = localStorage.getItem("atlasdrive-lang"); }catch(e){} }
+setLang(start || "fr");
+// GSAP scripts are deferred: they have run by DOMContentLoaded (or failed, and the site still works)
+document.addEventListener("DOMContentLoaded", () => {
+  initMotion();
+  Layout.watch();
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(() => Layout.schedule());
+});
+window.addEventListener("load", () => Layout.schedule());
+</script>
+</body>
+</html>

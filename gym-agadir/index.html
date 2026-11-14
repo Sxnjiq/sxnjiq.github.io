@@ -1,0 +1,1191 @@
+<!doctype html>
+<!--
+  DESIGN PLAN · Sahel Fight & Fitness (Founty, Agadir)
+
+  Idée : une salle de surf-town, pas une cave à néons. Le sable blanchi, le bleu profond de
+  l'Atlantique et la couleur brûlante du lever de soleil sur la plage de Founty.
+  "Sahel" veut dire "la côte" : la marque vit entre le ring et l'océan.
+
+  Palette
+    Atlantique  #0C2F55  grands aplats sombres (hero, disciplines, formulaire)
+    Abysse      #071A30  texte, sections les plus profondes, texte des boutons
+    Sable       #E6D8BC  fond principal, sable blanchi par le soleil (plus gris/jaune que crème)
+    Écume       #F5EFE3  surfaces claires, cases du planning
+    Lever       #FF4F2E  orange brûlant du lever : boutons, créneaux femmes, gros titres sur bleu
+    Soleil      #FFB72B  uniquement dans le disque solaire et le focus sur fond sombre
+    (Lever en petit texte sur clair -> #A82A12 pour garder le contraste AA)
+
+  Type
+    Archivo variable (axes wdth 62–125 + wght) pour tout.
+    Display : wght 900, largeur qui bouge (62 = ultra condensé, 125 = étiré), en capitales, énorme.
+    Texte : Archivo wdth 100, 400/600. Une seule famille, le contraste vient de l'axe de largeur.
+
+  Layout (mobile d'abord, aligné à gauche partout)
+    [header bleu : SAHEL ........ Essai gratuit]
+    [HERO bleu : SAHEL géant / Fight & Fitness | photo muay thaï + soleil qui se lève au scroll]
+    [cordes du ring = 3 lignes d'horizon]
+    [KINÉTIQUE sable, épinglé : FRAPPE (s'étire) / SOULÈVE (se comprime) / RESPIRE (inspire en hauteur)]
+    [DISCIPLINES bleu : défilement horizontal épinglé, 7 panneaux, la plage = illustration + compte à rebours]
+    [PLANNING sable : grille Lun–Dim, filtres, créneaux femmes ; sélecteur de jour sur mobile]
+    [COACHS abysse : épinglé, 3 coachs qui se révèlent par masque]
+    [QUIZ objectif -> formule conseillée] [TARIFS mensuel/trimestriel/annuel + économies]
+    [ESSAI GRATUIT -> WhatsApp] [ACCÈS carte + horaires] [footer]
+
+  Signature : la typographie cinétique. Les mots géants changent de LARGEUR (axe wdth) en plus
+  de glisser, comme un corps qui frappe, se ramasse et respire. Le compte à rebours de la
+  prochaine séance plage reprend ces chiffres condensés.
+
+  Moments de scroll (GSAP, désactivés si prefers-reduced-motion) :
+    1. hero : le soleil se lève derrière la photo (parallaxe)
+    2. section kinétique épinglée
+    3. disciplines en défilement horizontal (scroll natif + boutons sur mobile)
+    4. coachs épinglés, révélés par masque
+  Revue : j'ai écarté le noir + néon et la crème + terracotta ; pas de grille de cartes à ombre
+  grise ; pas de libellés en capitales au-dessus des titres ; boutons sans flèche.
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sahel Fight & Fitness · Salle de sport à Founty, Agadir</title>
+<meta name="description" content="Musculation, boxe anglaise, muay thaï, cours réservés aux femmes, coaching et séances sur la plage au lever du soleil. À Founty, à cinq minutes de la corniche d'Agadir.">
+<meta name="theme-color" content="#0C2F55">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="https://images.unsplash.com/photo-1773289336885-8402d69f7f68?w=1200&q=75&auto=format&fit=crop">
+<style>
+:root{
+  --atlantique:#0C2F55;
+  --abysse:#071A30;
+  --sable:#E6D8BC;
+  --ecume:#F5EFE3;
+  --lever:#FF4F2E;
+  --lever-ink:#A82A12;
+  --soleil:#FFB72B;
+  --brume:#A9BCD0;     /* texte secondaire sur bleu */
+  --ardoise:#3D4F63;   /* texte secondaire sur sable */
+  --focus:var(--abysse);
+  --font:"Archivo", "Arial Narrow", system-ui, sans-serif;
+  --gutter:clamp(16px,4vw,48px);
+  --max:1240px;
+  --head:64px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto !important}
+.lenis.lenis-smooth iframe{pointer-events:none}
+section[id]{scroll-margin-top:var(--head)}
+body{margin:0;background:var(--sable);color:var(--abysse);font:400 1.0625rem/1.6 var(--font);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit}
+p{margin:0}
+h1,h2,h3{margin:0;font-weight:900;line-height:.92;font-variation-settings:"wdth" 70}
+h2{font-size:clamp(2.6rem,7vw,5.5rem);text-transform:uppercase;letter-spacing:-.005em}
+h3{font-size:1.6rem;text-transform:uppercase;font-variation-settings:"wdth" 75}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.dark{--focus:var(--soleil)}
+.wrap{max-width:var(--max);margin-inline:auto;padding-inline:var(--gutter)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.tnum{font-variant-numeric:tabular-nums}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.6em;min-height:48px;padding:.8em 1.35em;border:0;border-radius:3px;font:800 1rem/1.1 var(--font);font-variation-settings:"wdth" 88;text-decoration:none;cursor:pointer;transition:background-color .2s,color .2s,transform .2s}
+.btn:active{transform:translateY(1px)}
+.btn-sun{background:var(--lever);color:var(--abysse)}
+.btn-sun:hover{background:#FF6A4D}
+.btn-ink{background:var(--abysse);color:var(--ecume)}
+.btn-ink:hover{background:var(--atlantique)}
+.btn-line{background:transparent;color:inherit;box-shadow:inset 0 0 0 2px currentColor}
+.btn-line:hover{background:rgba(255,255,255,.08)}
+.btn svg{width:1.2em;height:1.2em;flex:none}
+.link{font-weight:700;text-underline-offset:5px;text-decoration-thickness:2px;display:inline-flex;align-items:center;min-height:44px}
+
+/* ---------- header ---------- */
+.site-head{position:sticky;top:0;z-index:40;background:var(--atlantique);color:var(--ecume);height:var(--head)}
+.nav{display:flex;align-items:center;gap:28px;height:100%}
+.logo{display:flex;align-items:baseline;gap:.45em;text-decoration:none;margin-inline-end:auto;min-height:44px;align-items:center}
+.logo b{font-weight:900;font-size:1.75rem;letter-spacing:.01em;font-variation-settings:"wdth" 125;line-height:1}
+.logo span{font-size:.85rem;color:var(--brume);font-variation-settings:"wdth" 80;font-weight:600}
+.nav-links{display:flex;gap:22px}
+.nav-links a{text-decoration:none;font-weight:600;color:var(--brume);font-variation-settings:"wdth" 90;padding-block:10px}
+.nav-links a:hover{color:var(--ecume)}
+.nav .btn{min-height:44px;padding:.6em 1em;font-size:.95rem}
+
+/* ---------- hero ---------- */
+.hero{background:var(--atlantique);color:var(--ecume);position:relative;overflow:hidden}
+.hero-in{display:grid;grid-template-columns:1.25fr .75fr;gap:clamp(28px,5vw,72px);align-items:end;padding-block:clamp(28px,6vw,72px) clamp(56px,8vw,104px)}
+.hero-title{font-size:clamp(4.6rem,12.5vw,10.5rem);text-transform:uppercase;line-height:.84}
+.hero-title .ln{display:block;overflow:hidden;padding-bottom:.04em}
+.hero-title .w{display:block;--w:108;font-variation-settings:"wdth" var(--w)}
+.hero-title .w2{font-size:.4em;--w:72;color:var(--lever);line-height:1;margin-top:.12em}
+.hero-place{margin-top:1.4em;font-weight:700;font-size:1.15rem;font-variation-settings:"wdth" 85}
+.hero .lead{margin-top:.8em;max-width:46ch;color:var(--brume);font-size:1.1rem}
+.ctas{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;margin-top:2em}
+.hero-fig{position:relative;margin:0;aspect-ratio:3/4;max-width:440px;width:100%;justify-self:end;isolation:isolate}
+.hero-fig img{position:relative;z-index:1;width:100%;height:100%;object-fit:cover;object-position:60% 30%}
+.sun{position:absolute;z-index:0;width:118%;aspect-ratio:1;left:-34%;top:38%;border-radius:50%;background:radial-gradient(circle at 50% 45%,var(--soleil) 0 38%,var(--lever) 70%,#E2381A 100%)}
+.ropes{position:absolute;left:0;right:0;bottom:clamp(18px,3vw,32px);display:grid;gap:9px;pointer-events:none}
+.ropes i{display:block;height:3px;background:var(--ecume);opacity:.9}
+.ropes i:nth-child(2){opacity:.55}
+.ropes i:nth-child(3){opacity:.25}
+
+/* ---------- kinetic ---------- */
+.kinetic{position:relative;overflow:hidden;padding-block:clamp(72px,10vw,120px);background:var(--sable)}
+.k-row{display:grid;gap:14px;padding-block:clamp(10px,2vw,22px);border-bottom:3px solid var(--abysse)}
+.k-row:first-of-type{border-top:3px solid var(--abysse)}
+.k-word{display:block;font-weight:900;text-transform:uppercase;line-height:.82;font-size:clamp(4rem,17vw,15rem);white-space:nowrap;font-variation-settings:"wdth" var(--w,100);will-change:transform}
+.k1 .k-word{--w:125}
+.k2 .k-word{--w:62;color:var(--atlantique)}
+.k3 .k-word{--w:100;color:transparent;-webkit-text-stroke:2px var(--abysse);transform-origin:50% 100%}
+@media (min-width:960px){.k3 .k-word{-webkit-text-stroke-width:3px}}
+.k-row p{max-width:38ch;font-size:1.05rem;color:var(--ardoise)}
+.k-row p strong{color:var(--abysse)}
+@media (min-width:960px){
+  .kinetic{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-block:calc(var(--head) + 24px) 48px}
+  .k-row{grid-template-columns:1fr minmax(240px,300px);align-items:end;gap:32px}
+  .k-row p{padding-bottom:1.2em}
+  .k2{grid-template-columns:minmax(240px,300px) 1fr}
+  .k2 p{order:-1}
+  .k2 .k-word{text-align:right}
+}
+
+/* ---------- disciplines (horizontal) ---------- */
+.disc{background:var(--abysse);color:var(--ecume);padding-block:clamp(64px,9vw,104px);overflow:hidden}
+.disc-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:20px 40px;margin-bottom:clamp(28px,4vw,44px)}
+.disc-head p{max-width:42ch;color:var(--brume)}
+.disc-nav{display:flex;gap:10px}
+.disc-nav button{width:48px;height:48px;border-radius:50%;border:2px solid var(--brume);background:none;color:var(--ecume);cursor:pointer;display:grid;place-items:center}
+.disc-nav button:hover{border-color:var(--ecume)}
+.disc-nav svg{width:20px;height:20px}
+.disc-viewport{overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.disc-viewport::-webkit-scrollbar{display:none}
+.disc-track{display:flex;gap:clamp(16px,2.4vw,32px);padding-inline:var(--gutter);width:max-content}
+.panel{scroll-snap-align:start;scroll-margin-inline:var(--gutter);width:min(82vw,420px);flex:none;display:flex;flex-direction:column}
+.panel-media{aspect-ratio:4/5;overflow:hidden;position:relative;background:var(--atlantique)}
+.panel-media img{width:100%;height:100%;object-fit:cover}
+.panel h3{font-size:clamp(2rem,3.4vw,2.8rem);margin-top:.5em;font-variation-settings:"wdth" 68}
+.panel p{margin-top:.5em;color:var(--brume);max-width:40ch}
+.panel dl{display:flex;flex-wrap:wrap;gap:6px 22px;margin:1em 0 0;font-size:.92rem}
+.panel dl div{display:flex;gap:.4em}
+.panel dt{color:var(--brume)}
+.panel dd{margin:0;font-weight:700}
+.panel .tag{position:absolute;left:12px;top:12px;background:var(--lever);color:var(--abysse);font-weight:800;font-size:.85rem;padding:.35em .7em;border-radius:3px}
+/* the beach panel: illustrated sunrise + countdown */
+.beach{background:linear-gradient(180deg,var(--atlantique),var(--abysse))}
+.beach .sky{position:absolute;left:0;right:0;top:0;height:52%;overflow:hidden;background:linear-gradient(180deg,#FBE3B8 0%,#FFB089 62%,#FF7A55 100%)}
+.beach .bsun{position:absolute;left:50%;bottom:0;width:58%;aspect-ratio:1;transform:translate(-50%,46%);border-radius:50%;background:radial-gradient(circle,#FFF1C9 0 26%,var(--soleil) 58%,var(--lever) 100%)}
+.beach .waves{position:absolute;left:0;right:0;top:56%;display:grid;gap:12px;padding-inline:10%}
+.beach .waves i:first-child{background:rgba(255,183,43,.8);margin-inline:28%}
+.beach .waves i{height:2px;background:rgba(245,239,227,.55)}
+.beach .waves i:nth-child(2){margin-inline:8%;opacity:.7}
+.beach .waves i:nth-child(3){margin-inline:18%;opacity:.45}
+.beach .count{position:absolute;left:0;right:0;bottom:0;padding:18px;color:var(--ecume)}
+.beach .count small{display:block;font-size:.9rem;color:var(--brume)}
+.beach .count strong{display:block;font-weight:900;font-size:clamp(2.4rem,4.4vw,3.4rem);line-height:1;font-variation-settings:"wdth" 70;margin-top:.15em}
+@media (min-width:960px){
+  .disc.is-pinned{height:100vh;padding-block:calc(var(--head) + 20px) 28px;display:flex;flex-direction:column}
+  .disc.is-pinned .disc-viewport{overflow:visible;flex:1;min-height:0}
+  .disc.is-pinned .disc-track{height:100%;padding-right:var(--gutter)}
+  .disc.is-pinned .panel{width:clamp(320px,29vw,430px);height:100%}
+  .disc.is-pinned .panel-media{flex:1;min-height:0;aspect-ratio:auto}
+  .disc.is-pinned h2{font-size:clamp(2.4rem,4.4vw,4rem)}
+  .disc.is-pinned .disc-head{margin-bottom:22px}
+  .disc.is-pinned .panel h3{font-size:clamp(1.8rem,2.6vw,2.4rem)}
+  .disc.is-pinned .disc-nav{display:none}
+}
+
+/* ---------- schedule ---------- */
+.planning{padding-block:clamp(72px,10vw,120px)}
+.sec-head{display:grid;gap:18px;margin-bottom:clamp(28px,4vw,44px)}
+.sec-head p{max-width:52ch;color:var(--ardoise)}
+@media (min-width:960px){.sec-head{grid-template-columns:1.1fr .9fr;align-items:end;gap:48px}}
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{min-height:44px;padding:.5em 1em;border-radius:999px;border:2px solid var(--abysse);background:transparent;font-weight:700;font-variation-settings:"wdth" 88;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--abysse);color:var(--ecume)}
+.chip:hover{background:rgba(7,26,48,.08)}
+.chip[aria-pressed=true]:hover{background:var(--atlantique)}
+.women-toggle{display:inline-flex;align-items:center;gap:10px;min-height:44px;font-weight:700;cursor:pointer;margin-inline-start:auto;padding-inline:4px}
+.women-toggle{position:relative}
+.women-toggle input{position:absolute;opacity:0;width:1px;height:1px}
+.sw{width:46px;height:28px;border-radius:999px;background:var(--ardoise);position:relative;flex:none;transition:background .2s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--ecume);transition:transform .2s}
+.women-toggle input:checked + .sw{background:var(--lever-ink)}
+.women-toggle input:checked + .sw::after{transform:translateX(18px)}
+.women-toggle input:focus-visible + .sw{outline:3px solid var(--abysse);outline-offset:3px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:16px;font-size:.92rem;color:var(--ardoise)}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.days{display:none;gap:4px;margin-top:22px;overflow-x:auto;scrollbar-width:none}
+.days::-webkit-scrollbar{display:none}
+.days button{flex:1 0 auto;min-width:44px;min-height:56px;border:2px solid var(--abysse);border-radius:3px;background:var(--ecume);font-weight:800;font-variation-settings:"wdth" 80;cursor:pointer;display:grid;place-items:center;line-height:1.1;padding:6px 8px}
+.days button small{font-weight:500;font-size:.75rem;color:var(--ardoise)}
+.days button[aria-pressed=true]{background:var(--abysse);color:var(--ecume)}
+.days button[aria-pressed=true] small{color:var(--brume)}
+.grid7{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-top:22px}
+.day{background:var(--ecume);min-height:260px;display:flex;flex-direction:column}
+.day h3{font-size:1.25rem;padding:12px 12px 10px;border-bottom:3px solid var(--abysse);display:flex;justify-content:space-between;align-items:baseline;gap:6px}
+.day h3 small{font-size:.72rem;font-weight:700;text-transform:none;font-variation-settings:"wdth" 90;color:var(--lever-ink)}
+.day ul{list-style:none;margin:0;padding:6px;display:grid;gap:6px;align-content:start}
+.cls{padding:10px 10px 10px 12px;border-left:4px solid var(--atlantique);background:#fff;display:grid;gap:2px}
+.cls time{font-weight:900;font-size:1.15rem;font-variation-settings:"wdth" 75;line-height:1.1}
+.cls .nm{font-weight:700;line-height:1.25;font-size:.95rem}
+.cls .mt{font-size:.8rem;color:var(--ardoise)}
+.cls[data-d=boxe]{border-left-color:var(--abysse)}
+.cls[data-d=muay]{border-left-color:var(--atlantique);border-left-style:double;border-left-width:6px}
+.cls[data-d=force]{border-left-color:var(--ardoise)}
+.cls[data-d=circuit]{border-left-color:var(--brume)}
+.cls[data-d=plage]{border-left-color:var(--soleil);background:#FFF7E6}
+.cls.w{background:#FFEDE7;border-left-color:var(--lever)}
+.badge-w{justify-self:start;margin-top:4px;display:inline-flex;align-items:center;gap:4px;background:var(--lever);color:var(--abysse);font-size:.72rem;font-weight:800;padding:.2em .55em;border-radius:3px}
+.empty{padding:14px 12px;font-size:.88rem;color:var(--ardoise)}
+@media (max-width:959px){
+  .days{display:flex}
+  .grid7{grid-template-columns:1fr}
+  .day{display:none;min-height:0}
+  .day.on{display:flex}
+  .day h3{font-size:1.5rem}
+  .cls{grid-template-columns:auto 1fr;column-gap:16px;align-items:baseline}
+  .cls time{grid-row:span 3;font-size:1.5rem}
+  .women-toggle{margin-inline-start:0}
+}
+
+/* ---------- coaches ---------- */
+.coaches{background:var(--atlantique);color:var(--ecume);padding-block:clamp(72px,10vw,120px);overflow:hidden}
+.coach-list{display:grid;gap:clamp(56px,8vw,96px);margin-top:clamp(28px,4vw,44px)}
+.coach{display:grid;gap:22px}
+.coach-photo{aspect-ratio:4/5;overflow:hidden;max-width:520px;background:var(--abysse)}
+.coach-photo img{width:100%;height:100%;object-fit:cover}
+.coach-name{font-size:clamp(4rem,12vw,9rem);text-transform:uppercase;font-variation-settings:"wdth" 110;line-height:.85}
+.coach-role{font-weight:800;color:var(--lever);font-size:1.2rem;font-variation-settings:"wdth" 85;margin-top:.5em}
+.coach-bio{margin-top:1em;color:var(--brume);max-width:44ch}
+.coach ul{list-style:none;padding:0;margin:1.2em 0 0;display:flex;flex-wrap:wrap;gap:8px}
+.coach li{border:1.5px solid var(--brume);border-radius:999px;padding:.3em .85em;font-size:.9rem;font-weight:600}
+.coach-dots{display:none}
+@media (min-width:960px){
+  .coach{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);align-items:center;gap:56px}
+  .coaches.is-pinned{height:100vh;padding-block:calc(var(--head) + 24px) 32px;display:flex;flex-direction:column}
+  .coaches.is-pinned .coach-list{display:grid;grid-template-rows:minmax(0,1fr);flex:1;min-height:0;margin-top:24px}
+  .coaches.is-pinned .coach{grid-area:1/1;min-height:0;height:100%;grid-template-rows:minmax(0,1fr)}
+  .coaches.is-pinned .coach-photo{height:100%;max-height:100%;aspect-ratio:auto;width:100%}
+  .coaches.is-pinned .coach-dots{display:flex;gap:8px;margin-top:18px}
+  .coach-dots i{width:34px;height:4px;background:rgba(245,239,227,.25)}
+  .coach-dots i.on{background:var(--lever)}
+}
+
+/* ---------- quiz ---------- */
+.quiz{padding-block:clamp(72px,10vw,120px);background:var(--ecume)}
+.quiz-box{display:grid;gap:clamp(28px,5vw,64px)}
+@media (min-width:960px){.quiz-box{grid-template-columns:.8fr 1.2fr}}
+.quiz-box > div > p{margin-top:1em;color:var(--ardoise);max-width:40ch}
+.step{border:0;margin:0;padding:0;min-width:0}
+.step legend{font-weight:900;font-size:clamp(1.6rem,3vw,2.2rem);font-variation-settings:"wdth" 75;line-height:1.05;padding:0;margin-bottom:18px;text-transform:uppercase}
+.step legend small{display:block;font-size:.9rem;font-weight:600;color:var(--ardoise);text-transform:none;font-variation-settings:"wdth" 100;margin-bottom:6px}
+.opts{display:grid;gap:8px}
+@media (min-width:600px){.opts{grid-template-columns:1fr 1fr}}
+.opt{position:relative;display:flex;align-items:center;gap:12px;min-height:60px;padding:12px 16px;border:2px solid var(--abysse);border-radius:3px;cursor:pointer;font-weight:700;background:#fff}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt span small{display:block;font-weight:400;font-size:.88rem;color:var(--ardoise)}
+.opt:has(input:checked){background:var(--abysse);color:var(--ecume)}
+.opt:has(input:checked) small{color:var(--brume)}
+.opt:has(input:focus-visible){outline:3px solid var(--abysse);outline-offset:3px}
+.quiz-ctrl{display:flex;gap:12px;align-items:center;margin-top:20px;flex-wrap:wrap}
+.quiz-ctrl .count{margin-inline-start:auto;font-weight:700;color:var(--ardoise)}
+.quiz-err{color:var(--lever-ink);font-weight:700;min-height:1.6em;margin-top:10px}
+.result{background:var(--atlantique);color:var(--ecume);padding:clamp(22px,4vw,36px);--focus:var(--soleil)}
+.result h3{font-size:clamp(2.2rem,5vw,3.6rem);font-variation-settings:"wdth" 70}
+.result .price{font-weight:900;font-size:1.4rem;color:var(--soleil);margin-top:.4em;font-variation-settings:"wdth" 85}
+.result p{margin-top:.8em;color:var(--brume);max-width:52ch}
+.result ul{margin:.8em 0 0;padding-left:1.1em;color:var(--ecume)}
+.result .ctas{margin-top:1.4em}
+
+/* ---------- pricing ---------- */
+.tarifs{padding-block:clamp(72px,10vw,120px)}
+.period{display:inline-grid;grid-template-columns:repeat(3,auto);border:2px solid var(--abysse);border-radius:3px;padding:3px;gap:3px;max-width:100%}
+.period label{position:relative;cursor:pointer}
+.period input{position:absolute;opacity:0}
+.period span{display:grid;place-items:center;min-height:48px;padding:.4em clamp(.6em,2vw,1.2em);font-weight:800;font-variation-settings:"wdth" 85;text-align:center;line-height:1.1;border-radius:2px}
+.period span small{font-weight:600;font-size:.75rem;color:var(--lever-ink)}
+.period input:checked + span{background:var(--abysse);color:var(--ecume)}
+.period input:checked + span small{color:var(--soleil)}
+.period input:focus-visible + span{outline:3px solid var(--abysse);outline-offset:2px}
+.plans{display:grid;margin-top:clamp(28px,4vw,40px);border-top:3px solid var(--abysse)}
+@media (min-width:960px){.plans{grid-template-columns:repeat(3,1fr)}}
+.plan{padding:28px clamp(0px,2vw,28px) 32px;border-bottom:3px solid var(--abysse);display:flex;flex-direction:column;position:relative;transition:background-color .4s}
+@media (min-width:960px){.plan{border-bottom:3px solid var(--abysse)}.plan + .plan{border-left:3px solid var(--abysse)}.plan:first-child{padding-left:0}}
+.plan.featured{background:var(--atlantique);color:var(--ecume);padding-inline:clamp(18px,2vw,28px);--focus:var(--soleil)}
+.plan.flash{background:#FFE2D6}
+.plan.featured.flash{background:var(--abysse)}
+.plan h3{font-size:clamp(2.4rem,4vw,3.2rem);font-variation-settings:"wdth" 72}
+.plan .pitch{margin-top:.4em;color:var(--ardoise)}
+.plan.featured .pitch,.plan.featured .per{color:var(--brume)}
+.plan .amount{margin-top:1em;display:flex;align-items:baseline;gap:.35em;flex-wrap:wrap}
+.plan .amount b{font-weight:900;font-size:clamp(3.4rem,6vw,4.6rem);line-height:.9;font-variation-settings:"wdth" 70}
+.plan .amount span{font-weight:700}
+.plan .per{font-size:.95rem;color:var(--ardoise);min-height:1.6em;margin-top:.3em}
+.plan .save{display:inline-block;margin-top:.5em;font-weight:800;font-size:.9rem;background:var(--lever);color:var(--abysse);padding:.25em .6em;border-radius:3px}
+.plan .save[hidden]{display:none}
+.plan ul{margin:1.2em 0 1.6em;padding:0;list-style:none;display:grid;gap:8px;flex:1}
+.plan li{padding-left:22px;position:relative}
+.plan li::before{content:"";position:absolute;left:0;top:.62em;width:12px;height:3px;background:currentColor}
+.plan .btn{align-self:flex-start}
+.plan-flag{position:absolute;top:0;right:clamp(18px,2vw,28px);transform:translateY(-50%);background:var(--lever);color:var(--abysse);font-weight:800;font-size:.85rem;padding:.3em .7em;border-radius:3px}
+.extras{display:grid;gap:18px;margin-top:32px}
+@media (min-width:720px){.extras{grid-template-columns:repeat(3,1fr)}}
+.extras div{border-left:3px solid var(--abysse);padding-left:14px}
+.extras strong{display:block;font-size:1.05rem}
+.extras p{color:var(--ardoise);font-size:.95rem}
+
+/* ---------- trial form ---------- */
+.essai{background:var(--atlantique);color:var(--ecume);padding-block:clamp(72px,10vw,120px);position:relative;overflow:hidden}
+.essai-in{display:grid;gap:clamp(32px,5vw,72px);position:relative}
+@media (min-width:960px){.essai-in{grid-template-columns:.9fr 1.1fr;align-items:start}}
+.essai h2{color:var(--ecume)}
+.essai h2 span{display:block;color:var(--lever)}
+.essai .note{margin-top:1.2em;max-width:42ch;color:var(--brume)}
+.essai .steps{margin:1.4em 0 0;padding-left:1.2em;color:var(--brume);display:grid;gap:6px}
+.essai .steps li::marker{color:var(--lever);font-weight:800}
+.trial{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.trial label,.trial .lbl{display:grid;gap:6px;font-weight:600;font-size:.95rem;color:var(--ecume)}
+.trial .full{grid-column:1/-1}
+.trial input[type=text],.trial input[type=date],.trial select{min-height:50px;padding:.7em .9em;border-radius:3px;border:2px solid rgba(169,188,208,.55);background:rgba(7,26,48,.45);color:var(--ecume);width:100%}
+.trial input:focus-visible,.trial select:focus-visible{border-color:var(--soleil);outline:none;box-shadow:0 0 0 3px rgba(255,183,43,.45)}
+.trial select option{color:var(--abysse);background:#fff}
+.trial input::-webkit-calendar-picker-indicator{filter:invert(1)}
+.trial [aria-invalid=true]{border-color:var(--lever) !important}
+.trial .err{color:#FFB39F;font-size:.88rem;font-weight:600;min-height:1.2em}
+.check{display:flex !important;grid-template-columns:none;align-items:center;gap:12px;min-height:44px;cursor:pointer}
+.check input{width:24px;height:24px;accent-color:var(--lever);flex:none;margin:0}
+.slot{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.slot label{position:relative;cursor:pointer}
+.slot input{position:absolute;opacity:0}
+.slot span{display:grid;place-items:center;text-align:center;min-height:50px;border:2px solid rgba(169,188,208,.55);border-radius:3px;font-weight:700;line-height:1.15;padding:4px}
+.slot span small{font-weight:500;font-size:.75rem;color:var(--brume)}
+.slot input:checked + span{background:var(--lever);border-color:var(--lever);color:var(--abysse)}
+.slot input:checked + span small{color:var(--abysse)}
+.slot input:focus-visible + span{outline:3px solid var(--soleil);outline-offset:2px}
+.trial .btn{grid-column:1/-1;min-height:56px;font-size:1.1rem}
+.trial .hint{grid-column:1/-1;font-size:.88rem;color:var(--brume)}
+.essai .sun2{position:absolute;width:min(70vw,640px);aspect-ratio:1;border-radius:50%;right:-18%;bottom:-48%;background:radial-gradient(circle,var(--soleil) 0 30%,var(--lever) 62%,transparent 63%);opacity:.18;pointer-events:none}
+
+/* ---------- access ---------- */
+.acces{padding-block:clamp(72px,10vw,120px)}
+.acces-in{display:grid;gap:clamp(32px,5vw,64px)}
+@media (min-width:960px){.acces-in{grid-template-columns:.85fr 1.15fr;align-items:start}}
+.acces dl{margin:24px 0 0}
+.acces dt{font-weight:800;margin-top:1.1em;font-variation-settings:"wdth" 85;font-size:1.1rem}
+.acces dd{margin:.2em 0 0;color:var(--ardoise);max-width:42ch}
+.hours{width:100%;border-collapse:collapse;margin-top:.4em;max-width:360px}
+.hours td{padding:.35em 0;border-bottom:1.5px solid rgba(7,26,48,.18);color:var(--abysse)}
+.hours td:last-child{text-align:right;font-weight:700}
+.hours tr.today td{color:var(--lever-ink);font-weight:800}
+.map{width:100%;aspect-ratio:4/3;border:3px solid var(--abysse);display:block;background:var(--ecume)}
+.contact-links{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+
+/* ---------- footer ---------- */
+footer{background:var(--abysse);color:var(--brume);padding-block:48px 96px;font-size:.95rem}
+.foot{display:grid;gap:28px}
+@media (min-width:720px){.foot{grid-template-columns:1.3fr 1fr 1fr}}
+.foot .big{font-weight:900;font-size:clamp(3rem,9vw,5.5rem);text-transform:uppercase;line-height:.85;color:var(--ecume);font-variation-settings:"wdth" 125}
+.foot a{color:var(--ecume);text-underline-offset:3px}
+.foot p + p{margin-top:.4em}
+.demo-note{margin-top:32px;padding-top:20px;border-top:1px solid rgba(169,188,208,.25);font-size:.88rem}
+
+/* ---------- floating ---------- */
+.fab{position:fixed;right:16px;bottom:16px;z-index:50;width:58px;height:58px;border-radius:50%;background:#25D366;color:#06301A;display:grid;place-items:center;box-shadow:0 8px 24px rgba(7,26,48,.35);--focus:var(--abysse)}
+.fab svg{width:30px;height:30px}
+.demo-pill{position:fixed;left:16px;bottom:16px;z-index:50;display:inline-flex;align-items:center;min-height:44px;padding:.5em 1em;border-radius:999px;background:var(--abysse);color:var(--ecume);font-weight:600;font-size:.82rem;font-variation-settings:"wdth" 90;text-decoration:none;box-shadow:0 0 0 2px var(--sable);--focus:var(--soleil)}
+.demo-pill:hover{background:var(--atlantique)}
+
+/* ---------- responsive ---------- */
+@media (max-width:959px){
+  .nav-links{display:none}
+  .hero-in{grid-template-columns:1fr;gap:44px;padding-bottom:88px}
+  .hero-fig{justify-self:start;max-width:min(420px,88%);aspect-ratio:4/5}
+  .sun{left:auto;right:-30%;top:30%;width:96%}
+}
+@media (max-width:520px){
+  .logo span{display:none}
+  .trial{grid-template-columns:1fr}
+  .period span{padding-inline:.55em;font-size:.95rem}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition:none !important;animation:none !important}
+}
+</style>
+</head>
+<body>
+
+<header class="site-head dark">
+  <nav class="nav wrap" aria-label="Navigation principale">
+    <a class="logo" href="#top" aria-label="Sahel Fight & Fitness, retour en haut"><b>SAHEL</b><span>Fight &amp; Fitness</span></a>
+    <div class="nav-links">
+      <a href="#disciplines">Disciplines</a>
+      <a href="#planning">Planning</a>
+      <a href="#coachs">Coachs</a>
+      <a href="#tarifs">Tarifs</a>
+      <a href="#acces">Accès</a>
+    </div>
+    <a class="btn btn-sun" href="#essai">Essai gratuit</a>
+  </nav>
+</header>
+
+<main>
+<!-- ================= HERO ================= -->
+<section class="hero dark" id="top">
+  <div class="hero-in wrap">
+    <div class="hero-copy">
+      <h1 class="hero-title">
+        <span class="ln"><span class="w" id="heroW1">Sahel</span></span>
+        <span class="ln"><span class="w w2" id="heroW2">Fight &amp; Fitness</span></span>
+      </h1>
+      <p class="hero-place">Founty, Agadir. À cinq minutes à pied de l'océan.</p>
+      <p class="lead">Musculation, boxe anglaise et muay thaï. Des créneaux réservés aux femmes, du coaching individuel et, le week-end, l'entraînement sur la plage au lever du soleil.</p>
+      <div class="ctas">
+        <a class="btn btn-sun" href="#essai">Réserver ma séance d'essai</a>
+        <a class="link" href="#planning">Voir le planning</a>
+      </div>
+    </div>
+    <figure class="hero-fig">
+      <div class="sun" id="sun" aria-hidden="true"></div>
+      <img id="heroImg" src="https://images.unsplash.com/photo-1773289336885-8402d69f7f68?w=1200&q=75&auto=format&fit=crop" width="1200" height="1800" alt="Entraînement de muay thaï aux paos sur le ring : un coach tient les pattes d'ours, le combattant frappe" fetchpriority="high">
+    </figure>
+  </div>
+  <div class="ropes" aria-hidden="true"><i></i><i></i><i></i></div>
+</section>
+
+<!-- ================= KINETIC ================= -->
+<section class="kinetic" id="methode" aria-labelledby="kTitle">
+  <h2 class="sr" id="kTitle">Frapper, soulever, respirer</h2>
+  <div class="wrap">
+    <div class="k-row k1">
+      <span class="k-word" aria-hidden="true">Frappe</span>
+      <p><strong>Boxe anglaise et muay thaï</strong>, de la première garde jusqu'au sparring encadré. Gants de prêt pour vos premières séances.</p>
+    </div>
+    <div class="k-row k2">
+      <span class="k-word" aria-hidden="true">Soulève</span>
+      <p><strong>Un plateau de 600 m²</strong> : racks, barres olympiques, haltères jusqu'à 50 kg et une zone cardio face aux fenêtres.</p>
+    </div>
+    <div class="k-row k3">
+      <span class="k-word" aria-hidden="true">Respire</span>
+      <p><strong>Samedi et dimanche, on sort</strong> : sprints, gainage et mobilité sur le sable de Founty, quand le soleil se lève sur la baie.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DISCIPLINES ================= -->
+<section class="disc dark" id="disciplines" aria-labelledby="discTitle">
+  <div class="wrap disc-head">
+    <div>
+      <h2 id="discTitle">Sept façons<br>de s'entraîner</h2>
+    </div>
+    <p>Tous les cours sont encadrés par un coach diplômé. Débutant ou confirmé, on vous place dans le bon groupe dès la séance d'essai.</p>
+    <div class="disc-nav">
+      <button type="button" id="discPrev" aria-label="Discipline précédente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button type="button" id="discNext" aria-label="Discipline suivante"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+    </div>
+  </div>
+  <div class="disc-viewport" id="discViewport" tabindex="0" aria-label="Liste des disciplines, défilement horizontal">
+    <div class="disc-track" id="discTrack">
+      <article class="panel">
+        <div class="panel-media"><img loading="lazy" src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=900&q=75&auto=format&fit=crop" width="900" height="1125" alt="Athlète en baskets qui saisit une barre chargée pour un soulevé de terre"></div>
+        <h3>Musculation</h3>
+        <p>Accès libre au plateau de 6 h à 23 h, avec un programme écrit pour vous et revu chaque mois.</p>
+        <dl><div><dt>Niveau</dt><dd>Tous</dd></div><div><dt>Accès</dt><dd>Libre</dd></div></dl>
+      </article>
+      <article class="panel">
+        <div class="panel-media"><img loading="lazy" src="https://images.unsplash.com/photo-1517438322307-e67111335449?w=900&q=75&auto=format&fit=crop" width="900" height="1125" alt="Deux hommes en t-shirt blanc travaillent aux pattes d'ours dans une salle de boxe en brique"></div>
+        <h3>Boxe anglaise</h3>
+        <p>Garde, déplacements, enchaînements aux paos. Le mercredi soir, sparring encadré pour ceux qui le souhaitent.</p>
+        <dl><div><dt>Niveau</dt><dd>Débutant à confirmé</dd></div><div><dt>Durée</dt><dd>60 min</dd></div></dl>
+      </article>
+      <article class="panel">
+        <div class="panel-media"><img loading="lazy" src="https://images.unsplash.com/photo-1495555687398-3f50d6e79e1e?w=900&q=75&auto=format&fit=crop" width="900" height="1125" alt="Deux combattants casqués échangent des coups sur un ring devant le public"></div>
+        <h3>Muay thaï</h3>
+        <p>Coudes, genoux, clinch. On travaille au sac et aux pattes d'ours, avec protège-tibias obligatoires.</p>
+        <dl><div><dt>Niveau</dt><dd>Débutant à confirmé</dd></div><div><dt>Durée</dt><dd>75 min</dd></div></dl>
+      </article>
+      <article class="panel">
+        <div class="panel-media"><span class="tag">Réservé aux femmes</span><img loading="lazy" src="https://images.unsplash.com/photo-1773289338309-50476faedda2?w=900&q=75&auto=format&fit=crop" width="900" height="1125" alt="Femme en gants de boxe en position de garde dans une salle d'entraînement"></div>
+        <h3>Cours femmes</h3>
+        <p>Boxe, force et circuit entre femmes, avec Salma. Huit créneaux par semaine, dont deux le matin en semaine.</p>
+        <dl><div><dt>Niveau</dt><dd>Tous</dd></div><div><dt>Durée</dt><dd>60 min</dd></div></dl>
+      </article>
+      <article class="panel">
+        <div class="panel-media"><img loading="lazy" src="https://images.unsplash.com/photo-1758875569612-94d5e0f1a35f?w=900&q=75&auto=format&fit=crop" width="900" height="1125" alt="Un homme et une femme font des cordes ondulatoires dans une salle lumineuse"></div>
+        <h3>Circuit training</h3>
+        <p>Cordes, kettlebells, rameur, box jumps. Quarante-cinq minutes qui font monter le cardio, en petit groupe de douze maximum.</p>
+        <dl><div><dt>Niveau</dt><dd>Tous</dd></div><div><dt>Durée</dt><dd>45 min</dd></div></dl>
+      </article>
+      <article class="panel">
+        <div class="panel-media"><img loading="lazy" src="https://images.unsplash.com/photo-1722925541142-5db2668ca492?w=900&q=75&auto=format&fit=crop" width="900" height="1125" alt="Gros plan sur la main d'une femme qui serre une barre de squat"></div>
+        <h3>Coaching perso</h3>
+        <p>Un coach pour vous seul : bilan, programme, technique, suivi de la nutrition. Pour une reprise, une perte de poids ou un combat.</p>
+        <dl><div><dt>Séance</dt><dd>300 MAD</dd></div><div><dt>Durée</dt><dd>60 min</dd></div></dl>
+      </article>
+      <article class="panel">
+        <div class="panel-media beach">
+          <div class="sky" role="img" aria-label="Illustration du soleil qui se lève sur l'océan"><div class="bsun"></div></div>
+          <div class="waves"><i></i><i></i><i></i></div>
+          <div class="count">
+            <small id="beachWhen">Prochaine séance plage</small>
+            <strong class="tnum" id="beachCount">Sam. 7 h 30</strong>
+          </div>
+        </div>
+        <h3>Plage au lever du soleil</h3>
+        <p>Le samedi et le dimanche, rendez-vous devant le poste de secours de Founty. Sprints, gainage, mobilité les pieds dans le sable.</p>
+        <dl><div><dt>Niveau</dt><dd>Tous</dd></div><div><dt>Durée</dt><dd>45 min</dd></div></dl>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PLANNING ================= -->
+<section class="planning" id="planning" aria-labelledby="planTitle">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="planTitle">Le planning<br>de la semaine</h2>
+      <p>Les cours sont inclus dans votre formule, sans réservation. Les créneaux marqués en orange sont réservés aux femmes, coach comprise.</p>
+    </div>
+    <div class="filters" role="group" aria-label="Filtrer par discipline">
+      <button type="button" class="chip" data-f="all" aria-pressed="true">Tous les cours</button>
+      <button type="button" class="chip" data-f="boxe" aria-pressed="false">Boxe</button>
+      <button type="button" class="chip" data-f="muay" aria-pressed="false">Muay thaï</button>
+      <button type="button" class="chip" data-f="force" aria-pressed="false">Force</button>
+      <button type="button" class="chip" data-f="circuit" aria-pressed="false">Circuit</button>
+      <button type="button" class="chip" data-f="plage" aria-pressed="false">Plage</button>
+      <label class="women-toggle"><input type="checkbox" id="onlyWomen"><span class="sw" aria-hidden="true"></span>Seulement les créneaux femmes</label>
+    </div>
+    <div class="legend" aria-hidden="true">
+      <span><span class="badge-w">Femmes</span> créneau réservé aux femmes</span>
+    </div>
+    <div class="days" id="dayPicker" role="group" aria-label="Choisir un jour"></div>
+    <div class="grid7" id="schedGrid"></div>
+  </div>
+</section>
+
+<!-- ================= COACHES ================= -->
+<section class="coaches dark" id="coachs" aria-labelledby="coachTitle">
+  <div class="wrap">
+    <h2 id="coachTitle">Les coachs</h2>
+    <div class="coach-list" id="coachList">
+      <article class="coach">
+        <div class="coach-photo"><img loading="lazy" src="https://images.unsplash.com/photo-1765302907822-33032f78eb2c?w=1000&q=75&auto=format&fit=crop" width="1000" height="1250" alt="Yassine fait des pompes sur kettlebell devant les sacs de frappe"></div>
+        <div class="coach-text">
+          <h3 class="coach-name">Yassine</h3>
+          <p class="coach-role">Boxe anglaise et muay thaï</p>
+          <p class="coach-bio">Huit ans de compétition amateur, deux titres régionaux dans le Souss. Il enseigne la garde avant la puissance : ses élèves débutants font leur premier sparring encadré au bout de trois mois.</p>
+          <ul><li>Technique</li><li>Sparring</li><li>Préparation combat</li></ul>
+        </div>
+      </article>
+      <article class="coach">
+        <div class="coach-photo"><img loading="lazy" src="https://images.unsplash.com/photo-1772450014622-1c209d012c2e?w=1000&q=75&auto=format&fit=crop" width="1000" height="1250" alt="Salma en position de départ d'un soulevé de terre, barre chargée"></div>
+        <div class="coach-text">
+          <h3 class="coach-name">Salma</h3>
+          <p class="coach-role">Force et cours femmes</p>
+          <p class="coach-bio">Elle a lancé les créneaux réservés aux femmes en 2023. Squat, soulevé de terre, boxe : elle part de votre niveau et note chaque progression dans votre carnet d'entraînement.</p>
+          <ul><li>Force</li><li>Reprise après grossesse</li><li>Boxe femmes</li></ul>
+        </div>
+      </article>
+      <article class="coach">
+        <div class="coach-photo"><img loading="lazy" src="https://images.unsplash.com/photo-1549476464-37392f717541?w=1000&q=75&auto=format&fit=crop" width="1000" height="1250" alt="Omar debout dans la salle, un disque de fonte à la main"></div>
+        <div class="coach-text">
+          <h3 class="coach-name">Omar</h3>
+          <p class="coach-role">Préparation physique et plage</p>
+          <p class="coach-bio">Ancien surfeur de Taghazout, il prépare les surfeurs et les combattants du club. Chaque week-end, c'est lui qui fait courir tout le monde sur le sable de Founty.</p>
+          <ul><li>Cardio</li><li>Mobilité</li><li>Préparation surf</li></ul>
+        </div>
+      </article>
+    </div>
+    <div class="coach-dots" id="coachDots" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+  </div>
+</section>
+
+<!-- ================= QUIZ ================= -->
+<section class="quiz" id="objectif" aria-labelledby="quizTitle">
+  <div class="wrap quiz-box">
+    <div>
+      <h2 id="quizTitle">Quelle formule<br>pour vous ?</h2>
+      <p>Trois questions, trente secondes. On vous conseille une formule et les cours par lesquels commencer.</p>
+    </div>
+    <div>
+      <form id="quiz" novalidate>
+        <fieldset class="step" data-step="1">
+          <legend><small>Question 1 sur 3</small>Votre objectif principal</legend>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="goal" value="combat"><span>Apprendre à boxer<small>Boxe, muay thaï, se défendre</small></span></label>
+            <label class="opt"><input type="radio" name="goal" value="muscle"><span>Prendre du muscle<small>Force, volume, technique</small></span></label>
+            <label class="opt"><input type="radio" name="goal" value="perte"><span>Perdre du poids<small>Cardio, circuit, régularité</small></span></label>
+            <label class="opt"><input type="radio" name="goal" value="forme"><span>Retrouver la forme<small>Reprendre en douceur, bouger</small></span></label>
+          </div>
+        </fieldset>
+        <fieldset class="step" data-step="2">
+          <legend><small>Question 2 sur 3</small>Combien de fois par semaine ?</legend>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="freq" value="1"><span>1 à 2 fois<small>Pour commencer</small></span></label>
+            <label class="opt"><input type="radio" name="freq" value="3"><span>3 à 4 fois<small>Le bon rythme pour progresser</small></span></label>
+            <label class="opt"><input type="radio" name="freq" value="5"><span>5 fois ou plus<small>Vous êtes déterminé</small></span></label>
+          </div>
+        </fieldset>
+        <fieldset class="step" data-step="3">
+          <legend><small>Question 3 sur 3</small>Vous préférez vous entraîner</legend>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="mode" value="solo"><span>En autonomie<small>Avec un programme écrit</small></span></label>
+            <label class="opt"><input type="radio" name="mode" value="groupe"><span>En cours collectifs<small>L'énergie du groupe</small></span></label>
+            <label class="opt"><input type="radio" name="mode" value="coach"><span>Avec un coach<small>Suivi individuel</small></span></label>
+            <label class="opt"><input type="radio" name="mode" value="femmes"><span>Entre femmes<small>Créneaux réservés</small></span></label>
+          </div>
+        </fieldset>
+        <p class="quiz-err" id="quizErr" role="alert"></p>
+        <div class="quiz-ctrl" id="quizCtrl">
+          <button type="button" class="btn btn-line" id="quizBack" hidden>Retour</button>
+          <button type="submit" class="btn btn-ink" id="quizNext">Voir ma formule</button>
+          <span class="count" id="quizCount" aria-hidden="true"></span>
+        </div>
+      </form>
+      <div class="result" id="quizResult" hidden tabindex="-1">
+        <h3 id="resPlan"></h3>
+        <p class="price" id="resPrice"></p>
+        <p id="resWhy"></p>
+        <p id="resClassesT">Cours conseillés pour commencer :</p>
+        <ul id="resClasses"></ul>
+        <div class="ctas">
+          <a class="btn btn-sun" href="#essai" id="resTrial">Essayer gratuitement</a>
+          <a class="link" href="#tarifs" id="resPlanLink">Voir cette formule</a>
+          <button type="button" class="link" id="resRestart" style="background:none;border:0;color:inherit;cursor:pointer;padding:0">Refaire le quiz</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PRICING ================= -->
+<section class="tarifs" id="tarifs" aria-labelledby="tarifTitle">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="tarifTitle">Les tarifs</h2>
+      <p>Sans engagement au mois. Plus vous vous engagez, moins vous payez : jusqu'à 25 % d'économie sur l'année.</p>
+    </div>
+    <div class="period" role="radiogroup" aria-label="Durée de l'abonnement">
+      <label><input type="radio" name="period" value="0" checked><span>Mensuel</span></label>
+      <label><input type="radio" name="period" value="1"><span>Trimestriel<small>−10 %</small></span></label>
+      <label><input type="radio" name="period" value="2"><span>Annuel<small>−25 %</small></span></label>
+    </div>
+    <div class="plans" id="plans"></div>
+    <div class="extras">
+      <div><strong>Séance d'essai offerte</strong><p>Une séance gratuite dans la discipline de votre choix, sans engagement.</p></div>
+      <div><strong>Coaching individuel</strong><p>300 MAD la séance, 2 500 MAD le carnet de 10. Valable 4 mois.</p></div>
+      <div><strong>Frais d'inscription</strong><p>150 MAD, offerts avec l'abonnement annuel. Étudiants : −15 % sur présentation de la carte.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TRIAL FORM ================= -->
+<section class="essai dark" id="essai" aria-labelledby="essaiTitle">
+  <div class="sun2" aria-hidden="true"></div>
+  <div class="wrap essai-in">
+    <div>
+      <h2 id="essaiTitle">Première séance<span>offerte</span></h2>
+      <p class="note">Remplissez le formulaire : le message WhatsApp s'écrit tout seul. On vous répond dans l'heure, de 8 h à 21 h, pour confirmer le créneau.</p>
+      <ol class="steps">
+        <li>Vous choisissez une discipline et un créneau.</li>
+        <li>On confirme sur WhatsApp.</li>
+        <li>Vous venez en tenue de sport : on prête les gants.</li>
+      </ol>
+    </div>
+    <form class="trial" id="trialForm" novalidate>
+      <label>Prénom
+        <input type="text" name="prenom" autocomplete="given-name" required aria-describedby="errName">
+        <span class="err" id="errName"></span>
+      </label>
+      <label>Discipline
+        <select name="disc" id="trialDisc" required>
+          <option>Musculation</option>
+          <option>Boxe anglaise</option>
+          <option>Muay thaï</option>
+          <option>Circuit training</option>
+          <option>Cours femmes</option>
+          <option>Séance plage au lever du soleil</option>
+          <option>Je ne sais pas encore</option>
+        </select>
+      </label>
+      <label class="full">Jour souhaité
+        <input type="date" name="date" required aria-describedby="errDate">
+        <span class="err" id="errDate"></span>
+      </label>
+      <div class="full lbl" role="radiogroup" aria-labelledby="slotLbl">
+        <span id="slotLbl">Moment de la journée</span>
+        <div class="slot">
+          <label><input type="radio" name="slot" value="Matin (7 h à 10 h)" checked><span>Matin<small>7 h – 10 h</small></span></label>
+          <label><input type="radio" name="slot" value="Midi (12 h à 14 h)"><span>Midi<small>12 h – 14 h</small></span></label>
+          <label><input type="radio" name="slot" value="Soir (18 h à 21 h)"><span>Soir<small>18 h – 21 h</small></span></label>
+        </div>
+      </div>
+      <label class="full">Votre niveau
+        <select name="level">
+          <option>Débutant, je n'ai jamais pratiqué</option>
+          <option>J'ai déjà pratiqué, je reprends</option>
+          <option>Confirmé</option>
+        </select>
+      </label>
+      <label class="full check"><input type="checkbox" name="women" id="trialWomen"> Je préfère un créneau réservé aux femmes</label>
+      <button type="submit" class="btn btn-sun"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.4-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3zM12 2a10 10 0 0 0-8.6 15l-1.4 5 5.1-1.3A10 10 0 1 0 12 2zm0 18.3c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.3 8.3 0 1 1 12 20.3z"/></svg>Envoyer sur WhatsApp</button>
+      <p class="hint">Vous pouvez aussi appeler le +212 6 00 00 00 00.</p>
+    </form>
+  </div>
+</section>
+
+<!-- ================= ACCESS ================= -->
+<section class="acces" id="acces" aria-labelledby="accesTitle">
+  <div class="wrap acces-in">
+    <div>
+      <h2 id="accesTitle">Nous trouver</h2>
+      <dl>
+        <dt>Adresse</dt>
+        <dd>Quartier Founty, Agadir. À cinq minutes à pied de la corniche, côté hôtels.</dd>
+        <dt>Horaires</dt>
+        <dd>
+          <table class="hours" aria-label="Horaires d'ouverture">
+            <tbody id="hours">
+              <tr data-d="1 2 3 4 5"><td>Lundi au vendredi</td><td>6 h – 23 h</td></tr>
+              <tr data-d="6"><td>Samedi</td><td>7 h – 21 h</td></tr>
+              <tr data-d="0"><td>Dimanche</td><td>7 h – 14 h</td></tr>
+            </tbody>
+          </table>
+        </dd>
+        <dt>Parking</dt>
+        <dd>Places gratuites devant la salle. En bus, arrêt Founty à 200 m.</dd>
+        <dt>Contact</dt>
+        <dd><a href="tel:+212600000000">+212 6 00 00 00 00</a><br><a href="mailto:contact@example.com">contact@example.com</a></dd>
+      </dl>
+      <div class="contact-links">
+        <a class="btn btn-ink wa-link" href="https://wa.me/212600000000" target="_blank" rel="noopener">Écrire sur WhatsApp</a>
+      </div>
+    </div>
+    <iframe class="map" title="Carte : Sahel Fight & Fitness, quartier Founty à Agadir" src="https://www.google.com/maps?q=Founty,+Agadir&z=15&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+</section>
+</main>
+
+<footer class="dark">
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <p class="big">Sahel</p>
+        <p>Fight &amp; Fitness, Founty, Agadir.</p>
+      </div>
+      <div>
+        <p><a href="tel:+212600000000">+212 6 00 00 00 00</a></p>
+        <p><a href="mailto:contact@example.com">contact@example.com</a></p>
+        <p><a class="wa-link" href="https://wa.me/212600000000" target="_blank" rel="noopener">WhatsApp</a></p>
+      </div>
+      <div>
+        <p>Lundi au vendredi, 6 h – 23 h</p>
+        <p>Samedi, 7 h – 21 h</p>
+        <p>Dimanche, 7 h – 14 h</p>
+      </div>
+    </div>
+    <p class="demo-note">Site de démonstration : entreprise fictive. Photos Unsplash.</p>
+  </div>
+</footer>
+
+<a class="fab wa-link" href="https://wa.me/212600000000" target="_blank" rel="noopener" aria-label="Écrire à Sahel Fight & Fitness sur WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.4-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3zM12 2a10 10 0 0 0-8.6 15l-1.4 5 5.1-1.3A10 10 0 1 0 12 2zm0 18.3c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.3 8.3 0 1 1 12 20.3z"/></svg>
+</a>
+<a href="../" class="demo-pill">Démo réalisée par Ghali</a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
+<script>
+/* =====================================================================
+   NUMÉRO WHATSAPP DU CLUB : format international, sans "+" ni espaces.
+   Changez-le ici, tous les liens et formulaires se mettent à jour.
+   ===================================================================== */
+const WHATSAPP = "212600000000";
+const CLUB = "Sahel Fight & Fitness";
+
+const waURL = text => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
+const fmt = n => new Intl.NumberFormat("fr-FR").format(n);
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+document.addEventListener("DOMContentLoaded", init);
+
+function init(){
+  /* --- generic WhatsApp links --- */
+  $$(".wa-link").forEach(a => a.href = waURL(`Bonjour ${CLUB}, j'aimerais avoir des informations sur la salle.`));
+
+  /* --- "now" in Agadir (Africa/Casablanca) --- */
+  const now = agadirNow();
+
+  /* ===================== SCHEDULE ===================== */
+  const DAYS = ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
+  const DLAB = {boxe:"Boxe", muay:"Muay thaï", force:"Force", circuit:"Circuit", plage:"Plage"};
+  // day: 0 = lundi … 6 = dimanche ; w = créneau réservé aux femmes
+  const CLASSES = [
+    {day:0,t:"07:00",min:45,d:"circuit",n:"Circuit du matin",c:"Omar"},
+    {day:0,t:"12:30",min:60,d:"force",n:"Force technique",c:"Salma"},
+    {day:0,t:"18:30",min:60,d:"boxe",n:"Boxe débutants",c:"Yassine"},
+    {day:0,t:"19:30",min:75,d:"muay",n:"Muay thaï tous niveaux",c:"Yassine"},
+    {day:0,t:"20:45",min:45,d:"circuit",n:"Circuit du soir",c:"Omar"},
+    {day:1,t:"09:30",min:60,d:"boxe",n:"Boxe femmes",c:"Salma",w:1},
+    {day:1,t:"12:30",min:45,d:"circuit",n:"Circuit express",c:"Omar"},
+    {day:1,t:"18:00",min:60,d:"force",n:"Force femmes",c:"Salma",w:1},
+    {day:1,t:"19:00",min:60,d:"boxe",n:"Boxe tous niveaux",c:"Yassine"},
+    {day:1,t:"20:00",min:75,d:"muay",n:"Muay thaï confirmés",c:"Yassine"},
+    {day:2,t:"07:00",min:45,d:"circuit",n:"Circuit du matin",c:"Omar"},
+    {day:2,t:"12:30",min:60,d:"boxe",n:"Boxe du midi",c:"Yassine"},
+    {day:2,t:"18:30",min:60,d:"force",n:"Force technique",c:"Omar"},
+    {day:2,t:"19:30",min:75,d:"muay",n:"Muay thaï débutants",c:"Yassine"},
+    {day:2,t:"20:45",min:60,d:"boxe",n:"Sparring encadré",c:"Yassine"},
+    {day:3,t:"09:30",min:60,d:"boxe",n:"Boxe femmes",c:"Salma",w:1},
+    {day:3,t:"12:30",min:60,d:"force",n:"Force technique",c:"Salma"},
+    {day:3,t:"18:00",min:45,d:"circuit",n:"Circuit femmes",c:"Salma",w:1},
+    {day:3,t:"19:00",min:60,d:"boxe",n:"Boxe tous niveaux",c:"Yassine"},
+    {day:3,t:"20:00",min:75,d:"muay",n:"Muay thaï tous niveaux",c:"Yassine"},
+    {day:4,t:"07:00",min:45,d:"circuit",n:"Circuit du matin",c:"Omar"},
+    {day:4,t:"12:30",min:75,d:"muay",n:"Muay thaï du midi",c:"Yassine"},
+    {day:4,t:"18:30",min:60,d:"force",n:"Force femmes",c:"Salma",w:1},
+    {day:4,t:"19:30",min:60,d:"boxe",n:"Boxe débutants",c:"Yassine"},
+    {day:5,t:"07:30",min:45,d:"plage",n:"Plage au lever du soleil",c:"Omar"},
+    {day:5,t:"10:00",min:75,d:"muay",n:"Muay thaï open",c:"Yassine"},
+    {day:5,t:"11:30",min:60,d:"boxe",n:"Boxe femmes",c:"Salma",w:1},
+    {day:5,t:"17:00",min:45,d:"circuit",n:"Circuit du samedi",c:"Omar"},
+    {day:6,t:"07:30",min:45,d:"plage",n:"Plage au lever du soleil",c:"Omar"},
+    {day:6,t:"08:30",min:45,d:"plage",n:"Plage femmes",c:"Salma",w:1},
+    {day:6,t:"10:30",min:45,d:"circuit",n:"Circuit femmes",c:"Salma",w:1}
+  ];
+  const hm = t => { const [h, m] = t.split(":"); return `${+h} h${m === "00" ? "" : " " + m}`; };
+  const grid = $("#schedGrid"), picker = $("#dayPicker");
+  let filter = "all", onlyW = false, activeDay = now.dow;
+
+  DAYS.forEach((name, i) => {
+    const col = document.createElement("section");
+    col.className = "day";
+    col.id = "day" + i;
+    col.setAttribute("aria-label", name);
+    col.innerHTML = `<h3>${name}${i === now.dow ? ' <small>Aujourd\'hui</small>' : ""}</h3><ul></ul>`;
+    grid.appendChild(col);
+    const b = document.createElement("button");
+    b.type = "button";
+    b.dataset.day = i;
+    b.setAttribute("aria-controls", "day" + i);
+    b.innerHTML = `${name.slice(0,3)}<small>${i === now.dow ? "auj." : "&nbsp;"}</small>`;
+    b.setAttribute("aria-label", name + (i === now.dow ? ", aujourd'hui" : ""));
+    b.addEventListener("click", () => { activeDay = i; renderSchedule(); });
+    picker.appendChild(b);
+  });
+
+  const match = c => (filter === "all" || c.d === filter) && (!onlyW || c.w);
+
+  function renderSchedule(){
+    DAYS.forEach((name, i) => {
+      const col = $("#day" + i), ul = $("ul", col);
+      col.classList.toggle("on", i === activeDay);
+      const list = CLASSES.filter(c => c.day === i && match(c));
+      if(list.length){
+        ul.innerHTML = list.map(c => `<li class="cls${c.w ? " w" : ""}" data-d="${c.d}">
+          <time datetime="${c.t}">${hm(c.t)}</time>
+          <span class="nm">${c.n}</span>
+          <span class="mt">${DLAB[c.d]}, ${c.min} min, avec ${c.c}</span>
+          ${c.w ? '<span class="badge-w">Femmes</span>' : ""}</li>`).join("");
+      } else {
+        const nxt = nextMatch(i);
+        ul.innerHTML = `<li class="empty">Pas de cours${filter !== "all" ? " de " + DLAB[filter].toLowerCase() : ""} ce jour-là.${nxt ? ` Prochain : ${DAYS[nxt.day].toLowerCase()} à ${hm(nxt.t)}.` : ""}</li>`;
+      }
+    });
+    $$("button", picker).forEach(b => b.setAttribute("aria-pressed", +b.dataset.day === activeDay));
+  }
+  function nextMatch(from){
+    for(let k = 1; k <= 7; k++){
+      const d = (from + k) % 7, c = CLASSES.find(x => x.day === d && match(x));
+      if(c) return c;
+    }
+    return null;
+  }
+  $$(".chip").forEach(ch => ch.addEventListener("click", () => {
+    filter = ch.dataset.f;
+    $$(".chip").forEach(x => x.setAttribute("aria-pressed", x === ch));
+    renderSchedule();
+  }));
+  $("#onlyWomen").addEventListener("change", e => { onlyW = e.target.checked; renderSchedule(); });
+  renderSchedule();
+
+  /* opening hours: highlight today */
+  const jsDow = (now.dow + 1) % 7; // 0 = dimanche
+  $$("#hours tr").forEach(tr => { if(tr.dataset.d.split(" ").includes(String(jsDow))) tr.classList.add("today"); });
+
+  /* ===================== BEACH COUNTDOWN ===================== */
+  function beachTick(){
+    const n = agadirNow();
+    const nowMin = n.dow * 1440 + n.h * 60 + n.m;
+    const sessions = CLASSES.filter(c => c.d === "plage" && !c.w).map(c => c.day * 1440 + toMin(c.t));
+    let best = null;
+    sessions.forEach(s => { let diff = s - nowMin; if(diff <= 0) diff += 7 * 1440; if(best === null || diff < best.diff) best = {s, diff}; });
+    const day = Math.floor(best.s / 1440), t = best.s % 1440;
+    const dd = Math.floor(best.diff / 1440), hh = Math.floor(best.diff % 1440 / 60), mm = best.diff % 60;
+    $("#beachWhen").textContent = `Prochaine séance : ${DAYS[day].toLowerCase()} à ${Math.floor(t/60)} h ${String(t%60).padStart(2,"0")}, dans`;
+    $("#beachCount").textContent = (dd ? dd + " j " : "") + hh + " h " + String(mm).padStart(2, "0");
+  }
+  beachTick(); setInterval(beachTick, 30000);
+
+  /* ===================== PRICING ===================== */
+  const PERIODS = [{k:"mensuel", lab:"par mois", months:1},{k:"trimestriel", lab:"le trimestre", months:3},{k:"annuel", lab:"l'année", months:12}];
+  const PLANS = [
+    {id:"salle", name:"Salle", pitch:"Le plateau en accès libre et les cours de force et de circuit.", prices:[350,945,3150],
+      inc:["Plateau musculation et cardio, 6 h – 23 h","Cours de force et de circuit","Créneaux femmes force et circuit","Un programme écrit à l'inscription"]},
+    {id:"fight", name:"Fight", pitch:"Tous les cours de boxe et de muay thaï, plus le plateau.", prices:[490,1320,4400], featured:true,
+      inc:["Tout ce qu'inclut la formule Salle","Boxe anglaise et muay thaï à volonté","Sparring encadré du mercredi","Boxe femmes avec Salma"]},
+    {id:"illimite", name:"Illimité", pitch:"Tout le club, la plage du week-end et un coach chaque mois.", prices:[690,1860,6200],
+      inc:["Tous les cours, sans exception","Séances plage du samedi et du dimanche","Une séance de coaching individuel par mois","Serviette et casier personnel"]}
+  ];
+  let period = 0;
+  const plansEl = $("#plans");
+  plansEl.innerHTML = PLANS.map(p => `
+    <article class="plan${p.featured ? " featured dark" : ""}" id="plan-${p.id}">
+      ${p.featured ? '<span class="plan-flag">La plus choisie</span>' : ""}
+      <h3>${p.name}</h3>
+      <p class="pitch">${p.pitch}</p>
+      <p class="amount"><b class="tnum" data-amt></b><span>MAD <span data-lab></span></span></p>
+      <p class="per" data-per></p>
+      <span class="save" data-save hidden></span>
+      <ul>${p.inc.map(i => `<li>${i}</li>`).join("")}</ul>
+      <a class="btn ${p.featured ? "btn-sun" : "btn-ink"}" data-cta target="_blank" rel="noopener">Choisir ${p.name}</a>
+    </article>`).join("");
+
+  function renderPrices(){
+    const P = PERIODS[period];
+    PLANS.forEach(p => {
+      const el = $("#plan-" + p.id), price = p.prices[period];
+      const full = p.prices[0] * P.months, save = full - price;
+      $("[data-amt]", el).textContent = fmt(price);
+      $("[data-lab]", el).textContent = P.lab;
+      $("[data-per]", el).textContent = period ? `soit ${fmt(Math.round(price / P.months))} MAD par mois` : "Sans engagement";
+      const s = $("[data-save]", el);
+      s.hidden = !save;
+      s.textContent = save ? `Vous économisez ${fmt(save)} MAD` : "";
+      $("[data-cta]", el).href = waURL(`Bonjour ${CLUB}, je voudrais m'inscrire à la formule ${p.name} en ${P.k} (${fmt(price)} MAD).`);
+    });
+  }
+  $$('input[name=period]').forEach(r => r.addEventListener("change", () => { period = +r.value; renderPrices(); }));
+  renderPrices();
+  function setPeriod(i){ period = i; $$('input[name=period]')[i].checked = true; renderPrices(); }
+
+  /* ===================== QUIZ ===================== */
+  const quiz = $("#quiz"), steps = $$(".step", quiz), back = $("#quizBack"), next = $("#quizNext"), err = $("#quizErr"), res = $("#quizResult");
+  let step = 0;
+  const names = ["goal","freq","mode"];
+  function showStep(){
+    steps.forEach((s, i) => s.hidden = i !== step);
+    back.hidden = step === 0;
+    next.textContent = step === steps.length - 1 ? "Voir ma formule" : "Question suivante";
+    $("#quizCount").textContent = `${step + 1} / ${steps.length}`;
+    err.textContent = "";
+  }
+  quiz.addEventListener("submit", e => {
+    e.preventDefault();
+    const v = quiz.elements[names[step]].value;
+    if(!v){ err.textContent = "Choisissez une réponse pour continuer."; return; }
+    if(step < steps.length - 1){ step++; showStep(); $("input", steps[step]).focus({preventScroll:true}); }
+    else showResult();
+  });
+  back.addEventListener("click", () => { step = Math.max(0, step - 1); showStep(); });
+  showStep();
+
+  let rec = null;
+  function showResult(){
+    const goal = quiz.elements.goal.value, freq = quiz.elements.freq.value, mode = quiz.elements.mode.value;
+    let plan = "salle", why = "";
+    if(goal === "combat"){
+      plan = freq === "5" ? "illimite" : "fight";
+      why = freq === "5" ? "À ce rythme, combinez frappe et préparation physique : l'Illimité ajoute les séances plage et un coaching par mois." : "Boxe et muay thaï à volonté, avec un plateau pour renforcer le corps entre deux cours.";
+    } else if(goal === "muscle"){
+      plan = mode === "groupe" ? "illimite" : "salle";
+      why = plan === "salle" ? "Le plateau en accès libre et un programme écrit suffisent pour prendre du muscle. On le revoit avec vous chaque mois." : "Les cours de force en groupe et le coaching mensuel vous feront progresser plus vite sur la technique.";
+    } else if(goal === "perte"){
+      plan = freq === "1" ? "salle" : "illimite";
+      why = plan === "salle" ? "Deux circuits par semaine, c'est un très bon début. Vous pourrez passer à l'Illimité quand le rythme sera installé." : "Circuits, plage et boxe : varier les séances, c'est ce qui fait tenir sur la durée et brûler le plus.";
+    } else {
+      plan = (mode === "groupe" || freq !== "1") ? "illimite" : "salle";
+      why = plan === "salle" ? "Reprenez à votre rythme sur le plateau et en circuit, avec un programme adapté à votre niveau." : "Le plaisir de varier : un cours de boxe, un circuit, le sable le week-end. C'est la formule la plus complète.";
+    }
+    if(mode === "femmes" && plan === "illimite" && goal !== "combat" && freq === "1") plan = "salle";
+    const per = freq === "1" ? 0 : freq === "3" ? 1 : 2;
+    const p = PLANS.find(x => x.id === plan), P = PERIODS[per];
+    rec = {plan, per};
+
+    $("#resPlan").textContent = `Formule ${p.name}, ${P.k}`;
+    $("#resPrice").textContent = per ? `${fmt(p.prices[per])} MAD ${P.lab}, soit ${fmt(Math.round(p.prices[per] / P.months))} MAD par mois` : `${fmt(p.prices[0])} MAD par mois, sans engagement`;
+    let extra = "";
+    if(mode === "coach") extra = " Ajoutez un carnet de 10 séances de coaching individuel (2 500 MAD) pour un suivi complet.";
+    if(mode === "femmes") extra = " Vous aurez accès aux huit créneaux réservés aux femmes, encadrés par Salma.";
+    if(per === 0) extra += " Au mois, sans engagement : idéal pour tester le rythme.";
+    $("#resWhy").textContent = why + extra;
+
+    const wantD = {combat:["boxe","muay"], muscle:["force"], perte:["circuit","plage"], forme:["circuit","force","plage"]}[goal];
+    const allowed = {salle:["force","circuit"], fight:["boxe","muay","force","circuit"], illimite:["boxe","muay","force","circuit","plage"]}[plan];
+    let picks = CLASSES.filter(c => wantD.includes(c.d) && allowed.includes(c.d) && (mode !== "femmes" || c.w));
+    if(!picks.length) picks = CLASSES.filter(c => allowed.includes(c.d) && (mode !== "femmes" || c.w));
+    const seen = new Set();
+    picks = picks.filter(c => !seen.has(c.n) && seen.add(c.n)).slice(0, 3);
+    $("#resClasses").innerHTML = picks.map(c => `<li>${c.n}, ${DAYS[c.day].toLowerCase()} à ${hm(c.t)}</li>`).join("");
+    $("#resClassesT").hidden = !picks.length;
+
+    const discMap = {combat:"Boxe anglaise", muscle:"Musculation", perte:"Circuit training", forme:"Circuit training"};
+    $("#resTrial").onclick = () => {
+      $("#trialDisc").value = mode === "femmes" ? "Cours femmes" : discMap[goal];
+      $("#trialWomen").checked = mode === "femmes";
+    };
+    quiz.hidden = true; res.hidden = false; res.focus({preventScroll:true});
+  }
+  $("#resPlanLink").addEventListener("click", () => {
+    if(!rec) return;
+    setPeriod(rec.per);
+    const el = $("#plan-" + rec.plan);
+    el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 1600);
+  });
+  $("#resRestart").addEventListener("click", () => { quiz.reset(); step = 0; showStep(); res.hidden = true; quiz.hidden = false; $("input", steps[0]).focus(); });
+
+  /* ===================== TRIAL FORM → WHATSAPP ===================== */
+  const tf = $("#trialForm"), dateIn = tf.elements.date;
+  dateIn.min = now.iso;
+  tf.addEventListener("submit", e => {
+    e.preventDefault();
+    const f = tf.elements;
+    let ok = true;
+    const setErr = (input, msg) => {
+      input.setAttribute("aria-invalid", msg ? "true" : "false");
+      $("#" + input.getAttribute("aria-describedby")).textContent = msg;
+      if(msg && ok){ input.focus(); ok = false; }
+    };
+    setErr(f.prenom, f.prenom.value.trim() ? "" : "Indiquez votre prénom.");
+    setErr(f.date, !f.date.value ? "Choisissez un jour." : f.date.value < now.iso ? "Choisissez un jour à partir d'aujourd'hui." : "");
+    if(!ok) return;
+    const d = new Date(f.date.value + "T12:00").toLocaleDateString("fr-FR", {weekday:"long", day:"numeric", month:"long"});
+    const msg = `Bonjour ${CLUB}, je voudrais réserver ma séance d'essai gratuite.\n` +
+      `Prénom : ${f.prenom.value.trim()}\nDiscipline : ${f.disc.value}\nJour : ${d}\nMoment : ${f.slot.value}\nNiveau : ${f.level.value}` +
+      (f.women.checked ? "\nJe préfère un créneau réservé aux femmes." : "") + "\nMerci !";
+    window.open(waURL(msg), "_blank", "noopener");
+  });
+
+  /* ===================== DISCIPLINE BUTTONS (native scroller) ===================== */
+  const vp = $("#discViewport");
+  const step1 = () => ($(".panel", vp).getBoundingClientRect().width + 24);
+  $("#discPrev").addEventListener("click", () => vp.scrollBy({left:-step1(), behavior: reduce() ? "auto" : "smooth"}));
+  $("#discNext").addEventListener("click", () => vp.scrollBy({left: step1(), behavior: reduce() ? "auto" : "smooth"}));
+
+  /* ===================== MOTION ===================== */
+  motion();
+}
+
+function reduce(){ return window.matchMedia("(prefers-reduced-motion: reduce)").matches; }
+function toMin(t){ const [h, m] = t.split(":").map(Number); return h * 60 + m; }
+function agadirNow(){
+  const parts = {};
+  try{
+    new Intl.DateTimeFormat("en-GB", {timeZone:"Africa/Casablanca", weekday:"short", year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hourCycle:"h23"})
+      .formatToParts(new Date()).forEach(p => parts[p.type] = p.value);
+  }catch(e){
+    const d = new Date();
+    Object.assign(parts, {weekday:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][d.getDay()], year:d.getFullYear(), month:String(d.getMonth()+1).padStart(2,"0"), day:String(d.getDate()).padStart(2,"0"), hour:d.getHours(), minute:d.getMinutes()});
+  }
+  const dow = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].indexOf(parts.weekday);
+  return {dow, h:+parts.hour, m:+parts.minute, iso:`${parts.year}-${parts.month}-${parts.day}`};
+}
+
+/* ---------- scroll-driven motion (GSAP + ScrollTrigger + Lenis) ---------- */
+function motion(){
+  if(!window.gsap || !window.ScrollTrigger || reduce()) return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* smooth scroll */
+  if(window.Lenis){
+    const lenis = new Lenis({lerp:0.12});
+    lenis.on("scroll", ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+    document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener("click", e => {
+      const id = a.getAttribute("href");
+      const target = id.length > 1 ? document.querySelector(id) : document.body;
+      if(!target) return;
+      e.preventDefault();
+      lenis.scrollTo(target, {offset: id === "#top" ? 0 : -64});
+    }));
+  }
+
+  /* 0. page-load: the hero title stretches open, the sun rises */
+  const w1 = document.getElementById("heroW1"), w2 = document.getElementById("heroW2");
+  gsap.timeline({defaults:{ease:"power4.out"}})
+    .from(w1, {yPercent:105, "--w":62, duration:1.3})
+    .from(w2, {yPercent:110, "--w":125, duration:1.1}, "-=1")
+    .from("#sun", {yPercent:40, scale:.8, duration:1.6, ease:"power3.out"}, 0);
+
+  const mm = gsap.matchMedia();
+  mm.add({desk:"(min-width: 960px)", mob:"(max-width: 959px)"}, ctx => {
+    const {desk} = ctx.conditions;
+
+    /* 1. hero: the sun keeps rising as you leave, photo drifts */
+    gsap.timeline({scrollTrigger:{trigger:".hero", start:"top top", end:"bottom top", scrub:true}})
+      .to("#sun", {yPercent:-45, ease:"none"}, 0)
+      .to("#heroImg", {yPercent:8, ease:"none"}, 0);
+
+    /* 2. kinetic words */
+    const k1 = ".k1 .k-word", k2 = ".k2 .k-word", k3 = ".k3 .k-word";
+    if(desk){
+      gsap.set($$(".k-row p"), {autoAlpha:0, y:20});
+      const tl = gsap.timeline({scrollTrigger:{trigger:".kinetic", start:"top top", end:"+=180%", pin:true, scrub:1}});
+      tl.fromTo(k1, {xPercent:-40, "--w":62}, {xPercent:0, "--w":125, ease:"power2.inOut", duration:1})
+        .to(".k1 p", {autoAlpha:1, y:0, duration:.3}, "-=.25")
+        .fromTo(k2, {xPercent:35, "--w":125}, {xPercent:0, "--w":62, ease:"power2.inOut", duration:1}, "-=.2")
+        .to(".k2 p", {autoAlpha:1, y:0, duration:.3}, "-=.25")
+        .fromTo(k3, {scaleY:.25, "--w":125}, {scaleY:1, "--w":100, ease:"power2.inOut", duration:1}, "-=.2")
+        .to(".k3 p", {autoAlpha:1, y:0, duration:.3}, "-=.25")
+        .to({}, {duration:.3});
+    } else {
+      [[k1,-30,62,125],[k2,30,125,62],[k3,-20,125,100]].forEach(([sel, x, a, b]) => {
+        gsap.fromTo(sel, {xPercent:x, "--w":a}, {xPercent:0, "--w":b, ease:"none",
+          scrollTrigger:{trigger:sel, start:"top 95%", end:"top 45%", scrub:true}});
+      });
+    }
+
+    /* 3. disciplines: horizontal scroll (desktop only; mobile keeps native swipe) */
+    if(desk){
+      const sec = document.querySelector(".disc"), track = document.getElementById("discTrack");
+      sec.classList.add("is-pinned");
+      const dist = () => Math.max(0, track.scrollWidth - window.innerWidth);
+      gsap.to(track, {x:() => -dist(), ease:"none",
+        scrollTrigger:{trigger:sec, start:"top top", end:() => "+=" + dist(), pin:true, scrub:1, invalidateOnRefresh:true}});
+    }
+
+    /* 4. coaches: pinned, each coach revealed through a rising mask */
+    if(desk){
+      const sec = document.querySelector(".coaches"), list = $$(".coach", sec), dots = $$("#coachDots i");
+      sec.classList.add("is-pinned");
+      list.forEach((c, i) => { if(i){ gsap.set($(".coach-photo", c), {clipPath:"inset(100% 0% 0% 0%)"}); gsap.set($(".coach-text", c), {autoAlpha:0, y:40}); } });
+      const tl = gsap.timeline({scrollTrigger:{trigger:sec, start:"top top", end:"+=" + (list.length - 1) * 90 + "%", pin:true, scrub:1,
+        onUpdate: self => { const idx = Math.min(list.length - 1, Math.round(self.progress * (list.length - 1))); dots.forEach((d, i) => d.classList.toggle("on", i === idx)); }}});
+      list.forEach((c, i) => {
+        if(!i) return;
+        const prev = list[i - 1];
+        tl.to($(".coach-text", prev), {autoAlpha:0, y:-40, duration:.4})
+          .to($(".coach-photo", c), {clipPath:"inset(0% 0% 0% 0%)", duration:1, ease:"power2.inOut"}, "<")
+          .to($(".coach-text", c), {autoAlpha:1, y:0, duration:.5}, "-=.4")
+          .to({}, {duration:.3});
+      });
+    }
+
+    return () => {
+      document.querySelector(".disc").classList.remove("is-pinned");
+      document.querySelector(".coaches").classList.remove("is-pinned");
+    };
+  });
+
+  window.addEventListener("load", () => ScrollTrigger.refresh());
+  if(document.fonts) document.fonts.ready.then(() => ScrollTrigger.refresh());
+}
+</script>
+</body>
+</html>

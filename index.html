@@ -1,0 +1,1252 @@
+<!doctype html>
+<!--
+  DESIGN PLAN v2 — Ghali, portfolio (https://sxnjiq.github.io/)
+  Brief from Ghali: follow the structure and look of his reference site closely (dark retro
+  CRT, monochrome, small uppercase mono type, dithered portrait hero, light "work" band with
+  big screens bending in 3D). Own content, own brand, own code.
+
+  Palette (monochrome only)
+    --ink      #000000  CRT black
+    --phos     #EDEDED  phosphor white, main text on black (17:1)
+    --ash      #9A9A9A  secondary text on black (6.9:1, > 5.5:1 under scanlines)
+    --rule     #2A2A2A  thin rules on black (decorative)
+    --paper    #E9E9E9  light work band
+    --graphite #4A4A4A  secondary text on paper (7:1)
+    One accent only: a 6px WhatsApp-green dot (#25D366) next to "Parlons-en".
+
+  Type
+    VT323 (pixel monospace) for big uppercase type: hero statement, section titles, project
+    names, prices, phone number, loader.
+    Martian Mono, small and uppercase, for everything else (nav, body, tags, forms).
+
+  Layout
+    loader: black, "CHARGEMENT", pill bar with a dot
+    header: GHALI ............................ FR/EN   PARLONS-EN ·   MENU ≡
+    hero:   faint square grid + dithered portrait canvas (khatam star if no photo);
+            statement bottom-left in big pixel caps, intro + CTA under it
+    work:   paper background, faint log text scrolling behind, minimal filter row,
+            big screens (≈70vw) bending/tilting/drifting in 3D, VHS tear on entry
+    about:  full-bleed dark CRT photo with parallax, text box with a dotted vertical rule,
+            "> EN SAVOIR PLUS" reveals the spec sheet
+    prices / process / contact / footer: black, white mono, thin rules
+
+  Signature: the dithered CRT portrait (Bayer 8×8, rolling scan band, VHS tear, mouse lens).
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ghali · Création de sites web au Maroc</title>
+<meta name="description" content="Ghali, 19 ans, designer web indépendant au Maroc. Sites rapides, pensés mobile, reliés à WhatsApp, en français, anglais et arabe, pour restaurants, riads, barbiers, cliniques et salles de sport. Maquette en 48 h, en ligne en 7 jours.">
+<meta name="theme-color" content="#000000">
+<meta name="color-scheme" content="dark">
+<link rel="canonical" href="https://sxnjiq.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://sxnjiq.github.io/">
+<meta property="og:site_name" content="Ghali">
+<meta property="og:title" content="Ghali · Création de sites web au Maroc">
+<meta property="og:description" content="Des sites qui transforment une recherche Google en message WhatsApp. Huit démos par métier, tarifs en dirhams, maquette en 48 h.">
+<meta property="og:image" content="https://sxnjiq.github.io/shots/riad-tamra.jpg">
+<meta property="og:image:width" content="1440">
+<meta property="og:image:height" content="900">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='black'/%3E%3Cg fill='none' stroke='white' stroke-width='2.4'%3E%3Crect x='9' y='9' width='14' height='14'/%3E%3Crect x='9' y='9' width='14' height='14' transform='rotate(45 16 16)'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wdth,wght@75..112.5,300..600&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#000000;
+  --phos:#EDEDED;
+  --ash:#9A9A9A;
+  --rule:#2A2A2A;
+  --paper:#E9E9E9;
+  --graphite:#4A4A4A;
+  --wa:#25D366;
+  --mono:"Martian Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --pixel:"VT323", ui-monospace, monospace;
+  --gutter:clamp(16px,3.4vw,48px);
+  --max:1400px;
+  --head:56px;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ink);color:var(--phos);font:400 .78rem/1.8 var(--mono);letter-spacing:.04em;text-transform:uppercase;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit}
+p{margin:0}
+h1,h2,h3{margin:0;font-weight:400}
+ul,ol{margin:0;padding:0;list-style:none}
+button,input,select{font:inherit;color:inherit;letter-spacing:inherit;text-transform:inherit}
+:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+section[id]{scroll-margin-top:var(--head)}
+.wrap{max-width:var(--max);margin-inline:auto;padding-inline:var(--gutter)}
+.px{font-family:var(--pixel);font-weight:400;letter-spacing:0;text-transform:uppercase}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.muted{color:var(--ash)}
+
+/* scanlines over everything; text stays above AA */
+body::after{content:"";position:fixed;inset:0;z-index:90;pointer-events:none;background:repeating-linear-gradient(to bottom,rgba(0,0,0,.12) 0 1px,transparent 1px 3px)}
+@media (prefers-contrast:more){body::after{display:none}}
+
+.skip{position:absolute;left:12px;top:-80px;z-index:130;background:var(--phos);color:#000;padding:.8em 1em;text-decoration:none}
+.skip:focus{top:12px}
+
+/* ---------- loader (inserted by the first script, pure CSS) ---------- */
+.boot{position:fixed;inset:0;z-index:120;background:#000;display:grid;place-items:center;cursor:pointer}
+.boot-in{display:grid;justify-items:center;gap:18px}
+.boot-word{font:400 clamp(2rem,5vw,3.2rem)/1 var(--pixel);letter-spacing:.12em;color:var(--phos)}
+.pill{position:relative;width:min(280px,70vw);height:16px;border:1px solid var(--phos);border-radius:999px;padding:3px}
+.pill i{position:relative;display:block;height:100%;width:0;border-radius:999px;background:repeating-linear-gradient(90deg,rgba(237,237,237,.55) 0 2px,transparent 2px 5px);animation:fill 1s steps(24) forwards}
+.pill i::after{content:"";position:absolute;right:-4px;top:50%;width:8px;height:8px;margin-top:-4px;border-radius:50%;background:var(--phos);box-shadow:0 0 8px rgba(255,255,255,.8)}
+.boot-pct{font:400 1.1rem/1 var(--pixel);color:var(--ash)}
+.boot button{background:none;border:0;color:var(--ash);font:400 .7rem/1 var(--mono);letter-spacing:.12em;min-height:44px;padding:0 1em;cursor:pointer;text-decoration:underline;text-underline-offset:4px}
+.boot.off{animation:crtoff .34s cubic-bezier(.7,0,.3,1) forwards}
+@keyframes fill{to{width:100%}}
+@keyframes crtoff{0%{transform:scale(1,1)}55%{transform:scale(1,.006);filter:brightness(4)}100%{transform:scale(0,.006);opacity:0}}
+
+/* ---------- header ---------- */
+.top{position:fixed;inset:0 0 auto;z-index:60;height:var(--head);display:flex;align-items:center;gap:clamp(4px,1.6vw,22px);padding-inline:var(--gutter);color:var(--phos);background:rgba(0,0,0,.88);transition:background .3s,color .3s}
+.top.light{background:rgba(233,233,233,.92);color:#000}
+.brand{margin-inline-end:auto;font:400 1.7rem/1 var(--pixel);letter-spacing:.06em;text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
+.nav-a{display:inline-flex;align-items:center;gap:.6em;min-height:44px;padding:0 .3em;background:none;border:0;font:400 .72rem/1 var(--mono);letter-spacing:.1em;text-decoration:none;cursor:pointer;white-space:nowrap}
+.nav-a:hover{text-decoration:underline;text-underline-offset:5px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--wa);flex:none}
+.lang-btn{color:inherit;opacity:1}
+.lang-btn [data-l]{opacity:.6}
+.lang-btn .on{opacity:1;text-decoration:underline;text-underline-offset:4px}
+.burger{font-size:1rem;line-height:1}
+
+/* ---------- menu overlay ---------- */
+.menu{position:fixed;inset:0;z-index:70;background:#000;color:var(--phos);display:flex;flex-direction:column;padding:var(--head) var(--gutter) 28px;overflow:auto}
+.menu[hidden]{display:none}
+.menu-close{position:absolute;top:6px;right:var(--gutter)}
+.menu nav{margin-block:auto;display:grid}
+.menu nav a{width:fit-content;font:400 clamp(3rem,10vw,7.5rem)/.95 var(--pixel);text-decoration:none;padding-block:.04em}
+.menu nav a:hover,.menu nav a:focus-visible{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:8px}
+.menu-foot{display:flex;flex-wrap:wrap;align-items:center;gap:4px 28px;border-top:1px solid var(--rule);padding-top:14px}
+.menu-foot a,.menu-foot button{min-height:44px;display:inline-flex;align-items:center}
+
+/* ---------- hero ---------- */
+.hero{position:relative;min-height:100vh;min-height:100svh;display:flex;align-items:flex-end;isolation:isolate;overflow:hidden;
+  background-color:#000;background-image:linear-gradient(#151515 1px,transparent 1px),linear-gradient(90deg,#151515 1px,transparent 1px);background-size:72px 72px;background-position:center top}
+#heroCv{position:absolute;inset:0;width:100%;height:100%;z-index:-1;display:block}
+.hero-text{width:100%;padding-block:calc(var(--head) + 24px) clamp(28px,6vh,64px)}
+.hero h1{font:400 clamp(2.3rem,5.4vw,5.6rem)/.98 var(--pixel);text-transform:uppercase;letter-spacing:.01em;max-width:21ch;margin-inline-start:-.15em}
+.hero h1 span{background:#000;box-decoration-break:clone;-webkit-box-decoration-break:clone;padding:0 .15em}
+.hero-row{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px 40px;margin-top:22px}
+.hero-sub{max-width:54ch;background:#000;color:var(--phos)}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:.8em;min-height:48px;padding:0 1.3em;background:var(--phos);color:#000;border:1px solid var(--phos);font:400 .72rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;text-decoration:none;cursor:pointer}
+.btn:hover{background:#fff}
+.btn-ghost{background:#000;color:var(--phos)}
+.btn-ghost:hover{background:#111}
+.hero-meta{position:absolute;top:calc(var(--head) + 18px);left:var(--gutter);color:var(--ash);font-size:.68rem;line-height:1.7;background:#000}
+.hero-meta b{font-weight:400;color:var(--phos)}
+
+/* ---------- work (light band) ---------- */
+.work{position:relative;overflow:hidden;background:var(--paper);color:#000;padding-block:clamp(80px,10vw,140px) clamp(100px,12vw,180px)}
+.log{position:absolute;inset:0;overflow:hidden;pointer-events:none;color:#D6D6D6;font:400 .66rem/1.9 var(--mono);white-space:pre;letter-spacing:.06em}
+.log-in{padding-inline:var(--gutter)}
+.work-in{position:relative}
+.work-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:18px 40px}
+.work h2{font:400 clamp(3.6rem,12vw,11rem)/.8 var(--pixel);letter-spacing:-.01em}
+.work-lead{max-width:52ch;color:var(--graphite)}
+.filters{display:flex;flex-wrap:wrap;gap:0 4px;margin-top:clamp(28px,4vw,48px);border-top:1px solid #BDBDBD;border-bottom:1px solid #BDBDBD;padding-block:2px}
+.filters button{min-height:44px;padding:0 .9em;background:none;border:0;color:var(--graphite);font:400 .7rem/1 var(--mono);letter-spacing:.1em;cursor:pointer}
+.filters button .n::before{content:"("}
+.filters button .n::after{content:")"}
+.filters button:hover{color:#000}
+.filters button[aria-pressed=true]{color:#000;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+.filters button[aria-pressed=true]::before{content:"> "}
+.count{margin-top:10px;color:var(--graphite);font-size:.7rem}
+.projs{display:grid;gap:clamp(90px,13vw,200px);margin-top:clamp(70px,9vw,140px)}
+.proj{display:flex;justify-content:center;perspective:1300px}
+.proj[hidden]{display:none}
+.screen{position:relative;display:block;width:min(70vw,1180px);text-decoration:none;color:var(--phos);transform-style:preserve-3d;will-change:transform}
+.screen:focus-visible{outline:2px solid #000;outline-offset:8px}
+.glass{position:relative;display:block;aspect-ratio:16/10;overflow:hidden;background:#000;box-shadow:0 50px 90px -40px rgba(0,0,0,.55)}
+.glass::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(to bottom,rgba(0,0,0,.18) 0 1px,transparent 1px 3px),radial-gradient(ellipse at 50% 50%,transparent 62%,rgba(0,0,0,.45) 100%)}
+.glass img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;opacity:0;filter:grayscale(1) contrast(1.05);transition:opacity .5s,filter .7s}
+.glass img.ok{opacity:1}
+.screen.live img,.screen:hover img,.screen:focus-visible img{filter:none}
+.fb{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:5% 6%;background-color:#000;background-image:linear-gradient(#1a1a1a 1px,transparent 1px),linear-gradient(90deg,#1a1a1a 1px,transparent 1px);background-size:40px 40px;font-family:var(--pixel);color:var(--phos)}
+.fb-sig{position:absolute;top:6%;left:6%;font-size:1.1rem;color:var(--ash)}
+.fb-sig::after{content:"_";animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.fb-url{font-size:clamp(1rem,1.6vw,1.4rem);color:var(--ash)}
+.tearfx{position:absolute;inset:0;pointer-events:none;opacity:0;background:repeating-linear-gradient(to bottom,transparent 0 9px,rgba(255,255,255,.55) 9px 10px,transparent 10px 23px,rgba(255,255,255,.18) 23px 27px,transparent 27px 41px)}
+.screen.tear .glass{animation:vhs .55s steps(7) 1}
+.screen.tear .tearfx{animation:tearfx .55s steps(6) 1}
+@keyframes vhs{
+  0%{clip-path:inset(0);transform:translateX(0);filter:brightness(2.2) contrast(1.5)}
+  15%{clip-path:inset(10% 0 55% 0);transform:translateX(-5%)}
+  30%{clip-path:inset(35% 0 18% 0);transform:translateX(4%)}
+  45%{clip-path:inset(0 0 70% 0);transform:translateX(-2%)}
+  60%{clip-path:inset(0);transform:translateX(1.5%);filter:brightness(1.4)}
+  80%{transform:translateX(-.5%)}
+  100%{clip-path:inset(0);transform:none;filter:none}}
+@keyframes tearfx{0%{opacity:1;transform:translateY(-10%)}100%{opacity:0;transform:translateY(25%)}}
+.cap{position:absolute;left:-2.5%;bottom:-.9em;z-index:2;display:flex;flex-direction:column;align-items:flex-start;transform:translateZ(40px)}
+.cap h3{font:400 clamp(2.4rem,6.4vw,6.6rem)/.9 var(--pixel);text-transform:uppercase}
+.cap h3 span,.cap .where{background:#000;box-decoration-break:clone;-webkit-box-decoration-break:clone;padding:0 .14em}
+.cap .where{margin-top:6px;font-size:.66rem;letter-spacing:.12em;color:var(--phos);padding:.35em .7em}
+.more{position:absolute;top:0;right:0;z-index:2;width:min(46%,420px);padding:18px 20px;background:#000;color:var(--phos);opacity:0;transform:translateY(-8px);transition:opacity .25s,transform .25s;pointer-events:none}
+.screen:hover .more,.screen:focus-visible .more{opacity:1;transform:none}
+.more .desc{display:block;color:var(--phos)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.tags .tag{border:1px solid #555;padding:.35em .6em;font-size:.62rem;line-height:1.3;color:var(--phos)}
+.more .go{display:block;margin-top:14px;color:var(--ash);font-size:.66rem}
+.demo-note{margin-top:clamp(90px,10vw,150px);max-width:70ch;color:var(--graphite);font-size:.7rem}
+
+/* ---------- about (dark, full-bleed photo) ---------- */
+.about{position:relative;overflow:hidden;min-height:100vh;display:flex;align-items:center;padding-block:clamp(90px,12vw,160px);isolation:isolate}
+.about-bg{position:absolute;inset:-12% 0;z-index:-1}
+.about-bg img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) brightness(.42) contrast(1.15)}
+.about-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.85),rgba(0,0,0,.25) 70%),linear-gradient(transparent 70%,#000)}
+.about-in{width:100%}
+.about-box{position:relative;max-width:640px;padding:6px 0 6px 34px}
+.vline{position:absolute;left:6px;top:0;bottom:0;width:1px;background:var(--phos)}
+.vline i{position:absolute;left:-3.5px;width:8px;height:8px;border-radius:50%;background:var(--phos)}
+.vline i:first-child{top:-4px}.vline i:last-child{bottom:-4px}
+.about-box h2{font-size:.72rem;letter-spacing:.14em;color:var(--ash)}
+.about-box .big{margin-top:16px;font:400 clamp(1.9rem,3.4vw,3rem)/1.02 var(--pixel);text-transform:uppercase}
+.about-box p+p{margin-top:1.1em}
+.about-box .txt{margin-top:22px;max-width:56ch}
+.about-more{margin-top:1.1em}
+.about-more[hidden]{display:none}
+.spec{margin:18px 0 0;border-top:1px solid #444}
+.spec div{display:grid;grid-template-columns:12em 1fr;gap:12px;padding-block:.5em;border-bottom:1px solid #333}
+.spec dt{color:var(--ash)}
+.spec dd{margin:0}
+.more-btn{margin-top:22px;background:none;border:0;padding:0;min-height:44px;color:var(--phos);font:400 .74rem/1 var(--mono);letter-spacing:.12em;cursor:pointer;text-decoration:underline;text-underline-offset:6px}
+
+/* ---------- black sections ---------- */
+.sec{padding-block:clamp(90px,12vw,160px);border-top:1px solid var(--rule)}
+.sec-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:18px 40px;margin-bottom:clamp(40px,6vw,72px)}
+.sec-head h2{font:400 clamp(3rem,9vw,8rem)/.82 var(--pixel);text-transform:uppercase}
+.sec-head p{max-width:52ch;color:var(--ash)}
+
+.plans{border-top:1px solid var(--rule)}
+.plan{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px clamp(32px,6vw,96px);padding-block:clamp(26px,3.6vw,40px);border-bottom:1px solid var(--rule)}
+.plan-head{grid-column:1/-1;display:flex;align-items:baseline;gap:14px}
+.plan h3{font-size:.86rem;letter-spacing:.1em}
+.leader{flex:1;min-width:24px;border-bottom:1px dotted #555;transform:translateY(-.25em)}
+.price{white-space:nowrap;color:var(--ash);font-size:.7rem}
+.price strong{font:400 clamp(1.8rem,3vw,2.6rem)/1 var(--pixel);color:var(--phos);margin-inline-start:.35em}
+.plan-desc{max-width:52ch}
+.incl{display:grid;gap:2px;color:var(--ash)}
+.incl li::before{content:"+ ";color:var(--phos)}
+.plan-cta{grid-column:2;justify-self:start;min-height:44px;display:inline-flex;align-items:center;text-underline-offset:5px}
+.always{margin-top:clamp(36px,5vw,56px);display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px}
+.always h3{font-size:.72rem;letter-spacing:.12em;color:var(--ash)}
+.always ul{display:flex;flex-wrap:wrap;gap:6px}
+.always li{border:1px solid #555;padding:.4em .7em;font-size:.66rem;line-height:1.3}
+
+.steps-wrap{position:relative}
+.track{position:absolute;left:0;right:0;top:4px;height:1px;background:var(--rule)}
+.track i{position:absolute;inset:0;background:var(--phos);transform-origin:left}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(20px,3vw,40px)}
+.step{position:relative;padding-top:40px}
+.step::before{content:"";position:absolute;top:0;left:0;width:9px;height:9px;background:var(--phos)}
+.step .when{font:400 2.2rem/1 var(--pixel)}
+.step h3{margin-top:.6em;font-size:.8rem;letter-spacing:.1em}
+.step p.d{margin-top:.6em;color:var(--ash);max-width:34ch}
+
+.contact-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:56px clamp(40px,7vw,120px);align-items:start}
+.contact h2{font:400 clamp(3rem,8vw,7rem)/.85 var(--pixel);text-transform:uppercase}
+.contact-lead{margin-top:18px;max-width:46ch;color:var(--ash)}
+.big-wa{display:block;width:fit-content;max-width:100%;margin-top:clamp(28px,4vw,44px);text-decoration:none}
+.big-wa .l1{display:flex;align-items:center;gap:.7em;font-size:.7rem;letter-spacing:.12em}
+.big-wa .num{display:block;margin-top:.15em;font:400 clamp(2.4rem,5.4vw,5.2rem)/1 var(--pixel);white-space:nowrap;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.12em;text-decoration-color:#555}
+.big-wa:hover .num{text-decoration-color:var(--phos)}
+.other{display:flex;flex-wrap:wrap;gap:0 30px;margin-top:22px}
+.other a{min-height:44px;display:inline-flex;align-items:center;gap:.8em;text-underline-offset:5px;text-transform:none}
+.other span{color:var(--ash);text-transform:uppercase}
+.form{border:1px solid var(--rule);padding:clamp(20px,3vw,32px);display:grid;gap:16px}
+.form-title{font:400 1.5rem/1 var(--pixel)}
+.form-note{color:var(--ash);margin-top:-8px}
+.field{display:grid;gap:6px}
+.field label{font-size:.66rem;letter-spacing:.12em;color:var(--ash)}
+.field input,.field select{width:100%;min-height:48px;padding:.6em .8em;background:#000;border:1px solid #555;border-radius:0;color:var(--phos);font-size:.86rem;text-transform:none;letter-spacing:.02em}
+.field select{appearance:none;-webkit-appearance:none;text-transform:uppercase;font-size:.74rem;background-image:linear-gradient(45deg,transparent 50%,var(--phos) 50%),linear-gradient(-45deg,transparent 50%,var(--phos) 50%);background-position:calc(100% - 18px) 55%,calc(100% - 13px) 55%;background-size:5px 5px;background-repeat:no-repeat;padding-right:2.4em}
+.field input::placeholder{color:#7a7a7a}
+.field input:focus-visible,.field select:focus-visible{outline:2px solid var(--phos);outline-offset:0}
+.field input[aria-invalid=true]{border-color:#fff;border-style:dashed}
+.err{color:var(--phos);font-size:.7rem}
+.err::before{content:"! "}
+.err:empty{display:none}
+.form .btn{justify-content:center;width:100%;margin-top:4px}
+
+footer{border-top:1px solid var(--rule);padding-block:26px 34px;color:var(--ash);font-size:.68rem}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 30px}
+.foot a{color:var(--phos);min-height:44px;display:inline-flex;align-items:center;text-underline-offset:4px}
+
+/* ---------- responsive ---------- */
+@media (max-width:899px){
+  .hero{align-items:flex-end}
+  .hero-text{padding-top:60vh}
+  .hero-meta{display:none}
+  .projs{gap:72px}
+  .log{color:#DFDFDF}
+  .proj{perspective:none;display:block}
+  .screen{width:100%}
+  .cap{position:static;transform:none;margin-top:-1.1em;padding-inline:6px}
+  .more{position:static;width:auto;opacity:1;transform:none;background:none;color:#000;padding:12px 6px 0}
+  .more .desc{color:#000}
+  .tags .tag{border-color:#9a9a9a;color:#000}
+  .more .go{color:var(--graphite)}
+  .plan{grid-template-columns:1fr}
+  .plan-head{flex-wrap:wrap;gap:4px 12px}
+  .leader{display:none}
+  .price{width:100%}
+  .plan-cta{grid-column:1}
+  .steps-wrap{padding-left:30px}
+  .steps{grid-template-columns:1fr;gap:34px}
+  .track{left:4px;right:auto;top:4px;bottom:4px;width:1px;height:auto}
+  .track i{transform-origin:top}
+  .step{padding-top:0}
+  .step::before{left:-30px;top:12px}
+  .contact-grid{grid-template-columns:1fr}
+  .spec div{grid-template-columns:1fr;gap:0}
+}
+@media (max-width:520px){
+  .top{gap:2px}
+  .nav-a{font-size:.66rem;letter-spacing:.06em;padding:0 .35em}
+  .brand{font-size:1.5rem}
+  body{font-size:.74rem}
+}
+</style>
+</head>
+<body>
+<script>
+/* Loader: inserted only when JS runs; pure CSS animation (~1.4 s), skippable,
+   skipped with reduced motion and on repeat visits in the same session. */
+(function(){
+  window.GW_BOOT_END = 0;
+  try{ if(sessionStorage.getItem("gw-boot")) return; }catch(e){}
+  if(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  try{ sessionStorage.setItem("gw-boot","1"); }catch(e){}
+  var l = null; try{ l = new URLSearchParams(location.search).get("lang"); }catch(e){}
+  if(l !== "en" && l !== "fr"){ try{ l = localStorage.getItem("gw-lang"); }catch(e){} }
+  var en = l === "en";
+  document.body.insertAdjacentHTML("afterbegin",
+    '<div class="boot" id="boot"><div class="boot-in">'
+    + '<p class="boot-word">' + (en ? "LOADING" : "CHARGEMENT") + '</p>'
+    + '<div class="pill" aria-hidden="true"><i></i></div>'
+    + '<p class="boot-pct"><span id="bootPct">0</span>%</p>'
+    + '<button type="button">' + (en ? "SKIP" : "PASSER") + '</button>'
+    + '</div></div>');
+  var boot = document.getElementById("boot"), pct = document.getElementById("bootPct");
+  var t0 = Date.now(), done = false;
+  window.GW_BOOT_END = performance.now() + 1100;
+  var iv = setInterval(function(){ pct.textContent = Math.min(100, Math.round((Date.now() - t0) / 10)); }, 40);
+  function finish(fast){
+    if(done) return; done = true; clearInterval(iv);
+    window.GW_BOOT_END = performance.now() + (fast ? 0 : 340);
+    document.removeEventListener("keydown", onKey);
+    if(fast){ boot.remove(); return; }
+    pct.textContent = "100"; boot.classList.add("off");
+    setTimeout(function(){ boot.remove(); }, 360);
+  }
+  function onKey(){ finish(true); }
+  document.addEventListener("keydown", onKey);
+  boot.addEventListener("click", function(){ finish(true); });
+  setTimeout(function(){ finish(false); }, 1050);
+})();
+</script>
+
+<a class="skip" href="#main" data-en="Skip to content">Aller au contenu</a>
+
+<header class="top" id="top-bar">
+  <a class="brand" href="#top" aria-label="Ghali, accueil" data-en-label="Ghali, home">GHALI</a>
+  <button type="button" class="nav-a lang-btn" id="langBtn" aria-label="Switch to English"><span data-l="fr">FR</span>/<span data-l="en">EN</span></button>
+  <a class="nav-a wa" href="https://wa.me/212600000000" target="_blank" rel="noopener" data-wa="hello"><span data-en="Let's talk">Parlons-en</span><span class="dot" aria-hidden="true"></span></a>
+  <button type="button" class="nav-a" id="menuBtn" aria-expanded="false" aria-controls="menu"><span data-en="Menu">Menu</span><span class="burger" aria-hidden="true">≡</span></button>
+</header>
+
+<div class="menu" id="menu" hidden>
+  <button type="button" class="nav-a menu-close" id="menuClose"><span data-en="Close">Fermer</span> <span aria-hidden="true">×</span></button>
+  <nav aria-label="Menu principal" data-en-label="Main menu">
+    <a href="#projets" data-en="Work">Projets</a>
+    <a href="#apropos" data-en="About">À propos</a>
+    <a href="#tarifs" data-en="Pricing">Tarifs</a>
+    <a href="#methode" data-en="Process">Méthode</a>
+    <a href="#contact" data-en="Contact">Contact</a>
+  </nav>
+  <div class="menu-foot">
+    <button type="button" class="nav-a lang-btn" id="langBtn2" aria-label="Switch to English"><span data-l="fr">Français</span>&nbsp;/&nbsp;<span data-l="en">English</span></button>
+    <a class="nav-a wa" href="https://wa.me/212600000000" target="_blank" rel="noopener" data-wa="hello">WhatsApp</a>
+    <a class="nav-a ig" href="https://instagram.com/" target="_blank" rel="noopener">Instagram</a>
+    <a class="nav-a mail" href="mailto:contact@example.com">E-mail</a>
+  </div>
+</div>
+
+<main id="main">
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <canvas id="heroCv" aria-hidden="true"></canvas>
+  <p class="hero-meta"><b data-en="Independent web designer">Designer web indépendant</b><br><span data-en="Morocco, clients everywhere">Maroc, clients partout</span><br><span data-en="FR / EN / AR websites">Sites FR / EN / AR</span></p>
+  <div class="wrap hero-text">
+    <h1 id="hero-title"><span data-en="Websites that turn a Google search into a WhatsApp message.">Des sites qui transforment une recherche Google en message WhatsApp.</span></h1>
+    <div class="hero-row">
+      <p class="hero-sub" data-en="I'm Ghali, 19. I build websites for restaurants, riads, barbers, clinics and gyms, in Morocco and abroad. Mockup in 48 hours, live in 7 days.">Je suis Ghali, 19 ans. Je crée des sites pour restaurants, riads, barbiers, cliniques et salles de sport, au Maroc et ailleurs. Maquette en 48 h, en ligne en 7 jours.</p>
+      <div class="hero-ctas">
+        <a class="btn wa" href="https://wa.me/212600000000" target="_blank" rel="noopener" data-wa="project"><span data-en="Talk about your project">Parler de votre projet</span><span class="dot" aria-hidden="true"></span></a>
+        <a class="btn btn-ghost" href="#projets" data-en="See the work">Voir les projets</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WORK (light band) ================= -->
+<section class="work" id="projets" aria-labelledby="work-title">
+  <div class="log" aria-hidden="true"><div class="log-in" id="log"></div></div>
+  <div class="wrap work-in">
+    <div class="work-head">
+      <h2 id="work-title" class="px" data-en="Work">Projets</h2>
+      <p class="work-lead" data-en="Eight demo sites, one per trade. The businesses are fictional, the sites are complete and working. Pick your trade and open the one closest to yours.">Huit sites de démo, un par métier. Les entreprises sont fictives, les sites sont complets et fonctionnent. Choisissez votre métier et ouvrez celui qui ressemble au vôtre.</p>
+    </div>
+
+    <div class="filters" role="group" aria-label="Filtrer par métier" data-en-label="Filter by trade" id="filters">
+      <button type="button" data-f="all" aria-pressed="true"><span data-en="All">Tous</span> <span class="n">8</span></button>
+      <button type="button" data-f="resto" aria-pressed="false"><span data-en="Food &amp; drink">Restauration</span> <span class="n">2</span></button>
+      <button type="button" data-f="tourisme" aria-pressed="false"><span data-en="Tourism">Tourisme</span> <span class="n">1</span></button>
+      <button type="button" data-f="beaute" aria-pressed="false"><span data-en="Beauty &amp; health">Beauté &amp; santé</span> <span class="n">2</span></button>
+      <button type="button" data-f="sport" aria-pressed="false"><span data-en="Sport">Sport</span> <span class="n">1</span></button>
+      <button type="button" data-f="immo" aria-pressed="false"><span data-en="Property &amp; cars">Immobilier &amp; auto</span> <span class="n">2</span></button>
+    </div>
+    <p class="count" id="count" aria-live="polite"><span id="countN">8</span> <span id="countTxt">sites affichés</span></p>
+
+    <ol class="projs" id="projs">
+      <li class="proj" data-niche="tourisme">
+        <a class="screen" href="riad-tamra/">
+          <span class="glass">
+            <span class="fb" aria-hidden="true"><span class="fb-sig">NO SIGNAL</span><span class="fb-url">sxnjiq.github.io/riad-tamra</span></span>
+            <img src="shots/riad-tamra.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="" onload="this.classList.add('ok')" onerror="this.remove()">
+            <span class="tearfx" aria-hidden="true"></span>
+          </span>
+          <div class="cap"><h3><span>Riad Tamra</span></h3><span class="where">Marrakech · <span data-en="Tourism">Tourisme</span></span></div>
+          <div class="more">
+            <span class="desc" data-en="A 6-room riad in the medina.">Riad de 6 chambres dans la médina.</span>
+            <span class="tags"><span class="sr" data-en="Features:">Fonctions :</span><span class="tag">FR / EN / AR</span><span class="tag" data-en="WhatsApp booking">Réservation WhatsApp</span><span class="tag" data-en="Gallery">Galerie</span><span class="tag" data-en="Map">Carte</span></span>
+            <span class="go" data-en="> Open the site">&gt; Ouvrir le site</span>
+          </div>
+        </a>
+      </li>
+      <li class="proj" data-niche="resto">
+        <a class="screen" href="restaurant-fes/">
+          <span class="glass">
+            <span class="fb" aria-hidden="true"><span class="fb-sig">NO SIGNAL</span><span class="fb-url">sxnjiq.github.io/restaurant-fes</span></span>
+            <img src="shots/restaurant-fes.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="" onload="this.classList.add('ok')" onerror="this.remove()">
+            <span class="tearfx" aria-hidden="true"></span>
+          </span>
+          <div class="cap"><h3><span>Lmida</span></h3><span class="where">Fès · <span data-en="Food &amp; drink">Restauration</span></span></div>
+          <div class="more">
+            <span class="desc" data-en="A modern Moroccan restaurant near Bab Boujloud.">Restaurant marocain moderne près de Bab Boujloud.</span>
+            <span class="tags"><span class="sr" data-en="Features:">Fonctions :</span><span class="tag" data-en="Full menu">Menu complet</span><span class="tag" data-en="Table booking">Réservation</span><span class="tag" data-en="Live opening hours">Horaires en direct</span></span>
+            <span class="go" data-en="> Open the site">&gt; Ouvrir le site</span>
+          </div>
+        </a>
+      </li>
+      <li class="proj" data-niche="resto">
+        <a class="screen" href="cafe-rabat/">
+          <span class="glass">
+            <span class="fb" aria-hidden="true"><span class="fb-sig">NO SIGNAL</span><span class="fb-url">sxnjiq.github.io/cafe-rabat</span></span>
+            <img src="shots/cafe-rabat.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="" onload="this.classList.add('ok')" onerror="this.remove()">
+            <span class="tearfx" aria-hidden="true"></span>
+          </span>
+          <div class="cap"><h3><span>Kahwa Atelier</span></h3><span class="where">Rabat · <span data-en="Food &amp; drink">Restauration</span></span></div>
+          <div class="more">
+            <span class="desc" data-en="A coffee shop and bakery in Agdal.">Coffee shop et boulangerie à Agdal.</span>
+            <span class="tags"><span class="sr" data-en="Features:">Fonctions :</span><span class="tag" data-en="Takeaway ordering">Commande à emporter</span><span class="tag" data-en="Filterable menu">Menu filtrable</span></span>
+            <span class="go" data-en="> Open the site">&gt; Ouvrir le site</span>
+          </div>
+        </a>
+      </li>
+      <li class="proj" data-niche="beaute">
+        <a class="screen" href="barber-casablanca/">
+          <span class="glass">
+            <span class="fb" aria-hidden="true"><span class="fb-sig">NO SIGNAL</span><span class="fb-url">sxnjiq.github.io/barber-casablanca</span></span>
+            <img src="shots/barber-casablanca.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="" onload="this.classList.add('ok')" onerror="this.remove()">
+            <span class="tearfx" aria-hidden="true"></span>
+          </span>
+          <div class="cap"><h3><span>Hajjam Club</span></h3><span class="where">Casablanca · <span data-en="Beauty &amp; health">Beauté &amp; santé</span></span></div>
+          <div class="more">
+            <span class="desc" data-en="An Art Deco barbershop in Maârif.">Barbershop Art déco à Maârif.</span>
+            <span class="tags"><span class="sr" data-en="Features:">Fonctions :</span><span class="tag" data-en="Appointment booking">Prise de rendez-vous</span><span class="tag" data-en="Choose your barber">Choix du barbier</span></span>
+            <span class="go" data-en="> Open the site">&gt; Ouvrir le site</span>
+          </div>
+        </a>
+      </li>
+      <li class="proj" data-niche="beaute">
+        <a class="screen" href="dental-tanger/">
+          <span class="glass">
+            <span class="fb" aria-hidden="true"><span class="fb-sig">NO SIGNAL</span><span class="fb-url">sxnjiq.github.io/dental-tanger</span></span>
+            <img src="shots/dental-tanger.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="" onload="this.classList.add('ok')" onerror="this.remove()">
+            <span class="tearfx" aria-hidden="true"></span>
+          </span>
+          <div class="cap"><h3><span>Atlas Dental Studio</span></h3><span class="where"><span data-en="Tangier">Tanger</span> · <span data-en="Beauty &amp; health">Beauté &amp; santé</span></span></div>
+          <div class="more">
+            <span class="desc" data-en="A dental practice facing the Strait of Gibraltar.">Cabinet dentaire face au détroit.</span>
+            <span class="tags"><span class="sr" data-en="Features:">Fonctions :</span><span class="tag">FR / ES</span><span class="tag" data-en="Cost estimator">Simulateur de coût</span><span class="tag" data-en="Before / after">Avant / après</span></span>
+            <span class="go" data-en="> Open the site">&gt; Ouvrir le site</span>
+          </div>
+        </a>
+      </li>
+      <li class="proj" data-niche="sport">
+        <a class="screen" href="gym-agadir/">
+          <span class="glass">
+            <span class="fb" aria-hidden="true"><span class="fb-sig">NO SIGNAL</span><span class="fb-url">sxnjiq.github.io/gym-agadir</span></span>
+            <img src="shots/gym-agadir.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="" onload="this.classList.add('ok')" onerror="this.remove()">
+            <span class="tearfx" aria-hidden="true"></span>
+          </span>
+          <div class="cap"><h3><span>Sahel Fight &amp; Fitness</span></h3><span class="where">Agadir · <span data-en="Sport">Sport</span></span></div>
+          <div class="more">
+            <span class="desc" data-en="A gym with boxing and muay thai classes.">Salle de sport, boxe et muay thai.</span>
+            <span class="tags"><span class="sr" data-en="Features:">Fonctions :</span><span class="tag" data-en="Class schedule">Planning des cours</span><span class="tag" data-en="Memberships">Abonnements</span><span class="tag" data-en="Free trial">Essai gratuit</span></span>
+            <span class="go" data-en="> Open the site">&gt; Ouvrir le site</span>
+          </div>
+        </a>
+      </li>
+      <li class="proj" data-niche="immo">
+        <a class="screen" href="immobilier-casablanca/">
+          <span class="glass">
+            <span class="fb" aria-hidden="true"><span class="fb-sig">NO SIGNAL</span><span class="fb-url">sxnjiq.github.io/immobilier-casablanca</span></span>
+            <img src="shots/immobilier-casablanca.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="" onload="this.classList.add('ok')" onerror="this.remove()">
+            <span class="tearfx" aria-hidden="true"></span>
+          </span>
+          <div class="cap"><h3><span>Bayt Immobilier</span></h3><span class="where">Casablanca · <span data-en="Property &amp; cars">Immobilier &amp; auto</span></span></div>
+          <div class="more">
+            <span class="desc" data-en="An estate agency covering Anfa, Californie and Bouskoura.">Agence immobilière Anfa, Californie, Bouskoura.</span>
+            <span class="tags"><span class="sr" data-en="Features:">Fonctions :</span><span class="tag" data-en="Filterable listings">Annonces filtrables</span><span class="tag" data-en="Mortgage calculator">Simulateur de crédit</span></span>
+            <span class="go" data-en="> Open the site">&gt; Ouvrir le site</span>
+          </div>
+        </a>
+      </li>
+      <li class="proj" data-niche="immo">
+        <a class="screen" href="location-voiture-marrakech/">
+          <span class="glass">
+            <span class="fb" aria-hidden="true"><span class="fb-sig">NO SIGNAL</span><span class="fb-url">sxnjiq.github.io/location-voiture-marrakech</span></span>
+            <img src="shots/location-voiture-marrakech.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="" onload="this.classList.add('ok')" onerror="this.remove()">
+            <span class="tearfx" aria-hidden="true"></span>
+          </span>
+          <div class="cap"><h3><span>Atlas Drive</span></h3><span class="where">Marrakech · <span data-en="Property &amp; cars">Immobilier &amp; auto</span></span></div>
+          <div class="more">
+            <span class="desc" data-en="Car rental with airport delivery.">Location de voitures, livraison aéroport.</span>
+            <span class="tags"><span class="sr" data-en="Features:">Fonctions :</span><span class="tag">FR / EN</span><span class="tag" data-en="Instant quote">Devis instantané</span><span class="tag" data-en="Filterable fleet">Flotte filtrable</span></span>
+            <span class="go" data-en="> Open the site">&gt; Ouvrir le site</span>
+          </div>
+        </a>
+      </li>
+    </ol>
+
+    <p class="demo-note" data-en="Every name, staff member and price in these demos is invented. The design, the code and the features are real, and the same work goes into a client site.">Les noms, l'équipe et les prix de ces démos sont inventés. Le design, le code et les fonctions sont réels, et c'est le même travail qui part dans un site client.</p>
+  </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section class="about" id="apropos" aria-labelledby="about-title">
+  <div class="about-bg">
+    <img src="https://images.unsplash.com/photo-1571690459265-b890d6115b79?w=1800&q=70&auto=format&fit=crop" width="1800" height="1200" loading="lazy" decoding="async" alt="Pile de vieux moniteurs cathodiques de toutes tailles" data-en-alt="A stack of old CRT monitors of all sizes">
+  </div>
+  <div class="wrap about-in">
+    <div class="about-box">
+      <span class="vline" aria-hidden="true"><i></i><i></i></span>
+      <h2 id="about-title" data-en="About">À propos</h2>
+      <p class="big" data-en="One person designs and codes your site, and answers your messages.">Une seule personne dessine et code votre site, et répond à vos messages.</p>
+      <div class="txt">
+        <p data-en="I design and code every site myself, without templates. You talk directly to the person building your site, on WhatsApp, with no middleman.">Je conçois et je code chaque site moi-même, sans template. Vous parlez directement à la personne qui fabrique votre site, sur WhatsApp, sans intermédiaire.</p>
+        <p data-en="I start from your trade: a riad needs photos and bookings, a barber needs time slots, a dentist needs trust. Every site is built for the phone first, because that is where your customers look for you.">Je pars de votre métier : un riad a besoin de photos et de réservations, un barbier de créneaux, un dentiste de confiance. Chaque site est pensé pour le téléphone d'abord, parce que c'est là que vos clients vous cherchent.</p>
+        <div class="about-more" id="aboutMore" hidden>
+          <p data-en="I'm 19 and I won't invent numbers or reviews. The demos above show what I can do. For the rest, let's talk.">J'ai 19 ans et je ne vais pas vous inventer des chiffres ni des avis. Les démos ci-dessus montrent ce que je sais faire. Pour le reste, parlons-en.</p>
+          <dl class="spec">
+            <div><dt data-en="Name">Nom</dt><dd>Ghali</dd></div>
+            <div><dt data-en="Age">Âge</dt><dd data-en="19">19 ans</dd></div>
+            <div><dt data-en="Based in">Basé au</dt><dd data-en="Morocco">Maroc</dd></div>
+            <div><dt data-en="Clients">Clients</dt><dd data-en="Morocco and abroad">Maroc et international</dd></div>
+            <div><dt data-en="Site languages">Langues des sites</dt><dd data-en="French, English, Arabic">Français, anglais, arabe</dd></div>
+            <div><dt data-en="Standard delivery">Délai standard</dt><dd data-en="7 days">7 jours</dd></div>
+            <div><dt data-en="Built with">Outils</dt><dd>HTML, CSS, JavaScript, GSAP</dd></div>
+          </dl>
+        </div>
+      </div>
+      <button type="button" class="more-btn" id="moreBtn" aria-expanded="false" aria-controls="aboutMore">&gt; En savoir plus</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PRICES ================= -->
+<section class="sec" id="tarifs" aria-labelledby="price-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="price-title" data-en="Pricing">Tarifs</h2>
+      <p data-en="Starting prices in dirhams. The final quote depends on the number of pages and features, and you get it in writing before I start.">Prix de départ en dirhams. Le devis final dépend du nombre de pages et des fonctions, et vous le recevez par écrit avant que je commence.</p>
+    </div>
+    <ul class="plans">
+      <li class="plan">
+        <div class="plan-head"><h3 data-en="One-page website">Site vitrine one-page</h3><span class="leader" aria-hidden="true"></span><p class="price"><span data-en="from">à partir de</span><strong data-en="2,500 MAD">2 500 MAD</strong></p></div>
+        <p class="plan-desc" data-en="One clear page: who you are, what you offer, your prices, how to reach you. Ideal for a café, a barber or a craftsman starting out online.">Une seule page claire : qui vous êtes, ce que vous proposez, vos prix, comment venir. Idéal pour un café, un barbier ou un artisan qui démarre en ligne.</p>
+        <ul class="incl">
+          <li data-en="Sections: services, photos, hours, map">Sections services, photos, horaires, carte</li>
+          <li data-en="WhatsApp button with a prefilled message">Bouton WhatsApp avec message prérempli</li>
+          <li data-en="Live in 7 days">En ligne en 7 jours</li>
+        </ul>
+        <a class="plan-cta wa" href="https://wa.me/212600000000" target="_blank" rel="noopener" data-wa="plan" data-plan="Site vitrine one-page" data-plan-en="One-page website" data-en="> Ask for this plan">&gt; Demander ce forfait</a>
+      </li>
+      <li class="plan">
+        <div class="plan-head"><h3 data-en="Multi-page website + WhatsApp booking">Site multi-pages + réservation WhatsApp</h3><span class="leader" aria-hidden="true"></span><p class="price"><span data-en="from">à partir de</span><strong data-en="5,000 MAD">5 000 MAD</strong></p></div>
+        <p class="plan-desc" data-en="Up to 6 pages for businesses that take bookings: restaurants, riads, clinics, gyms. The customer fills in a short form and the request lands in your WhatsApp.">Jusqu'à 6 pages pour les activités qui prennent des réservations : restaurant, riad, cabinet, salle de sport. Le client remplit un petit formulaire, la demande arrive dans votre WhatsApp.</p>
+        <ul class="incl">
+          <li data-en="Menu, rooms, services or class schedule">Menu, chambres, soins ou planning des cours</li>
+          <li data-en="Booking or appointment form to WhatsApp">Formulaire de réservation ou de rendez-vous vers WhatsApp</li>
+          <li data-en="Photo gallery, scroll animations">Galerie photo, animations au défilement</li>
+        </ul>
+        <a class="plan-cta wa" href="https://wa.me/212600000000" target="_blank" rel="noopener" data-wa="plan" data-plan="Site multi-pages + réservation WhatsApp" data-plan-en="Multi-page website + WhatsApp booking" data-en="> Ask for this plan">&gt; Demander ce forfait</a>
+      </li>
+      <li class="plan">
+        <div class="plan-head"><h3 data-en="Multilingual site / online shop">Site multilingue / boutique</h3><span class="leader" aria-hidden="true"></span><p class="price"><strong data-en="Quote">Sur devis</strong></p></div>
+        <p class="plan-desc" data-en="For tourist customers and catalogues: French, English, Arabic written right to left, Spanish if you need it. Product catalogue, cost or loan calculators, filterable listings.">Pour la clientèle touristique et les catalogues : français, anglais, arabe de droite à gauche, espagnol si besoin. Catalogue produits, simulateurs de prix ou de crédit, annonces filtrables.</p>
+        <ul class="incl">
+          <li data-en="Language switch that remembers the visitor's choice">Changement de langue qui retient le choix du visiteur</li>
+          <li data-en="Orders via WhatsApp or online payment">Commande par WhatsApp ou paiement en ligne</li>
+          <li data-en="Quote within 24 hours of our call">Devis sous 24 h après notre échange</li>
+        </ul>
+        <a class="plan-cta wa" href="https://wa.me/212600000000" target="_blank" rel="noopener" data-wa="plan" data-plan="Site multilingue / boutique" data-plan-en="Multilingual site / online shop" data-en="> Ask for a quote">&gt; Demander un devis</a>
+      </li>
+      <li class="plan">
+        <div class="plan-head"><h3 data-en="Maintenance &amp; hosting">Maintenance &amp; hébergement</h3><span class="leader" aria-hidden="true"></span><p class="price"><span data-en="from">à partir de</span><strong data-en="200 MAD/mo">200 MAD/mois</strong></p></div>
+        <p class="plan-desc" data-en="Your site stays online, secure and up to date. New dish, new price, Ramadan hours: send me a message and it's changed.">Votre site reste en ligne, sécurisé et à jour. Nouveau plat, nouveau prix, horaires du Ramadan : vous m'envoyez un message, c'est modifié.</p>
+        <ul class="incl">
+          <li data-en="Hosting, HTTPS certificate, backups">Hébergement, certificat HTTPS, sauvegardes</li>
+          <li data-en="Small text, price and photo changes">Petites modifications de textes, prix et photos</li>
+          <li data-en="Cancel any month">Sans engagement</li>
+        </ul>
+        <a class="plan-cta wa" href="https://wa.me/212600000000" target="_blank" rel="noopener" data-wa="plan" data-plan="Maintenance & hébergement" data-plan-en="Maintenance & hosting" data-en="> Ask for this plan">&gt; Demander ce forfait</a>
+      </li>
+    </ul>
+    <div class="always">
+      <h3 data-en="Included in every site:">Inclus dans chaque site :</h3>
+      <ul>
+        <li data-en="Domain name (first year)">Nom de domaine (1re année)</li>
+        <li data-en="Mobile first">Pensé mobile d'abord</li>
+        <li>Google Maps</li>
+        <li data-en="WhatsApp button">Bouton WhatsApp</li>
+        <li data-en="Google Business listing">Fiche Google Business</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROCESS ================= -->
+<section class="sec" id="methode" aria-labelledby="proc-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="proc-title" data-en="Process">Méthode</h2>
+      <p data-en="Four steps, one person from start to finish. You always know what happens next.">Quatre étapes, une seule personne du début à la fin. Vous savez toujours ce qui vient ensuite.</p>
+    </div>
+    <div class="steps-wrap" id="steps">
+      <div class="track" aria-hidden="true"><i id="trackFill"></i></div>
+      <ol class="steps">
+        <li class="step">
+          <p class="when" data-en="Day 0">Jour 0</p>
+          <h3 data-en="1. A call or a message">1. Appel ou message</h3>
+          <p class="d" data-en="You write to me on WhatsApp. Fifteen minutes to understand your business, your customers and what the site needs to do.">Vous m'écrivez sur WhatsApp. Quinze minutes pour comprendre votre activité, vos clients et ce que le site doit faire.</p>
+        </li>
+        <li class="step">
+          <p class="when">48 h</p>
+          <h3 data-en="2. Mockup in 48 hours">2. Maquette en 48 h</h3>
+          <p class="d" data-en="You get a first visual version on your phone. You comment, we adjust until it feels like your place.">Vous recevez une première version visuelle sur votre téléphone. Vous commentez, on ajuste jusqu'à ce qu'elle vous ressemble.</p>
+        </li>
+        <li class="step">
+          <p class="when" data-en="Day 7">Jour 7</p>
+          <h3 data-en="3. Live in 7 days">3. Site en ligne en 7 jours</h3>
+          <p class="d" data-en="Texts, photos, domain, Google Maps, Google Business listing: everything is connected and tested on mobile.">Textes, photos, domaine, Google Maps, fiche Google Business : tout est branché et testé sur mobile.</p>
+        </li>
+        <li class="step">
+          <p class="when" data-en="After">Ensuite</p>
+          <h3 data-en="4. Follow-up">4. Suivi</h3>
+          <p class="d" data-en="A change of hours, a new dish, a promotion: one message and it's online. With or without a maintenance plan.">Un changement d'horaires, un nouveau plat, une promo : un message et c'est en ligne. Avec ou sans forfait maintenance.</p>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="sec contact" id="contact" aria-labelledby="contact-title">
+  <div class="wrap contact-grid">
+    <div>
+      <h2 id="contact-title" data-en="Let's talk">Parlons-en</h2>
+      <p class="contact-lead" data-en="The quickest way is a WhatsApp message. I usually reply the same day, in French, English or Darija.">Le plus rapide : un message WhatsApp. Je réponds en général dans la journée, en français, en anglais ou en darija.</p>
+      <a class="big-wa wa" href="https://wa.me/212600000000" target="_blank" rel="noopener" data-wa="project">
+        <span class="l1"><span class="dot" aria-hidden="true"></span><span data-en="Write to me on WhatsApp">Écrire sur WhatsApp</span></span>
+        <span class="num" id="waNum">+212 6 00 00 00 00</span>
+      </a>
+      <div class="other">
+        <a class="ig" href="https://instagram.com/" target="_blank" rel="noopener"><span>Instagram</span><b class="ig-handle" style="font-weight:400">@ghali.web</b></a>
+        <a class="mail" href="mailto:contact@example.com"><span>E-mail</span><b class="mail-addr" style="font-weight:400">contact@example.com</b></a>
+      </div>
+    </div>
+
+    <form class="form" id="brief" novalidate>
+      <p class="form-title" data-en="> Quick brief">&gt; Brief express</p>
+      <p class="form-note" data-en="Four fields and the WhatsApp message writes itself.">Quatre champs, et le message WhatsApp s'écrit tout seul.</p>
+      <div class="field">
+        <label for="fName" data-en="Your name">Votre nom</label>
+        <input id="fName" name="name" autocomplete="name" required aria-describedby="fNameErr">
+        <p class="err" id="fNameErr"></p>
+      </div>
+      <div class="field">
+        <label for="fBiz" data-en="Your business">Votre activité</label>
+        <input id="fBiz" name="biz" placeholder="Ex. : café à Rabat" data-en-placeholder="E.g. a café in Rabat">
+      </div>
+      <div class="field">
+        <label for="fNeed" data-en="What you need">Votre besoin</label>
+        <select id="fNeed" name="need">
+          <option data-en="One-page website">Site vitrine one-page</option>
+          <option data-en="Multi-page website + booking">Site multi-pages + réservation</option>
+          <option data-en="Multilingual site or online shop">Site multilingue ou boutique</option>
+          <option data-en="Redesign of an existing site">Refonte d'un site existant</option>
+          <option data-en="Maintenance &amp; hosting">Maintenance &amp; hébergement</option>
+          <option data-en="Not sure yet">Je ne sais pas encore</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="fBudget" data-en="Budget">Budget</label>
+        <select id="fBudget" name="budget">
+          <option data-en="Under 3,000 MAD">Moins de 3 000 MAD</option>
+          <option data-en="3,000 to 6,000 MAD">3 000 à 6 000 MAD</option>
+          <option data-en="6,000 to 12,000 MAD">6 000 à 12 000 MAD</option>
+          <option data-en="Over 12,000 MAD">Plus de 12 000 MAD</option>
+          <option data-en="To be discussed" selected>À définir ensemble</option>
+        </select>
+      </div>
+      <button class="btn" type="submit"><span data-en="Send on WhatsApp">Envoyer sur WhatsApp</span><span class="dot" aria-hidden="true"></span></button>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <p>© 2026 Ghali. <span data-en="Websites for Moroccan businesses.">Sites web pour les commerces marocains.</span></p>
+    <a href="#top" data-en="Back to top">Retour en haut</a>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<script>
+/* ==================================================================
+   CONFIG — Ghali's details. Change them here only.
+   whatsapp: international format, digits only (212 = Morocco)
+   portrait: photo shown dithered in the hero (same folder as this page).
+             If it is missing, the hero shows the zellige star instead.
+   ================================================================== */
+const CONFIG = {
+  whatsapp: "212600000000",
+  instagram: "ghali.web",
+  instagramUrl: "https://instagram.com/",
+  email: "contact@example.com",
+  portrait: "moi.jpg"
+};
+
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const T = {
+  fr: {
+    title: "Ghali · Création de sites web au Maroc",
+    desc: "Ghali, 19 ans, designer web indépendant au Maroc. Sites rapides, pensés mobile, reliés à WhatsApp, en français, anglais et arabe, pour restaurants, riads, barbiers, cliniques et salles de sport. Maquette en 48 h, en ligne en 7 jours.",
+    langLabel: "Switch to English",
+    shown: n => n > 1 ? "sites affichés" : "site affiché",
+    more: "> En savoir plus", less: "> Réduire",
+    hello: "Bonjour Ghali, je viens de voir ton portfolio.",
+    project: "Bonjour Ghali, j'aimerais parler d'un projet de site web.",
+    plan: p => `Bonjour Ghali, je suis intéressé(e) par : ${p}.`,
+    nameErr: "Indiquez votre nom pour que je sache à qui je réponds.",
+    brief: (n, b, ne, bu) => `Bonjour Ghali,\nNom : ${n}\nActivité : ${b || "-"}\nBesoin : ${ne}\nBudget : ${bu}`
+  },
+  en: {
+    title: "Ghali · Websites for Moroccan businesses",
+    desc: "Ghali, 19, independent web designer in Morocco. Fast, mobile-first, WhatsApp-connected websites in French, English and Arabic for restaurants, riads, barbers, clinics and gyms. Mockup in 48 hours, live in 7 days.",
+    langLabel: "Passer en français",
+    shown: n => n > 1 ? "sites shown" : "site shown",
+    more: "> Learn more", less: "> Show less",
+    hello: "Hi Ghali, I just saw your portfolio.",
+    project: "Hi Ghali, I'd like to talk about a website project.",
+    plan: p => `Hi Ghali, I'm interested in: ${p}.`,
+    nameErr: "Add your name so I know who I'm replying to.",
+    brief: (n, b, ne, bu) => `Hi Ghali,\nName: ${n}\nBusiness: ${b || "-"}\nNeed: ${ne}\nBudget: ${bu}`
+  }
+};
+
+let lang = "fr";
+const waURL = text => `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(text)}`;
+const prettyPhone = d => d.startsWith("212") && d.length === 12
+  ? `+212 ${d[3]} ${d.slice(4,6)} ${d.slice(6,8)} ${d.slice(8,10)} ${d.slice(10,12)}` : "+" + d;
+
+/* ---------- contact details from CONFIG ---------- */
+$$(".ig").forEach(a => a.href = CONFIG.instagramUrl);
+$$(".ig-handle").forEach(el => el.textContent = "@" + CONFIG.instagram);
+$$(".mail").forEach(a => a.href = "mailto:" + CONFIG.email);
+$$(".mail-addr").forEach(el => el.textContent = CONFIG.email);
+$("#waNum").textContent = prettyPhone(CONFIG.whatsapp);
+
+function refreshWA(){
+  const t = T[lang];
+  $$("a[data-wa]").forEach(a => {
+    const k = a.dataset.wa;
+    a.href = waURL(k === "plan" ? t.plan(lang === "en" ? a.dataset.planEn : a.dataset.plan) : t[k]);
+  });
+}
+
+/* ---------- language: French default, English from data-en attributes ---------- */
+function setLang(l){
+  lang = l === "en" ? "en" : "fr";
+  const en = lang === "en", t = T[lang];
+  document.documentElement.lang = lang;
+  $$("[data-en]").forEach(el => {
+    if(el.dataset.fr === undefined) el.dataset.fr = el.textContent;
+    el.textContent = en ? el.dataset.en : el.dataset.fr;
+  });
+  $$("[data-en-label]").forEach(el => {
+    if(el.dataset.frLabel === undefined) el.dataset.frLabel = el.getAttribute("aria-label") || "";
+    el.setAttribute("aria-label", en ? el.dataset.enLabel : el.dataset.frLabel);
+  });
+  $$("[data-en-placeholder]").forEach(el => {
+    if(el.dataset.frPlaceholder === undefined) el.dataset.frPlaceholder = el.placeholder;
+    el.placeholder = en ? el.dataset.enPlaceholder : el.dataset.frPlaceholder;
+  });
+  $$("[data-en-alt]").forEach(el => {
+    if(el.dataset.frAlt === undefined) el.dataset.frAlt = el.alt;
+    el.alt = en ? el.dataset.enAlt : el.dataset.frAlt;
+  });
+  document.title = t.title;
+  $('meta[name="description"]').content = t.desc;
+  $$(".lang-btn").forEach(b => {
+    b.setAttribute("aria-label", t.langLabel);
+    $$("[data-l]", b).forEach(s => s.classList.toggle("on", s.dataset.l === lang));
+  });
+  const mb = $("#moreBtn"); mb.textContent = mb.getAttribute("aria-expanded") === "true" ? t.less : t.more;
+  refreshWA();
+  updateCount();
+  const err = $("#fNameErr"); if(err.textContent) err.textContent = t.nameErr;
+  try{ localStorage.setItem("gw-lang", lang); }catch(e){}
+}
+$$(".lang-btn").forEach(b => b.addEventListener("click", () => setLang(lang === "fr" ? "en" : "fr")));
+
+/* ---------- menu ---------- */
+const menu = $("#menu"), menuBtn = $("#menuBtn");
+function openMenu(){
+  menu.hidden = false; menuBtn.setAttribute("aria-expanded","true");
+  document.body.style.overflow = "hidden";
+  $("nav a", menu).focus();
+}
+function closeMenu(focusBack = true){
+  menu.hidden = true; menuBtn.setAttribute("aria-expanded","false");
+  document.body.style.overflow = "";
+  if(focusBack) menuBtn.focus();
+}
+menuBtn.addEventListener("click", openMenu);
+$("#menuClose").addEventListener("click", () => closeMenu());
+$$("nav a, .menu-foot a", menu).forEach(a => a.addEventListener("click", () => closeMenu(false)));
+document.addEventListener("keydown", e => {
+  if(menu.hidden) return;
+  if(e.key === "Escape") closeMenu();
+  if(e.key === "Tab"){
+    const f = $$("button, a", menu), first = f[0], last = f[f.length - 1];
+    if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+  }
+});
+
+/* ---------- header switches to light over the work band ---------- */
+const topBar = $("#top-bar"), workSec = $("#projets");
+let hdrTick = false;
+function hdr(){
+  hdrTick = false;
+  const r = workSec.getBoundingClientRect(), h = topBar.offsetHeight / 2;
+  topBar.classList.toggle("light", r.top <= h && r.bottom >= h);
+}
+addEventListener("scroll", () => { if(!hdrTick){ hdrTick = true; requestAnimationFrame(hdr); } }, { passive:true });
+hdr();
+
+/* ---------- about: "en savoir plus" ---------- */
+$("#moreBtn").addEventListener("click", e => {
+  const b = e.currentTarget, open = b.getAttribute("aria-expanded") !== "true";
+  b.setAttribute("aria-expanded", open);
+  $("#aboutMore").hidden = !open;
+  b.textContent = open ? T[lang].less : T[lang].more;
+  if(window.ScrollTrigger) ScrollTrigger.refresh();
+});
+
+/* ---------- work: faint log text behind the screens ---------- */
+(function log(){
+  const slugs = ["riad-tamra","restaurant-fes","cafe-rabat","barber-casablanca","dental-tanger","gym-agadir","immobilier-casablanca","location-voiture-marrakech"];
+  const steps = ["build html","minify css","compress images","check mobile 375px","check lang fr/en","link whatsapp","google maps embed","deploy","lazy-load images","focus states","contrast aa","og tags"];
+  const lines = [];
+  let s = 7;
+  const rnd = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+  for(let i = 0; i < 260; i++){
+    const slug = slugs[(rnd() * slugs.length) | 0], st = steps[(rnd() * steps.length) | 0];
+    const tt = String(10 + (i % 50)).padStart(2,"0") + ":" + String((i * 7) % 60).padStart(2,"0") + ":" + String((i * 13) % 60).padStart(2,"0");
+    const r = rnd();
+    lines.push(r < .45 ? `[${tt}] ${st.padEnd(20," ")} /${slug}/ ........ ok`
+      : r < .7 ? `[${tt}] GET /${slug}/ 200   ${(20 + rnd() * 60 | 0)}kb   ${(80 + rnd() * 300 | 0)}ms`
+      : r < .85 ? `       .screen{transform:rotateX(${(rnd() * 30 - 15).toFixed(1)}deg) skewY(${(rnd() * 4 - 2).toFixed(1)}deg)}`
+      : `[${tt}] wa.me/${CONFIG.whatsapp} -> message prefilled (${slug})`);
+  }
+  $("#log").textContent = lines.join("\n");
+})();
+
+/* ---------- niche filter ---------- */
+const projs = $$(".proj");
+function relayout(){
+  let i = 0;
+  projs.forEach(p => { if(!p.hidden){ p.classList.toggle("flip", i % 2 === 1); i++; } });
+}
+function updateCount(){
+  const n = projs.filter(p => !p.hidden).length;
+  $("#countN").textContent = n;
+  $("#countTxt").textContent = T[lang].shown(n);
+}
+$$("#filters button").forEach(b => b.addEventListener("click", () => {
+  const f = b.dataset.f;
+  $$("#filters button").forEach(x => x.setAttribute("aria-pressed", x === b));
+  projs.forEach(p => p.hidden = !(f === "all" || p.dataset.niche === f));
+  relayout(); updateCount();
+  if(window.ScrollTrigger) ScrollTrigger.refresh();
+}));
+relayout();
+
+/* ---------- screens: colour + VHS tear when they reach the middle of the viewport ---------- */
+if("IntersectionObserver" in window){
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    const scr = $(".screen", e.target);
+    scr.classList.toggle("live", e.isIntersecting);
+    if(e.isIntersecting && !REDUCED){
+      scr.classList.remove("tear"); void scr.offsetWidth; scr.classList.add("tear");
+    }
+  }), { rootMargin:"-30% 0px -30% 0px" });
+  projs.forEach(p => io.observe(p));
+  projs.forEach(p => $(".glass", p).addEventListener("animationend", () => $(".screen", p).classList.remove("tear")));
+}
+
+/* ---------- brief form -> WhatsApp ---------- */
+$("#brief").addEventListener("submit", e => {
+  e.preventDefault();
+  const f = e.target.elements, t = T[lang], name = f.name.value.trim(), err = $("#fNameErr");
+  if(!name){ err.textContent = t.nameErr; f.name.setAttribute("aria-invalid","true"); f.name.focus(); return; }
+  err.textContent = ""; f.name.removeAttribute("aria-invalid");
+  window.open(waURL(t.brief(name, f.biz.value.trim(), f.need.selectedOptions[0].textContent, f.budget.selectedOptions[0].textContent)), "_blank", "noopener");
+});
+$("#fName").addEventListener("input", e => { if(e.target.value.trim()){ $("#fNameErr").textContent = ""; e.target.removeAttribute("aria-invalid"); } });
+
+/* ---------- hero canvas: dithered CRT portrait, or the zellige star if no photo ---------- */
+(function hero(){
+  const cv = $("#heroCv");
+  if(!cv || !cv.getContext) return;
+  const ctx = cv.getContext("2d");
+  const off = document.createElement("canvas"), octx = off.getContext("2d", { willReadFrequently:true });
+  const B8 = [0,32,8,40,2,34,10,42,48,16,56,24,50,18,58,26,12,44,4,36,14,46,6,38,60,28,52,20,62,30,54,22,3,35,11,43,1,33,9,41,51,19,59,27,49,17,57,25,15,47,7,39,13,45,5,37,63,31,55,23,61,29,53,21].map(v => (v + .5) / 64);
+  let W = 0, H = 0, mode = "wait", img = null;
+  let mx = -1e4, my = -1e4, tmx = -1e4, tmy = -1e4, inside = false;
+  let running = false, visible = true, raf = 0, last = 0, frameN = 0;
+  let glitchUntil = 0, nextGlitch = performance.now() + 2600;
+  const desk = () => W >= 900;
+
+  function power(now){ return REDUCED ? 1 : Math.max(0, Math.min(1, (now - (window.GW_BOOT_END || 0)) / 700)); }
+  function glitchState(now){
+    if(REDUCED) return false;
+    if(now > nextGlitch){ glitchUntil = now + 120 + Math.random() * 120; nextGlitch = now + 3200 + Math.random() * 3800; }
+    return now < glitchUntil;
+  }
+
+  /* ---- portrait ---- */
+  let cell = 4, gw = 0, gh = 0, gx = 0, gy = 0, lum = null, idata = null, grid = null;
+  function preparePortrait(){
+    cell = desk() ? Math.max(3, Math.round(W / 360)) : 3;
+    const ar = img.naturalWidth / img.naturalHeight;
+    let dh = desk() ? H * .97 : H * .62, dw = dh * ar;
+    const maxW = desk() ? W * .6 : W * 1.1;
+    if(dw > maxW){ dw = maxW; dh = dw / ar; }
+    gw = Math.max(8, Math.round(dw / cell)); gh = Math.max(8, Math.round(dh / cell));
+    const cx = desk() ? W * .62 : W * .5;
+    gx = Math.round(cx - gw * cell / 2);
+    gy = desk() ? Math.round(H - gh * cell) : Math.round(parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--head")) || 56);
+    off.width = gw; off.height = gh;
+    octx.clearRect(0, 0, gw, gh);
+    octx.drawImage(img, 0, 0, gw, gh);
+    const d = octx.getImageData(0, 0, gw, gh).data;   // throws on a tainted canvas (file://)
+    lum = new Float32Array(gw * gh);
+    const hist = new Uint32Array(256);
+    for(let i = 0; i < gw * gh; i++){
+      const v = (d[i*4] * .299 + d[i*4+1] * .587 + d[i*4+2] * .114) | 0;
+      lum[i] = v; hist[v]++;
+    }
+    // auto levels (2% / 98%) so any photo gives a punchy dither
+    const n = gw * gh; let acc = 0, lo = 0, hi = 255;
+    for(let v = 0; v < 256; v++){ acc += hist[v]; if(acc > n * .02){ lo = v; break; } }
+    acc = 0; for(let v = 255; v >= 0; v--){ acc += hist[v]; if(acc > n * .02){ hi = v; break; } }
+    const span = Math.max(1, hi - lo);
+    for(let y = 0; y < gh; y++) for(let x = 0; x < gw; x++){
+      const i = y * gw + x;
+      let v = Math.min(1, Math.max(0, (lum[i] - lo) / span));
+      v = Math.pow(v, 1.1);
+      // soft vignette + fade at the bottom so the bust melts into the black
+      const nx = (x / gw - .5) * 2, ny = (y / gh - .42) * 2;
+      const r = Math.sqrt(nx * nx + ny * ny * .5);
+      const vig = Math.min(1, Math.max(0, (.98 - r) / .38));
+      const bottom = Math.min(1, Math.max(0, (1 - y / gh) / .14)), topF = Math.min(1, y / gh / .06);
+      lum[i] = v * vig * bottom * topF;
+    }
+    idata = octx.createImageData(gw, gh);
+    // pixel-grid mask: 1px gap between dither dots
+    const pc = document.createElement("canvas"); pc.width = pc.height = cell;
+    const p2 = pc.getContext("2d"); p2.fillStyle = "#000"; p2.fillRect(cell - 1, 0, 1, cell); p2.fillRect(0, cell - 1, cell, 1);
+    grid = ctx.createPattern(pc, "repeat");
+  }
+
+  function drawPortrait(now){
+    const t = now / 1000, pw = power(now), glitch = glitchState(now);
+    frameN++;
+    const buf = idata.data;
+    const mcx = (mx - gx) / cell, mcy = (my - gy) / cell, lr = gh * .2, lr2 = lr * lr;
+    const band = ((t * .16) % 1.5 - .25) * gh;   // slow rolling scan band
+    const lens = inside && !REDUCED;
+    for(let y = 0; y < gh; y++){
+      const bandK = REDUCED ? 0 : .12 * Math.exp(-((y - band) * (y - band)) / 60);
+      for(let x = 0; x < gw; x++){
+        const i = y * gw + x;
+        let l = lum[i];
+        if(lens){
+          const dx = x - mcx, dy = y - mcy, d2 = dx * dx + dy * dy;
+          if(d2 < lr2 * 4) l += .3 * Math.exp(-d2 / lr2) * (l > .03 ? 1 : .4);
+        }
+        l = (l + bandK * (l > .02 ? 1 : 0)) * pw;
+        let th = B8[(y & 7) * 8 + (x & 7)];
+        if(!REDUCED){ const h = ((x * 73856093) ^ (y * 19349663) ^ (frameN * 83492791)) & 255; th += (h / 255 - .5) * .07; }
+        const on = l > th;
+        const o = i * 4;
+        buf[o] = buf[o+1] = buf[o+2] = 237; buf[o+3] = on ? 255 : 0;
+      }
+    }
+    octx.putImageData(idata, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    ctx.imageSmoothingEnabled = false;
+    const par = lens ? (mx - W / 2) / W * -12 : 0;
+    const ox = Math.round(gx + par);
+    ctx.drawImage(off, ox, gy, gw * cell, gh * cell);
+    // VHS: a torn band and a few jittering lines
+    if(glitch){
+      const y0 = (Math.random() * gh * .85) | 0, hgt = 3 + (Math.random() * gh * .12) | 0, sh = (Math.random() - .5) * cell * 14;
+      ctx.clearRect(0, gy + y0 * cell, W, hgt * cell);
+      ctx.drawImage(off, 0, y0, gw, hgt, ox + sh, gy + y0 * cell, gw * cell, hgt * cell);
+      ctx.fillStyle = "rgba(237,237,237,.35)";
+      for(let k = 0; k < 3; k++) ctx.fillRect(0, gy + (Math.random() * gh * cell), W, 1);
+    }
+    if(!REDUCED && Math.random() < .18){
+      const y0 = (Math.random() * gh) | 0, sh = (Math.random() < .5 ? -1 : 1) * cell * (1 + (Math.random() * 2 | 0));
+      ctx.clearRect(0, gy + y0 * cell, W, cell);
+      ctx.drawImage(off, 0, y0, gw, 1, ox + sh, gy + y0 * cell, gw * cell, cell);
+    }
+    if(cell >= 3){
+      ctx.save(); ctx.globalCompositeOperation = "destination-out";
+      ctx.translate(ox, gy); ctx.fillStyle = grid; ctx.fillRect(0, 0, gw * cell, gh * cell);
+      ctx.restore();
+    }
+  }
+
+  /* ---- fallback: the zellige khatam in ASCII, monochrome ---- */
+  const RAMP = " .:-=+*#%@", COL = ["#EDEDED", "#9A9A9A", "#C8C8C8", "#3C3C3C"], SQ = Math.SQRT1_2;
+  const B4 = [0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5].map(v => (v + .5) / 16);
+  let cw = 8, ch = 14, fs = 15, cols = 0, rows = 0, scx = 0, scy = 0, S = 100;
+  function prepareStar(){
+    fs = Math.max(13, Math.min(22, Math.round(W / 90)));
+    ctx.font = `${fs}px VT323, ui-monospace, monospace`;
+    ctx.textBaseline = "middle";
+    cw = ctx.measureText("M").width || fs * .5; ch = fs * .82;
+    cols = Math.ceil(W / cw) + 1; rows = Math.ceil(H / ch) + 1;
+    if(desk()){ scx = W * .62; scy = H * .5; S = Math.min(W * .24, H * .37); }
+    else { scx = W * .5; scy = Math.min(H, 900) * .3; S = Math.min(W * .38, Math.min(H, 900) * .2); }
+    ctx.clearRect(0, 0, W, H);
+  }
+  const edge = (d, R, w) => { const e = 1 - Math.abs(d - R) / w; return e > 0 ? e : 0; };
+  function drawStar(now){
+    const t = now / 1000, pw = power(now), glitch = glitchState(now);
+    const mxN = inside ? (mx - scx) / W : 0;
+    const a0 = (REDUCED ? .2 : 0) + t * .05 + mxN * .6, a1 = -t * .08 - mxN * .4, a2 = t * .13, a3 = -t * .2;
+    const rings = [
+      { R:S,       a:a0, w:Math.max(cw * 1.1, S * .03),  layer:0, sil:true,  fill:.34, fl:2 },
+      { R:S * .82, a:a0, w:Math.max(cw * .8, S * .016), layer:1, sil:false, fill:.07, fl:1, spokes:true },
+      { R:S * .58, a:a1, w:Math.max(cw, S * .026),      layer:0, sil:true,  fill:.26, fl:1 },
+      { R:S * .38, a:a2, w:Math.max(cw * .9, S * .022), layer:2, sil:false, fill:.06, fl:1 },
+      { R:S * .18, a:a3, w:Math.max(cw * .9, S * .02),  layer:0, sil:true,  fill:.7,  fl:2 }
+    ];
+    for(const r of rings){ r.c = Math.cos(r.a); r.s = Math.sin(r.a); }
+    const P = S * .42, PL = S * .11, ga = -t * .02, gc = Math.cos(ga), gs = Math.sin(ga), L2 = (S * .45) ** 2;
+    const lensOn = inside && !REDUCED;
+    const lines = [[],[],[],[]];
+    for(let rI = 0; rI < rows; rI++){
+      const y = rI * ch + ch / 2;
+      const L = [new Array(cols).fill(" "), new Array(cols).fill(" "), new Array(cols).fill(" "), new Array(cols).fill(" ")];
+      for(let c = 0; c < cols; c++){
+        const x = c * cw + cw / 2;
+        let dx = x - scx, dy = y - scy, boost = 0;
+        if(lensOn){
+          const ex = x - mx, ey = y - my, d2 = ex * ex + ey * ey;
+          if(d2 < L2 * 4){ const k = Math.exp(-d2 / L2); dx -= ex * k * .38; dy -= ey * k * .38; boost = k; }
+        }
+        const rr = Math.sqrt(dx * dx + dy * dy);
+        let best = 0, layer = -1;
+        if(rr < S * 1.12){
+          let filled = false;
+          for(let i = 0; i < rings.length; i++){
+            const g = rings[i];
+            const u = Math.abs(dx * g.c + dy * g.s), v = Math.abs(-dx * g.s + dy * g.c);
+            const d1 = u > v ? u : v, d2 = (u + v) * SQ, dm = d1 < d2 ? d1 : d2;
+            const e = g.sil ? edge(dm, g.R, g.w) : Math.max(edge(d1, g.R, g.w), edge(d2, g.R, g.w));
+            if(e > best){ best = e; layer = g.layer; }
+            if(filled || dm >= g.R) continue;
+            const nx = rings[i + 1];
+            if(nx){
+              const u2 = Math.abs(dx * nx.c + dy * nx.s), v2 = Math.abs(-dx * nx.s + dy * nx.c);
+              if(Math.min(u2 > v2 ? u2 : v2, (u2 + v2) * SQ) < nx.R) continue;
+            }
+            filled = true;
+            const ang = Math.atan2(dy, dx);
+            let f = g.fill * (1 + .35 * Math.cos(ang * 8 - g.a * 8 + t * .6)) + .05 * Math.sin(rr * .06 - t * 1.5);
+            if(g.spokes && Math.abs(Math.sin((ang - g.a) * 4 + Math.PI / 2)) * rr < g.w * 1.1) f = .6;
+            if(best < .45 && f > B4[(rI & 3) * 4 + (c & 3)]){
+              const fv = .14 + Math.min(f, 1) * .26;
+              if(fv > best){ best = fv; layer = g.fl; }
+            }
+          }
+        }
+        if(best < .2 && rr > S * .95){
+          const qx = dx * gc + dy * gs, qy = -dx * gs + dy * gc;
+          const lx = ((qx % P) + P * 1.5) % P - P / 2, ly = ((qy % P) + P * 1.5) % P - P / 2;
+          const u = Math.abs(lx), v = Math.abs(ly);
+          const e = Math.max(edge(u > v ? u : v, PL, cw * .7), edge((u + v) * SQ, PL, cw * .7));
+          const lv = e * .3 * Math.max(0, 1 - (rr - S) / (S * 1.6));
+          if(lv > best){ best = lv; layer = 3; }
+        }
+        best = Math.min(1, best * (1 + boost * .9)) * pw;
+        const idx = Math.min(9, (best * 9.99) | 0);
+        if(idx > 0 && layer >= 0) L[layer][c] = RAMP[idx];
+      }
+      for(let k = 0; k < 4; k++) lines[k].push(L[k].join(""));
+    }
+    // phosphor persistence on a transparent canvas (so the square grid shows through)
+    if(REDUCED) ctx.clearRect(0, 0, W, H);
+    else { ctx.save(); ctx.globalCompositeOperation = "destination-out"; ctx.fillStyle = "rgba(0,0,0,.5)"; ctx.fillRect(0, 0, W, H); ctx.restore(); }
+    const tearA = glitch ? (Math.random() * rows) | 0 : -1, tearB = tearA + 3 + ((Math.random() * 6) | 0);
+    for(let k = 3; k >= 0; k--){
+      ctx.fillStyle = COL[k];
+      for(let rI = 0; rI < rows; rI++){
+        const tear = rI >= tearA && rI <= tearB ? (rI % 2 ? 16 : -10) : 0;
+        ctx.fillText(lines[k][rI], tear, rI * ch + ch / 2);
+      }
+    }
+    if(glitch){ ctx.fillStyle = "rgba(237,237,237,.3)"; for(let k = 0; k < 3; k++) ctx.fillRect(0, Math.random() * H, W, 1); }
+  }
+
+  /* ---- plumbing ---- */
+  function size(){
+    const r = cv.getBoundingClientRect();
+    W = r.width; H = r.height;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if(mode === "portrait"){
+      try{ preparePortrait(); }catch(e){ mode = "star"; prepareStar(); }
+    } else if(mode === "star") prepareStar();
+  }
+  function frame(now){
+    mx += (tmx - mx) * .12; my += (tmy - my) * .12;
+    if(mode === "portrait") drawPortrait(now);
+    else if(mode === "star") drawStar(now);
+  }
+  function loop(now){
+    raf = requestAnimationFrame(loop);
+    if(now - last < 33) return;   // ~30 fps: plenty for a CRT, kinder to phones
+    last = now; frame(now);
+  }
+  function start(){ if(running || REDUCED) return; running = true; raf = requestAnimationFrame(loop); }
+  function stop(){ running = false; cancelAnimationFrame(raf); }
+  function setMode(m){ mode = m; size(); frame(performance.now()); }
+
+  const heroEl = $(".hero");
+  heroEl.addEventListener("pointermove", e => {
+    const r = cv.getBoundingClientRect();
+    tmx = e.clientX - r.left; tmy = e.clientY - r.top;
+    if(!inside){ mx = tmx; my = tmy; }
+    inside = true;
+  });
+  heroEl.addEventListener("pointerleave", () => { inside = false; tmx = tmy = -1e4; });
+
+  let rt;
+  new ResizeObserver(() => { clearTimeout(rt); rt = setTimeout(() => { size(); frame(performance.now()); }, 80); }).observe(cv);
+  new IntersectionObserver(es => { visible = es[0].isIntersecting; visible ? start() : stop(); }).observe(heroEl);
+  document.addEventListener("visibilitychange", () => { document.hidden ? stop() : (visible && start()); });
+  if(document.fonts && document.fonts.load) document.fonts.load("16px VT323").then(() => { if(mode === "star"){ prepareStar(); frame(performance.now()); } }, () => {});
+
+  img = new Image();
+  img.decoding = "async";
+  img.onload = () => setMode("portrait");
+  img.onerror = () => setMode("star");
+  img.src = CONFIG.portrait;
+  start();
+})();
+
+/* ---------- start language: ?lang= > saved > French ---------- */
+let startLang = null;
+try{ startLang = new URLSearchParams(location.search).get("lang"); }catch(e){}
+if(startLang !== "en" && startLang !== "fr"){ try{ startLang = localStorage.getItem("gw-lang"); }catch(e){} }
+setLang(startLang === "en" ? "en" : "fr");
+
+/* ---------- scroll motion (GSAP). Initial states are set here, never in CSS. ---------- */
+window.addEventListener("DOMContentLoaded", () => {
+  if(!window.gsap || !window.ScrollTrigger) return;
+  gsap.registerPlugin(ScrollTrigger);
+  const mm = gsap.matchMedia();
+
+  mm.add("(min-width: 900px) and (prefers-reduced-motion: no-preference)", () => {
+    // big screens bend, tilt, skew and drift left/right as they pass
+    projs.forEach(p => {
+      const scr = $(".screen", p);
+      const dir = () => p.classList.contains("flip") ? -1 : 1;
+      gsap.timeline({ scrollTrigger:{ trigger:p, start:"top bottom", end:"bottom top", scrub:.8, invalidateOnRefresh:true } })
+        .fromTo(scr,
+          { rotateX:32, rotateY:() => -22 * dir(), skewY:() => 4 * dir(), x:() => -innerWidth * .12 * dir(), z:-240, transformOrigin:"50% 100%" },
+          { rotateX:0, rotateY:() => -4 * dir(), skewY:0, x:() => -innerWidth * .02 * dir(), z:0, ease:"power2.out", duration:1 })
+        .to(scr, { rotateX:-24, rotateY:() => 18 * dir(), skewY:() => -3 * dir(), x:() => innerWidth * .12 * dir(), z:-180, transformOrigin:"50% 0%", ease:"power2.in", duration:1 });
+    });
+    // hero portrait sinks slightly as you leave it
+    gsap.to("#heroCv", { yPercent:12, opacity:.35, ease:"none", scrollTrigger:{ trigger:".hero", start:"top top", end:"bottom top", scrub:true } });
+  });
+
+  mm.add("(prefers-reduced-motion: no-preference)", () => {
+    // faint log text scrolls behind the work band
+    gsap.fromTo("#log", { yPercent:0 }, { yPercent:-45, ease:"none", scrollTrigger:{ trigger:"#projets", start:"top bottom", end:"bottom top", scrub:true } });
+    // about photo parallax
+    gsap.fromTo(".about-bg", { yPercent:-8 }, { yPercent:8, ease:"none", scrollTrigger:{ trigger:".about", start:"top bottom", end:"bottom top", scrub:true } });
+  });
+
+  mm.add({ desk:"(min-width: 900px) and (prefers-reduced-motion: no-preference)", mob:"(max-width: 899px) and (prefers-reduced-motion: no-preference)" }, ctx => {
+    const axis = ctx.conditions.mob ? "scaleY" : "scaleX";
+    gsap.fromTo("#trackFill", { [axis]:0 }, { [axis]:1, ease:"none", scrollTrigger:{ trigger:"#steps", start:"top 75%", end:"bottom 60%", scrub:.5 } });
+  });
+});
+</script>
+</body>
+</html>

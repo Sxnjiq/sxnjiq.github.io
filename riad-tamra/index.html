@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Riad Tamra · Marrakech</title>
+<meta name="description" content="Riad Tamra — six chambres autour d'un patio d'orangers, dans la médina de Marrakech.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Figtree:wght@400;500;600&family=Reem+Kufi:wght@500;600&family=IBM+Plex+Sans+Arabic:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ CONFIG — change these for each client ============ */
+/* WhatsApp number lives in the <script> at the bottom (WHATSAPP). */
+
+:root{
+  --plaster:#EFD6CC;      /* rose city walls */
+  --plaster-light:#F8EBE5;
+  --zellige:#0E4A3C;      /* green tiles & doors */
+  --zellige-deep:#08332A;
+  --saffron:#E0A526;
+  --clay:#6B4A3E;         /* secondary text */
+  --text:#1E2B26;
+  --display:"Marcellus", Georgia, serif;
+  --body:"Figtree", system-ui, sans-serif;
+  --gutter:clamp(16px,4vw,48px);
+  --max:1180px;
+}
+:lang(ar){
+  --display:"Reem Kufi", "IBM Plex Sans Arabic", sans-serif;
+  --body:"IBM Plex Sans Arabic", system-ui, sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+section[id]{scroll-margin-top:68px}
+body{margin:0;background:var(--plaster);color:var(--text);font:400 1.0625rem/1.6 var(--body);-webkit-font-smoothing:antialiased}
+:lang(ar) body{line-height:1.8}
+img{display:block;max-width:100%}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--saffron);outline-offset:3px;border-radius:4px}
+.wrap{max-width:var(--max);margin-inline:auto;padding-inline:var(--gutter)}
+h1,h2,h3{font-family:var(--display);font-weight:400;line-height:1.1;margin:0}
+:lang(ar) h1,:lang(ar) h2,:lang(ar) h3{font-weight:500;line-height:1.35}
+h2{font-size:clamp(2rem,4.2vw,3.1rem);color:var(--zellige)}
+h3{font-size:1.5rem;color:var(--zellige)}
+p{margin:0}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:.6em;padding:.85em 1.4em;border-radius:999px;font:600 1rem/1 var(--body);text-decoration:none;border:0;cursor:pointer}
+.btn-wa{background:var(--zellige);color:#fff}
+.btn-wa:hover{background:var(--zellige-deep)}
+.btn-wa svg{width:1.25em;height:1.25em;flex:none}
+.btn-light{background:var(--saffron);color:var(--zellige-deep)}
+.btn-light:hover{background:#F0B83D}
+
+/* ---------- header ---------- */
+header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--plaster) 92%,transparent);backdrop-filter:blur(8px)}
+.nav{display:flex;align-items:center;gap:24px;height:68px}
+.logo{font:400 1.45rem/1 var(--display);color:var(--zellige);text-decoration:none;margin-inline-end:auto}
+.nav-links{display:flex;gap:22px}
+.nav-links a{text-decoration:none;font-weight:500;color:var(--clay)}
+.nav-links a:hover{color:var(--zellige)}
+.lang{display:flex;border:1.5px solid var(--zellige);border-radius:999px;overflow:hidden}
+.lang button{background:none;border:0;padding:.35em .8em;font:600 .85rem/1.2 var(--body);color:var(--zellige);cursor:pointer}
+.lang button[lang=ar]{font-family:"IBM Plex Sans Arabic",sans-serif}
+.lang button[aria-pressed=true]{background:var(--zellige);color:#fff}
+.nav .btn{padding:.65em 1.1em;font-size:.95rem}
+
+/* ---------- hero: the horseshoe arch ---------- */
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(24px,5vw,72px);align-items:end;padding-block:clamp(24px,5vw,56px) clamp(48px,8vw,96px)}
+.hero-text{padding-bottom:clamp(0px,4vw,48px)}
+.hero h1{font-size:clamp(3.4rem,9vw,7.5rem);color:var(--zellige);letter-spacing:-.01em}
+:lang(ar) .hero h1{letter-spacing:0}
+.hero .where{font:400 clamp(1.15rem,2vw,1.4rem)/1.3 var(--display);color:var(--clay);margin-top:.4em}
+.hero .lead{max-width:34ch;margin-top:1.6em;font-size:1.15rem}
+.hero .ctas{display:flex;flex-wrap:wrap;gap:12px 22px;align-items:center;margin-top:2em}
+.hero .ctas a.text{font-weight:600;color:var(--zellige);text-underline-offset:4px}
+.arch{position:relative;aspect-ratio:.72;width:100%;max-width:500px;justify-self:end}
+.arch img{width:100%;height:100%;object-fit:cover;clip-path:url(#horseshoe)}
+.arch .frame{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;translate:-14px 14px;z-index:-1}
+.arch .frame path{fill:none;stroke:var(--saffron);stroke-width:2;vector-effect:non-scaling-stroke}
+.arch{isolation:isolate}
+[dir=rtl] .arch{justify-self:start}
+[dir=rtl] .arch .frame{translate:14px 14px}
+
+/* ---------- the house ---------- */
+.house{background:var(--plaster-light);padding-block:clamp(64px,9vw,120px)}
+.house-head{display:grid;grid-template-columns:1fr 1fr;gap:24px 64px;align-items:end;margin-bottom:56px}
+.house-head p{max-width:46ch;color:var(--clay)}
+.spaces{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3vw,40px)}
+.space img{aspect-ratio:4/5;object-fit:cover;width:100%;border-radius:2px}
+.space h3{margin-top:.8em}
+.space p{margin-top:.4em;max-width:36ch}
+
+/* ---------- rooms ---------- */
+.rooms{padding-block:clamp(64px,9vw,120px)}
+.rooms h2{margin-bottom:12px}
+.rooms .sub{color:var(--clay);margin-bottom:48px;max-width:52ch}
+.room-list{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,3vw,44px)}
+.room img{aspect-ratio:.78;object-fit:cover;width:100%;border-radius:50% 50% 0 0 / 34% 34% 0 0}
+.room h3{margin-top:.9em}
+.room p{margin-top:.35em}
+.room .price{margin-top:.8em;font-weight:600;color:var(--zellige)}
+.room .price span{font-weight:400;color:var(--clay)}
+
+/* ---------- gallery ---------- */
+.gallery{background:var(--zellige-deep);color:#fff;padding-block:clamp(64px,9vw,120px)}
+.gallery h2{color:#fff;margin-bottom:40px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:clamp(140px,18vw,240px);gap:8px}
+.grid button{padding:0;border:0;background:none;cursor:zoom-in;overflow:hidden;border-radius:2px}
+.grid button:first-child{grid-column:span 2;grid-row:span 2}
+.grid button:nth-child(5){grid-row:span 2}
+.grid img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.grid button:hover img{transform:scale(1.04)}
+dialog{border:0;padding:0;background:transparent;max-width:min(92vw,1200px);max-height:92vh}
+dialog::backdrop{background:rgba(5,25,20,.92)}
+dialog img{max-height:84vh;width:auto;margin:auto;border-radius:2px}
+.lb-bar{display:flex;justify-content:space-between;gap:12px;margin-top:12px}
+.lb-bar button{background:rgba(255,255,255,.12);color:#fff;border:0;border-radius:999px;padding:.55em 1.1em;font:500 .95rem var(--body);cursor:pointer}
+.lb-bar button:hover{background:rgba(255,255,255,.22)}
+
+/* ---------- location ---------- */
+.location{padding-block:clamp(64px,9vw,120px)}
+.loc{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(32px,5vw,72px);align-items:start}
+.loc dl{margin:28px 0 0}
+.loc dt{font-weight:600;color:var(--zellige);margin-top:1.2em}
+.loc dd{margin:.2em 0 0;max-width:42ch}
+.map{width:100%;aspect-ratio:4/3;border:0;border-radius:2px;filter:saturate(.75)}
+
+/* ---------- booking ---------- */
+.book{background:var(--zellige);color:#fff;padding-block:clamp(64px,9vw,112px)}
+.book-in{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(32px,5vw,72px);align-items:start}
+.book h2{color:#fff}
+.book .note{margin-top:1em;max-width:40ch;color:#D5E6DF}
+form{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+label{display:grid;gap:6px;font-weight:500;font-size:.95rem;color:#D5E6DF}
+label.full{grid-column:1/-1}
+input,select{font:500 1rem var(--body);padding:.8em .9em;border-radius:10px;border:1.5px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;width:100%}
+select option{color:var(--text)}
+input::-webkit-calendar-picker-indicator{filter:invert(1)}
+form .btn{grid-column:1/-1;justify-content:center;padding-block:1em;font-size:1.05rem}
+
+/* ---------- footer ---------- */
+footer{background:var(--zellige-deep);color:#B9CFC7;padding-block:40px;font-size:.92rem}
+.foot{display:flex;flex-wrap:wrap;gap:12px 40px;justify-content:space-between}
+.foot strong{font:400 1.25rem var(--display);color:#fff;display:block;margin-bottom:4px}
+
+/* link back to Ghali's portfolio */
+.demo-pill{position:fixed;inset-inline-start:16px;bottom:16px;z-index:30;padding:.55em 1em;border-radius:999px;background:var(--zellige-deep);color:#fff;font:500 .82rem/1.2 var(--body);text-decoration:none;box-shadow:0 4px 14px rgba(8,51,42,.25)}
+.demo-pill:hover{background:var(--zellige)}
+
+/* floating WhatsApp on phones */
+.fab{display:none;position:fixed;inset-inline-end:16px;bottom:16px;z-index:30;width:58px;height:58px;border-radius:50%;background:#25D366;color:#fff;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(8,51,42,.35)}
+.fab svg{width:30px;height:30px}
+
+/* ---------- responsive ---------- */
+@media (max-width:900px){
+  .nav-links{display:none}
+  .hero{grid-template-columns:1fr}
+  .hero{gap:40px}
+  .hero-text{padding-bottom:0}
+  .arch{justify-self:center;max-width:min(380px,82vw)}
+  [dir=rtl] .arch{justify-self:center}
+  .house-head,.loc,.book-in{grid-template-columns:1fr}
+  .spaces,.room-list{grid-template-columns:1fr 1fr}
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .grid button:nth-child(5){grid-row:span 1}
+}
+@media (max-width:600px){
+  .nav{gap:12px}
+  .nav .btn{display:none}
+  .fab{display:flex}
+  .spaces,.room-list{grid-template-columns:1fr}
+  .space img{aspect-ratio:3/2}
+  form{grid-template-columns:1fr}
+  .hero .ctas .btn{width:100%;justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .grid img{transition:none}
+}
+/* one entrance moment: the arch opens */
+@media (prefers-reduced-motion:no-preference){
+  .arch img{animation:open 1.4s cubic-bezier(.2,.7,.2,1) both}
+  .arch .frame{animation:fade 1s .9s both}
+  @keyframes open{from{opacity:0;transform:scale(1.06)}to{opacity:1;transform:none}}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+}
+</style>
+</head>
+<body>
+
+<!-- horseshoe arch shape, reused for the hero photo -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <clipPath id="horseshoe" clipPathUnits="objectBoundingBox">
+    <path d="M0.07,1 L0.07,0.46 A0.5,0.3 0 1 1 0.93,0.46 L0.93,1 Z"/>
+  </clipPath>
+</svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="wa" viewBox="0 0 24 24"><path fill="currentColor" d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Zm5.8 14.03c-.24.68-1.42 1.3-1.95 1.35-.5.05-.97.23-3.26-.68-2.75-1.08-4.5-3.9-4.63-4.08-.13-.18-1.1-1.47-1.1-2.8 0-1.34.7-2 .95-2.27.24-.27.53-.34.71-.34h.51c.16 0 .39-.06.6.46.24.56.8 1.93.87 2.07.07.14.11.3.02.48-.09.18-.14.3-.27.46-.14.16-.29.36-.41.48-.14.13-.28.28-.12.55.16.27.71 1.17 1.52 1.9 1.05.93 1.93 1.22 2.2 1.36.27.13.43.11.59-.07.16-.18.68-.8.86-1.07.18-.27.36-.23.61-.14.25.09 1.58.75 1.85.88.27.14.45.2.52.32.07.11.07.66-.17 1.33Z"/></symbol>
+</svg>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#top">Riad Tamra</a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#rooms" data-i18n="nav_rooms">Chambres</a>
+      <a href="#gallery" data-i18n="nav_gallery">Galerie</a>
+      <a href="#location" data-i18n="nav_location">Accès</a>
+    </nav>
+    <div class="lang" role="group" aria-label="Langue / Language / اللغة">
+      <button type="button" lang="fr" data-lang="fr">FR</button>
+      <button type="button" lang="en" data-lang="en">EN</button>
+      <button type="button" lang="ar" data-lang="ar">ع</button>
+    </div>
+    <a class="btn btn-wa" href="#book" data-i18n="nav_book">Réserver</a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="wrap hero">
+    <div class="hero-text">
+      <h1>Riad Tamra</h1>
+      <p class="where" data-i18n="hero_where">Médina de Marrakech, quartier Mouassine</p>
+      <p class="lead" data-i18n="hero_lead">Six chambres autour d'un patio planté d'orangers, à huit minutes à pied de la place Jemaa el-Fna.</p>
+      <div class="ctas">
+        <a class="btn btn-wa wa-link" href="#" target="_blank" rel="noopener">
+          <svg aria-hidden="true"><use href="#wa"/></svg><span data-i18n="cta_wa">Réserver sur WhatsApp</span>
+        </a>
+        <a class="text" href="#rooms" data-i18n="cta_rooms">Voir les chambres</a>
+      </div>
+    </div>
+    <div class="arch">
+      <img src="https://images.unsplash.com/photo-1628642004970-1da51c8c7dec?w=1000&q=75&auto=format&fit=crop" alt="" data-i18n-alt="alt_hero" fetchpriority="high">
+      <svg class="frame" viewBox="0 0 1 1" preserveAspectRatio="none" aria-hidden="true"><path d="M0.07,1 L0.07,0.46 A0.5,0.3 0 1 1 0.93,0.46 L0.93,1"/></svg>
+    </div>
+  </section>
+
+  <section class="house" aria-labelledby="house-title">
+    <div class="wrap">
+      <div class="house-head">
+        <h2 id="house-title" data-i18n="house_title">Une maison de la médina</h2>
+        <p data-i18n="house_text">Derrière une porte discrète du derb, la rumeur de la ville s'arrête. On vit ici comme dans une maison marocaine : autour du patio le jour, sur la terrasse le soir.</p>
+      </div>
+      <div class="spaces">
+        <article class="space">
+          <img loading="lazy" src="https://images.unsplash.com/photo-1750859513748-90ad9625f1ae?w=800&q=75&auto=format&fit=crop" alt="" data-i18n-alt="alt_patio">
+          <h3 data-i18n="patio_t">Le patio</h3>
+          <p data-i18n="patio_p">Orangers, fontaine en zellige et banquettes à l'ombre. Le petit-déjeuner y est servi jusqu'à 11 h.</p>
+        </article>
+        <article class="space">
+          <img loading="lazy" src="https://images.unsplash.com/photo-1628961914988-5e295cee6d8c?w=800&q=75&auto=format&fit=crop" alt="" data-i18n-alt="alt_terrace">
+          <h3 data-i18n="terrace_t">La terrasse</h3>
+          <p data-i18n="terrace_p">Vue sur les toits et l'Atlas par temps clair. Transats, coin repas et thé au coucher du soleil.</p>
+        </article>
+        <article class="space">
+          <img loading="lazy" src="https://images.unsplash.com/photo-1591299089616-c9604047b1a6?w=800&q=75&auto=format&fit=crop" alt="" data-i18n-alt="alt_tea">
+          <h3 data-i18n="welcome_t">L'accueil</h3>
+          <p data-i18n="welcome_p">Thé à la menthe à l'arrivée, conseils pour les souks, guides et excursions réservés pour vous.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap rooms" id="rooms" aria-labelledby="rooms-title">
+    <h2 id="rooms-title" data-i18n="rooms_title">Les chambres</h2>
+    <p class="sub" data-i18n="rooms_sub">Toutes avec salle de bain en tadelakt, climatisation et petit-déjeuner inclus.</p>
+    <div class="room-list">
+      <article class="room">
+        <img loading="lazy" src="https://images.unsplash.com/photo-1505577058444-a3dab90d4253?w=800&q=75&auto=format&fit=crop" alt="" data-i18n-alt="alt_r1">
+        <h3 data-i18n="r1_t">Chambre Zellige</h3>
+        <p data-i18n="r1_p">Lumineuse, ouverte sur le patio. Lit double, pour 2 personnes.</p>
+        <p class="price"><span data-i18n="from">À partir de</span> 950 MAD <span data-i18n="night">/ nuit</span></p>
+      </article>
+      <article class="room">
+        <img loading="lazy" src="https://images.unsplash.com/photo-1505576391880-b3f9d713dc4f?w=800&q=75&auto=format&fit=crop" alt="" data-i18n-alt="alt_r2">
+        <h3 data-i18n="r2_t">Chambre Tadelakt</h3>
+        <p data-i18n="r2_p">Murs ocre et arcades, salon privé. Jusqu'à 3 personnes.</p>
+        <p class="price"><span data-i18n="from">À partir de</span> 1 150 MAD <span data-i18n="night">/ nuit</span></p>
+      </article>
+      <article class="room">
+        <img loading="lazy" src="https://images.unsplash.com/photo-1750859537685-24f071b0ae8f?w=800&q=75&auto=format&fit=crop" alt="" data-i18n-alt="alt_r3">
+        <h3 data-i18n="r3_t">Suite Bougainvillier</h3>
+        <p data-i18n="r3_p">La plus grande, avec alcôve et accès direct à la terrasse. Pour 2 à 4 personnes.</p>
+        <p class="price"><span data-i18n="from">À partir de</span> 1 600 MAD <span data-i18n="night">/ nuit</span></p>
+      </article>
+    </div>
+  </section>
+
+  <section class="gallery" id="gallery" aria-labelledby="gallery-title">
+    <div class="wrap">
+      <h2 id="gallery-title" data-i18n="gallery_title">En images</h2>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <section class="wrap location" id="location" aria-labelledby="loc-title">
+    <div class="loc">
+      <div>
+        <h2 id="loc-title" data-i18n="loc_title">Nous trouver</h2>
+        <dl>
+          <dt data-i18n="loc_addr_t">Adresse</dt>
+          <dd data-i18n="loc_addr">Derb Tamra, Mouassine, Médina, Marrakech</dd>
+          <dt data-i18n="loc_taxi_t">En taxi</dt>
+          <dd data-i18n="loc_taxi">Les voitures n'entrent pas dans le derb. Demandez Bab Laksour : nous venons vous chercher là, envoyez-nous un message en arrivant.</dd>
+          <dt data-i18n="loc_air_t">Depuis l'aéroport</dt>
+          <dd data-i18n="loc_air">20 minutes. Transfert privé sur demande, 150 MAD par trajet.</dd>
+        </dl>
+      </div>
+      <iframe class="map" title="Google Maps" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+        src="https://www.google.com/maps?q=Mouassine+Mosque,+Marrakech&z=16&output=embed"></iframe>
+    </div>
+  </section>
+
+  <section class="book" id="book" aria-labelledby="book-title">
+    <div class="wrap book-in">
+      <div>
+        <h2 id="book-title" data-i18n="book_title">Réserver</h2>
+        <p class="note" data-i18n="book_note">Choisissez vos dates : le message WhatsApp se remplit tout seul. Nous répondons en général dans l'heure, de 8 h à 22 h.</p>
+      </div>
+      <form id="bookForm">
+        <label><span data-i18n="f_arrival">Arrivée</span><input type="date" name="arrival" required></label>
+        <label><span data-i18n="f_nights">Nuits</span><input type="number" name="nights" min="1" max="30" value="3" required></label>
+        <label><span data-i18n="f_guests">Personnes</span><input type="number" name="guests" min="1" max="12" value="2" required></label>
+        <label><span data-i18n="f_room">Chambre</span>
+          <select name="room">
+            <option value="r1" data-i18n="r1_t">Chambre Zellige</option>
+            <option value="r2" data-i18n="r2_t">Chambre Tadelakt</option>
+            <option value="r3" data-i18n="r3_t">Suite Bougainvillier</option>
+            <option value="any" data-i18n="f_any">Pas de préférence</option>
+          </select>
+        </label>
+        <button class="btn btn-light" type="submit"><svg aria-hidden="true" style="width:1.3em;height:1.3em"><use href="#wa"/></svg><span data-i18n="f_send">Envoyer sur WhatsApp</span></button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div><strong>Riad Tamra</strong><span data-i18n="loc_addr">Derb Tamra, Mouassine, Médina, Marrakech</span></div>
+    <div data-i18n="demo">Site de démonstration : riad fictif. Photos Unsplash.</div>
+  </div>
+</footer>
+
+<a href="../" class="demo-pill">Démo réalisée par Ghali</a>
+<a class="fab wa-link" href="#" target="_blank" rel="noopener" aria-label="WhatsApp"><svg aria-hidden="true"><use href="#wa"/></svg></a>
+
+<dialog id="lb" aria-label="Photo">
+  <img id="lbImg" alt="">
+  <div class="lb-bar">
+    <button type="button" id="lbPrev" data-i18n="prev">Précédente</button>
+    <button type="button" id="lbClose" data-i18n="close">Fermer</button>
+    <button type="button" id="lbNext" data-i18n="next">Suivante</button>
+  </div>
+</dialog>
+
+<script>
+/* ============ CONFIG ============ */
+const WHATSAPP = "212600000000";   // client's number, international format, no + or spaces
+const RIAD = "Riad Tamra";
+
+const PHOTOS = [
+  "1750859464437-b66433efd869","1757009400553-48283071014c","1759250451654-72ab594ba2c9","1647878501041-1609141a7fb1",
+  "1527760503822-71202ab45be2","1692089265184-f0941cbe333c","1628642393776-70a715f2cc40","1544234674-d099c6efdb0d"
+];
+const img = (id,w) => `https://images.unsplash.com/photo-${id}?w=${w}&q=75&auto=format&fit=crop`;
+
+const T = {
+fr:{
+  nav_rooms:"Chambres",nav_gallery:"Galerie",nav_location:"Accès",nav_book:"Réserver",
+  hero_where:"Médina de Marrakech, quartier Mouassine",
+  hero_lead:"Six chambres autour d'un patio planté d'orangers, à huit minutes à pied de la place Jemaa el-Fna.",
+  cta_wa:"Réserver sur WhatsApp",cta_rooms:"Voir les chambres",
+  house_title:"Une maison de la médina",
+  house_text:"Derrière une porte discrète du derb, la rumeur de la ville s'arrête. On vit ici comme dans une maison marocaine : autour du patio le jour, sur la terrasse le soir.",
+  patio_t:"Le patio",patio_p:"Orangers, fontaine en zellige et banquettes à l'ombre. Le petit-déjeuner y est servi jusqu'à 11 h.",
+  terrace_t:"La terrasse",terrace_p:"Vue sur les toits et l'Atlas par temps clair. Transats, coin repas et thé au coucher du soleil.",
+  welcome_t:"L'accueil",welcome_p:"Thé à la menthe à l'arrivée, conseils pour les souks, guides et excursions réservés pour vous.",
+  rooms_title:"Les chambres",rooms_sub:"Toutes avec salle de bain en tadelakt, climatisation et petit-déjeuner inclus.",
+  r1_t:"Chambre Zellige",r1_p:"Lumineuse, ouverte sur le patio. Lit double, pour 2 personnes.",
+  r2_t:"Chambre Tadelakt",r2_p:"Murs ocre et arcades, salon privé. Jusqu'à 3 personnes.",
+  r3_t:"Suite Bougainvillier",r3_p:"La plus grande, avec alcôve et accès direct à la terrasse. Pour 2 à 4 personnes.",
+  from:"À partir de",night:"/ nuit",
+  gallery_title:"En images",
+  loc_title:"Nous trouver",loc_addr_t:"Adresse",loc_addr:"Derb Tamra, Mouassine, Médina, Marrakech",
+  loc_taxi_t:"En taxi",loc_taxi:"Les voitures n'entrent pas dans le derb. Demandez Bab Laksour : nous venons vous chercher là, envoyez-nous un message en arrivant.",
+  loc_air_t:"Depuis l'aéroport",loc_air:"20 minutes. Transfert privé sur demande, 150 MAD par trajet.",
+  book_title:"Réserver",book_note:"Choisissez vos dates : le message WhatsApp se remplit tout seul. Nous répondons en général dans l'heure, de 8 h à 22 h.",
+  f_arrival:"Arrivée",f_nights:"Nuits",f_guests:"Personnes",f_room:"Chambre",f_any:"Pas de préférence",f_send:"Envoyer sur WhatsApp",
+  demo:"Site de démonstration : riad fictif. Photos Unsplash.",
+  prev:"Précédente",next:"Suivante",close:"Fermer",
+  alt_hero:"Patio du riad avec porte verte, zellige et palmiers",alt_patio:"Patio vu d'en haut, orangers et fontaine",alt_terrace:"Verre de thé au-dessus des toits de Marrakech",alt_tea:"Thé à la menthe servi en hauteur",
+  alt_r1:"Chambre blanche avec lanterne et coffre bleu",alt_r2:"Chambre ocre avec arcades",alt_r3:"Alcôve en arc avec rideaux",alt_gal:"Photo du riad",
+  msg_hello:`Bonjour ${RIAD}, je voudrais réserver.`,
+  msg:(r,d,n,g)=>`Bonjour ${RIAD},\nJe voudrais réserver : ${r}\nArrivée : ${d}\nNuits : ${n}\nPersonnes : ${g}\nMerci !`
+},
+en:{
+  nav_rooms:"Rooms",nav_gallery:"Gallery",nav_location:"Getting here",nav_book:"Book",
+  hero_where:"Marrakech medina, Mouassine quarter",
+  hero_lead:"Six rooms around a courtyard of orange trees, an eight-minute walk from Jemaa el-Fna square.",
+  cta_wa:"Book on WhatsApp",cta_rooms:"See the rooms",
+  house_title:"A house in the medina",
+  house_text:"Behind a quiet door in the derb, the noise of the city stops. Life here follows a Moroccan home: around the courtyard by day, up on the roof terrace at night.",
+  patio_t:"The courtyard",patio_p:"Orange trees, a zellige fountain and shaded benches. Breakfast is served here until 11 am.",
+  terrace_t:"The roof terrace",terrace_p:"Views over the rooftops, and of the Atlas on clear days. Loungers, a dining corner and tea at sunset.",
+  welcome_t:"Our welcome",welcome_p:"Mint tea when you arrive, tips for the souks, and guides and day trips booked for you.",
+  rooms_title:"The rooms",rooms_sub:"All with a tadelakt bathroom, air conditioning and breakfast included.",
+  r1_t:"Zellige Room",r1_p:"Bright and open to the courtyard. Double bed, sleeps 2.",
+  r2_t:"Tadelakt Room",r2_p:"Ochre walls, arches and a private sitting area. Sleeps up to 3.",
+  r3_t:"Bougainvillea Suite",r3_p:"Our largest, with an alcove and direct access to the terrace. Sleeps 2 to 4.",
+  from:"From",night:"/ night",
+  gallery_title:"Photos",
+  loc_title:"Getting here",loc_addr_t:"Address",loc_addr:"Derb Tamra, Mouassine, Medina, Marrakech",
+  loc_taxi_t:"By taxi",loc_taxi:"Cars can't enter the derb. Ask for Bab Laksour and message us when you arrive: we'll meet you there.",
+  loc_air_t:"From the airport",loc_air:"20 minutes. Private transfer on request, 150 MAD each way.",
+  book_title:"Book your stay",book_note:"Pick your dates and the WhatsApp message fills itself in. We usually reply within the hour, 8 am to 10 pm.",
+  f_arrival:"Arrival",f_nights:"Nights",f_guests:"Guests",f_room:"Room",f_any:"No preference",f_send:"Send on WhatsApp",
+  demo:"Demo website: fictional riad. Photos from Unsplash.",
+  prev:"Previous",next:"Next",close:"Close",
+  alt_hero:"Riad courtyard with a green door, zellige tiles and palms",alt_patio:"Courtyard seen from above, with orange trees and a fountain",alt_terrace:"Glass of tea above the rooftops of Marrakech",alt_tea:"Mint tea being poured",
+  alt_r1:"White room with a lantern and a blue chest",alt_r2:"Ochre room with arches",alt_r3:"Arched alcove with curtains",alt_gal:"Photo of the riad",
+  msg_hello:`Hello ${RIAD}, I'd like to book a stay.`,
+  msg:(r,d,n,g)=>`Hello ${RIAD},\nI'd like to book: ${r}\nArrival: ${d}\nNights: ${n}\nGuests: ${g}\nThank you!`
+},
+ar:{
+  nav_rooms:"الغرف",nav_gallery:"الصور",nav_location:"الوصول",nav_book:"احجز",
+  hero_where:"المدينة القديمة بمراكش، حي المواسين",
+  hero_lead:"ست غرف حول فناء مزروع بأشجار البرتقال، على بعد ثماني دقائق مشياً من ساحة جامع الفنا.",
+  cta_wa:"احجز عبر واتساب",cta_rooms:"شاهد الغرف",
+  house_title:"دار في قلب المدينة",
+  house_text:"خلف باب هادئ في الدرب، يختفي صخب المدينة. هنا نعيش كما في بيت مغربي: حول الفناء نهاراً، وعلى السطح مساءً.",
+  patio_t:"الفناء",patio_p:"أشجار برتقال، نافورة من الزليج ومقاعد في الظل. يُقدَّم الفطور هنا حتى الساعة 11.",
+  terrace_t:"السطح",terrace_p:"إطلالة على أسطح المدينة وجبال الأطلس في الأيام الصافية. كراسي استرخاء، ركن للعشاء وشاي عند الغروب.",
+  welcome_t:"الاستقبال",welcome_p:"أتاي بالنعناع عند وصولكم، نصائح لزيارة الأسواق، ونحجز لكم المرشدين والرحلات.",
+  rooms_title:"الغرف",rooms_sub:"جميعها بحمّام من التدلاكت، مكيّف هواء، والفطور مشمول.",
+  r1_t:"غرفة الزليج",r1_p:"مضيئة ومطلّة على الفناء. سرير مزدوج لشخصين.",
+  r2_t:"غرفة التدلاكت",r2_p:"جدران بلون المغرة وأقواس وصالون خاص. حتى 3 أشخاص.",
+  r3_t:"جناح الجهنمية",r3_p:"الأوسع، مع خلوة ومدخل مباشر إلى السطح. من 2 إلى 4 أشخاص.",
+  from:"ابتداءً من",night:"/ لليلة",
+  gallery_title:"صور الرياض",
+  loc_title:"كيف تصلون إلينا",loc_addr_t:"العنوان",loc_addr:"درب تمرة، المواسين، المدينة القديمة، مراكش",
+  loc_taxi_t:"بسيارة الأجرة",loc_taxi:"السيارات لا تدخل الدرب. اطلبوا باب لقصور وراسلونا عند وصولكم، وسنأتي لاستقبالكم هناك.",
+  loc_air_t:"من المطار",loc_air:"20 دقيقة. نقل خاص عند الطلب، 150 درهماً للرحلة.",
+  book_title:"الحجز",book_note:"اختاروا تواريخكم وستُكتب رسالة واتساب تلقائياً. نردّ عادةً خلال ساعة، من 8 صباحاً إلى 10 ليلاً.",
+  f_arrival:"تاريخ الوصول",f_nights:"عدد الليالي",f_guests:"عدد الأشخاص",f_room:"الغرفة",f_any:"بدون تفضيل",f_send:"أرسل عبر واتساب",
+  demo:"موقع تجريبي: رياض خيالي. الصور من Unsplash.",
+  prev:"السابقة",next:"التالية",close:"إغلاق",
+  alt_hero:"فناء الرياض بباب أخضر وزليج ونخيل",alt_patio:"الفناء من الأعلى مع أشجار البرتقال والنافورة",alt_terrace:"كأس شاي فوق أسطح مراكش",alt_tea:"صبّ أتاي بالنعناع",
+  alt_r1:"غرفة بيضاء بفانوس وصندوق أزرق",alt_r2:"غرفة بلون المغرة بأقواس",alt_r3:"خلوة مقوّسة بستائر",alt_gal:"صورة من الرياض",
+  msg_hello:`السلام عليكم ${RIAD}، أود الحجز.`,
+  msg:(r,d,n,g)=>`السلام عليكم ${RIAD}،\nأود حجز: ${r}\nتاريخ الوصول: ${d}\nعدد الليالي: ${n}\nعدد الأشخاص: ${g}\nشكراً!`
+}};
+
+let lang = "fr";
+const waURL = text => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
+
+function setLang(l){
+  if(!T[l]) l = "fr";
+  lang = l;
+  const t = T[l];
+  document.documentElement.lang = l;
+  document.documentElement.dir = l === "ar" ? "rtl" : "ltr";
+  document.querySelectorAll("[data-i18n]").forEach(el => { const v = t[el.dataset.i18n]; if(typeof v === "string") el.textContent = v; });
+  document.querySelectorAll("[data-i18n-alt]").forEach(el => el.alt = t[el.dataset.i18nAlt] || "");
+  document.querySelectorAll("#grid img").forEach(el => el.alt = t.alt_gal);
+  document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === l));
+  document.querySelectorAll(".wa-link").forEach(a => a.href = waURL(t.msg_hello));
+  try{ localStorage.setItem("riad-lang", l); }catch(e){}
+}
+
+document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => setLang(b.dataset.lang)));
+
+/* gallery + lightbox */
+const grid = document.getElementById("grid"), lb = document.getElementById("lb"), lbImg = document.getElementById("lbImg");
+let cur = 0;
+PHOTOS.forEach((id,i) => {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.innerHTML = `<img loading="lazy" src="${img(id, i===0?1000:600)}" alt="">`;
+  b.addEventListener("click", () => openLb(i));
+  grid.appendChild(b);
+});
+function openLb(i){ cur = (i + PHOTOS.length) % PHOTOS.length; lbImg.src = img(PHOTOS[cur],1600); lbImg.alt = T[lang].alt_gal; if(!lb.open) lb.showModal(); }
+document.getElementById("lbPrev").onclick = () => openLb(cur + (lang==="ar" ? 1 : -1));
+document.getElementById("lbNext").onclick = () => openLb(cur + (lang==="ar" ? -1 : 1));
+document.getElementById("lbClose").onclick = () => lb.close();
+lb.addEventListener("click", e => { if(e.target === lb) lb.close(); });
+lb.addEventListener("keydown", e => {
+  if(e.key === "ArrowRight") openLb(cur + (lang==="ar" ? -1 : 1));
+  if(e.key === "ArrowLeft")  openLb(cur + (lang==="ar" ? 1 : -1));
+});
+
+/* booking form -> prefilled WhatsApp message */
+const form = document.getElementById("bookForm");
+const arrival = form.elements.arrival;
+const today = new Date(); today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+arrival.min = today.toISOString().slice(0,10);
+form.addEventListener("submit", e => {
+  e.preventDefault();
+  const t = T[lang], f = form.elements;
+  const room = f.room.selectedOptions[0].textContent;
+  const d = new Date(f.arrival.value + "T12:00").toLocaleDateString(lang === "ar" ? "ar-MA" : lang, {day:"numeric", month:"long", year:"numeric"});
+  window.open(waURL(t.msg(room, d, f.nights.value, f.guests.value)), "_blank", "noopener");
+});
+
+/* start language: ?lang= > saved > browser */
+let start = new URLSearchParams(location.search).get("lang");
+if(!start){ try{ start = localStorage.getItem("riad-lang"); }catch(e){} }
+if(!start){ const n = (navigator.language||"fr").slice(0,2); start = T[n] ? n : "fr"; }
+setLang(start);
+</script>
+</body>
+</html>

@@ -1,0 +1,1165 @@
+<!doctype html>
+<!--
+  DESIGN PLAN — Bayt Immobilier (Casablanca)
+
+  Idea: Casablanca is "Dar el Beïda", the white house; bayt means home. The site reads like an
+  architect's portfolio of houses: lime-washed walls, raw concrete, cypress green, thin plan lines.
+  Quiet, editorial, lots of air around the photos.
+
+  Palette
+    Chaux       #EDECE7  lime-washed wall, page background (cool, not cream)
+    Pierre      #E2E0D9  pale stone, alternate sections and inputs
+    Béton       #CFCBC2  concrete, hairlines and borders
+    Taupe       #5E5951  secondary text (5.9:1 on Chaux)
+    Ardoise     #252928  charcoal, body text and plan lines
+    Cyprès      #1F3A33  deep cypress green, buttons and dark sections
+    Laiton      #B39663  brass, used only on dark green (focus ring, plan accents)
+
+  Type
+    Newsreader (light, optical sizes) for headings and the big numbers that matter (price, mensualité).
+    Archivo (normal + semi-expanded width) for body, data, forms. Tabular figures for prices.
+    No caps labels, sentence case everywhere.
+
+  Layout
+    [logo]                         Biens  Gestion MRE  Simulateur  Estimer  Contact  [WhatsApp]
+    Habiter Casablanca,          | Vente, location, gestion…
+    d'Anfa à la côte.            | [Acheter|Louer] [Quartier] [Voir les biens]
+    [==================== wide photo opening like sliding doors ====================]
+    Quartiers: 4 portrait windows (shutter reveal) + price per m² that actually helps
+    Pinned featured villa: photo stack left | name, plan drawing itself, room text right
+    Listing: filters bar, 3-col editorial grid (no shadows), drawer with carousel
+    MRE management (green) · Crédit simulator · Estimer form · Agency + map · footer
+    Left-aligned throughout, ragged right.
+
+  Signature: architectural masks. Every photo opens like a pair of sliding doors (or a rolling
+  shutter for portrait windows), with two hairline door edges travelling outward. The featured
+  villa's floor plan draws itself while its rooms light up in sync with the photos.
+
+  Review vs. generic: dropped the full-bleed hero with a search box over the photo and the
+  "500+ biens vendus" stats band (meaningless here); numbers kept only where useful (prix au m²
+  par quartier, mensualité, honoraires). Cards are image + text, no boxes or shadows.
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bayt Immobilier, agence immobilière à Casablanca</title>
+<meta name="description" content="Bayt Immobilier : vente, location et gestion d'appartements et de villas à Anfa, Californie, Bouskoura et Dar Bouazza. Gestion locative pour les Marocains résidant à l'étranger.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..600&family=Newsreader:opsz,wght@6..72,300..500&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="https://images.unsplash.com/photo-1782720829237-ec146b0afe0a?w=2000&q=75&auto=format&fit=crop">
+<style>
+:root{
+  --chaux:#EDECE7;
+  --pierre:#E2E0D9;
+  --beton:#CFCBC2;
+  --taupe:#5E5951;
+  --ardoise:#252928;
+  --cypres:#1F3A33;
+  --cypres-deep:#152A25;
+  --laiton:#B39663;
+  --serif:"Newsreader", Georgia, serif;
+  --sans:"Archivo", system-ui, sans-serif;
+  --gutter:clamp(16px,4vw,56px);
+  --max:1320px;
+  --hdr:68px;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scrollbar-gutter:stable}
+html.lock{overflow:hidden}
+section[id]{scroll-margin-top:var(--hdr)}
+body{margin:0;background:var(--chaux);color:var(--ardoise);font:400 1.0625rem/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:clip}
+img{display:block;max-width:100%}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--cypres);outline-offset:3px}
+.dark :focus-visible,.dark:focus-visible{outline-color:var(--laiton)}
+.wrap{max-width:var(--max);margin-inline:auto;padding-inline:var(--gutter)}
+h1,h2,h3{font-family:var(--serif);font-weight:300;line-height:1.05;margin:0;letter-spacing:-.015em;font-optical-sizing:auto}
+h2{font-size:clamp(2.1rem,4.6vw,3.7rem)}
+h3{font-size:1.5rem;font-weight:400;line-height:1.15}
+p{margin:0}
+.num{font-variant-numeric:tabular-nums;font-stretch:112%}
+.muted{color:var(--taupe)}
+[hidden]{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.6em;min-height:48px;padding:.75em 1.4em;border-radius:2px;border:1px solid var(--cypres);background:var(--cypres);color:var(--chaux);font:500 1rem/1.1 var(--sans);font-stretch:108%;text-decoration:none;cursor:pointer;transition:background .25s,color .25s}
+.btn:hover{background:var(--cypres-deep)}
+.btn svg{width:1.2em;height:1.2em;flex:none}
+.btn-ghost{background:transparent;color:var(--cypres)}
+.btn-ghost:hover{background:var(--cypres);color:var(--chaux)}
+.btn-light{background:var(--chaux);border-color:var(--chaux);color:var(--cypres)}
+.btn-light:hover{background:#fff}
+.link{color:var(--cypres);font-weight:500;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px;background:none;border:0;padding:0;cursor:pointer;min-height:44px;display:inline-flex;align-items:center}
+.link:hover{text-decoration-thickness:2px}
+
+/* ---------- header ---------- */
+header{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--chaux) 90%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid color-mix(in srgb,var(--beton) 60%,transparent)}
+.nav{display:flex;align-items:center;gap:28px;height:var(--hdr)}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-inline-end:auto;color:var(--ardoise)}
+.logo svg{width:26px;height:26px;color:var(--cypres)}
+.logo b{font:400 1.6rem/1 var(--serif);letter-spacing:-.01em}
+.logo span{font:500 .78rem/1 var(--sans);font-stretch:118%;color:var(--taupe);letter-spacing:.02em;margin-top:.35em}
+.nav-links{display:flex;gap:26px}
+.nav-links a{text-decoration:none;font-size:.95rem;color:var(--taupe)}
+.nav-links a:hover{color:var(--ardoise);text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1px}
+.nav .btn{min-height:42px;padding:.55em 1.1em;font-size:.92rem}
+.menu-btn{display:none;background:none;border:1px solid var(--beton);border-radius:2px;min-height:44px;padding:0 14px;cursor:pointer;font-size:.92rem}
+
+/* ---------- reveal frames (signature) ---------- */
+.frame{position:relative}
+.frame .pane{position:relative;overflow:hidden;height:100%;width:100%}
+.frame .pane img{width:100%;height:100%;object-fit:cover}
+.edge{position:absolute;pointer-events:none;background:var(--ardoise);z-index:2}
+.edge.v{top:0;bottom:0;width:1px}
+.edge.h{left:0;right:0;height:1px}
+.dark .edge{background:var(--laiton)}
+
+/* ---------- hero ---------- */
+.hero{padding-top:clamp(36px,6vw,88px)}
+.hero-top{display:grid;grid-template-columns:1.5fr 1fr;gap:28px clamp(32px,6vw,96px);align-items:end}
+.hero h1{font-size:clamp(2.9rem,6vw,5.4rem);line-height:1;letter-spacing:-.03em;text-wrap:balance}
+.hero .lead{font-size:1.12rem;max-width:40ch}
+.search{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.seg{display:inline-flex;border:1px solid var(--cypres);border-radius:2px;padding:3px;gap:3px;background:var(--chaux)}
+.seg button{min-height:40px;padding:0 1.05em;border:0;border-radius:1px;background:transparent;color:var(--cypres);font-weight:500;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--cypres);color:var(--chaux)}
+select,input,textarea{font:400 1rem var(--sans);color:var(--ardoise);background:var(--pierre);border:1px solid var(--beton);border-radius:2px;min-height:48px;padding:.6em .8em;width:100%}
+textarea{min-height:96px;resize:vertical}
+select{appearance:none;-webkit-appearance:none;padding-right:2.2em;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23252928' stroke-width='1.4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .85em center;cursor:pointer}
+.search select{width:auto;flex:1 1 160px;background-color:var(--chaux)}
+.search .btn{flex:1 1 auto}
+.hero-pic{margin-top:clamp(36px,5vw,64px);height:min(62vh,620px);min-height:340px}
+.hero-pic .pane img{height:116%}
+.hero-cap{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:4px 20px;padding-top:10px;font-size:.92rem;color:var(--taupe)}
+
+/* ---------- quartiers ---------- */
+.quartiers{padding-block:clamp(80px,11vw,150px)}
+.intro{display:grid;grid-template-columns:1fr 1fr;gap:20px clamp(32px,6vw,96px);align-items:end;margin-bottom:clamp(40px,5vw,72px)}
+.intro p{max-width:46ch;color:var(--taupe)}
+.q-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(20px,2.4vw,36px);list-style:none;margin:0;padding:0}
+.q-grid .frame{aspect-ratio:3/4}
+.q h3{margin-top:18px}
+.q p{margin-top:8px;font-size:.98rem;max-width:34ch}
+.q .ref{margin-top:14px;padding-top:12px;border-top:1px solid var(--beton);font-size:.92rem;color:var(--taupe)}
+.q .ref strong{display:block;font:400 1.35rem/1.2 var(--serif);color:var(--ardoise)}
+.q .link{margin-top:6px}
+.foot-note{margin-top:28px;font-size:.85rem;color:var(--taupe)}
+
+/* ---------- featured villa (pinned on desktop) ---------- */
+.feature{background:var(--pierre);padding-block:clamp(72px,9vw,120px)}
+.feature-in{display:grid;gap:36px}
+.feature-head .over{font-size:.95rem;color:var(--taupe);margin-bottom:10px}
+.feature-head h2{font-size:clamp(2.2rem,4.2vw,3.5rem)}
+.feature-head .meta{margin-top:10px;color:var(--taupe);max-width:44ch}
+.feature-head .row{display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px;margin-top:18px}
+.feature-head .price{font:300 1.9rem/1 var(--serif)}
+.plan-wrap{margin:0}
+.plan{width:100%;height:auto;max-height:340px;display:block}
+.plan path,.plan rect.line{fill:none;stroke:var(--ardoise);stroke-linecap:square}
+.plan .w-ext{stroke-width:4}
+.plan .w-int{stroke-width:2}
+.plan .thin{stroke-width:1}
+.plan .dash{stroke-width:1;stroke-dasharray:4 5;stroke:var(--taupe)}
+.plan .room{fill:var(--cypres);fill-opacity:.14;opacity:0}
+.plan text{font:500 11px var(--sans);fill:var(--taupe)}
+.plan-wrap figcaption{font-size:.85rem;color:var(--taupe);margin-top:8px}
+.feature-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:40px clamp(24px,3vw,40px)}
+.fstep figure{margin:0;aspect-ratio:4/3}
+.fstep figure img{width:100%;height:100%;object-fit:cover}
+.fstep-txt{margin-top:16px}
+.fstep-txt h3 .s{font:400 1rem var(--sans);color:var(--taupe);margin-inline-start:.5em}
+.fstep-txt p{margin-top:8px;max-width:44ch}
+.fprog{display:none}
+
+.feature.is-pinned{height:100vh;padding:0;overflow:hidden}
+.feature.is-pinned .feature-in{height:100vh;padding-top:calc(var(--hdr) + clamp(20px,3vh,40px));padding-bottom:clamp(20px,4vh,40px);grid-template-columns:1.2fr 1fr;grid-template-rows:auto minmax(0,1fr) auto auto;grid-template-areas:"img head" "img plan" "img txt" "img prog";gap:clamp(14px,2.4vh,26px) clamp(40px,4.5vw,72px)}
+.feature.is-pinned .feature-head{grid-area:head}
+.feature.is-pinned .plan-wrap{grid-area:plan;min-height:0;display:flex;flex-direction:column}
+.feature.is-pinned .plan{flex:1;min-height:0;max-height:none}
+.feature.is-pinned .feature-steps,.feature.is-pinned .fstep{display:contents}
+.feature.is-pinned .fstep figure{grid-area:img;aspect-ratio:auto;height:100%;min-height:0}
+.feature.is-pinned .fstep-txt{grid-area:txt;margin:0;min-height:7.5em}
+.feature.is-pinned .fprog{grid-area:prog;display:flex;gap:6px;list-style:none;margin:0;padding:0}
+.fprog button{background:none;border:0;border-top:2px solid var(--beton);padding:10px 0 0;min-height:44px;width:100%;text-align:left;cursor:pointer;color:var(--taupe);font-size:.9rem;transition:border-color .3s,color .3s}
+.fprog li{flex:1}
+@media (max-height:820px){.feature.is-pinned .feature-head .meta{display:none}}
+.fprog button[aria-current=step]{border-top-color:var(--cypres);color:var(--ardoise)}
+
+/* ---------- listing ---------- */
+.biens{padding-block:clamp(80px,10vw,140px)}
+.biens .intro{margin-bottom:36px}
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px;padding-bottom:18px;border-bottom:1px solid var(--beton)}
+.toolbar .count{margin-inline-end:auto;color:var(--taupe)}
+.toolbar .sort{display:flex;align-items:center;gap:10px;font-size:.92rem;color:var(--taupe)}
+.toolbar .sort select{width:auto;min-width:190px;background-color:var(--chaux)}
+.filt-btn{display:none}
+.filters{display:grid;grid-template-columns:1fr 1fr 1.6fr auto auto;gap:18px 24px;align-items:end;padding-block:22px 28px}
+.field{display:grid;gap:6px;font-size:.9rem;color:var(--taupe);min-width:0}
+.field output{color:var(--ardoise);font-weight:500}
+.field .lab{display:flex;justify-content:space-between;gap:12px}
+input[type=range]{-webkit-appearance:none;appearance:none;background:transparent;border:0;padding:0;min-height:48px}
+input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--beton)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--cypres);border:3px solid var(--chaux);margin-top:-10px;box-shadow:0 0 0 1px var(--cypres)}
+input[type=range]::-moz-range-track{height:2px;background:var(--beton)}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--cypres);border:3px solid var(--chaux);box-shadow:0 0 0 1px var(--cypres)}
+.chips{display:flex;gap:4px}
+.chips button{min-width:44px;min-height:48px;padding:0 .7em;border:1px solid var(--beton);border-radius:2px;background:transparent;cursor:pointer;color:var(--ardoise)}
+.chips button[aria-pressed=true]{background:var(--cypres);border-color:var(--cypres);color:var(--chaux)}
+.reset{min-height:48px}
+.grid{list-style:none;margin:36px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:56px clamp(20px,2.4vw,36px)}
+.bien{position:relative}
+.bien figure{margin:0;position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--pierre)}
+.bien figure img{width:100%;height:100%;object-fit:cover;transition:transform 1.1s var(--ease)}
+.bien:hover figure img{transform:scale(1.035)}
+.bien .tag{position:absolute;left:0;bottom:0;background:var(--chaux);padding:6px 12px 4px;font-size:.85rem}
+.bien .lieu{margin-top:16px;font-size:.92rem;color:var(--taupe)}
+.bien h3{margin-top:4px}
+.bien h3 button{all:unset;cursor:pointer}
+.bien h3 button::after{content:"";position:absolute;inset:0}
+.bien h3 button:focus-visible{outline:none}
+.bien:has(button:focus-visible){outline:2px solid var(--cypres);outline-offset:6px}
+.bien .prix{margin-top:10px;font-size:1.1rem;font-weight:500}
+.specs{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:4px 18px;font-size:.92rem;color:var(--taupe)}
+.empty{margin-top:36px;padding:40px 0;border-top:1px solid var(--beton);max-width:52ch}
+.empty h3{margin-bottom:10px}
+.empty .row{display:flex;flex-wrap:wrap;gap:12px 24px;margin-top:20px;align-items:center}
+
+/* ---------- drawer ---------- */
+dialog#drawer{margin:0 0 0 auto;padding:0;border:0;width:min(640px,100vw);height:100dvh;max-height:none;max-width:100vw;background:var(--chaux);color:var(--ardoise);overflow:hidden}
+dialog#drawer::backdrop{background:rgba(21,42,37,.55)}
+.d-in{height:100%;display:flex;flex-direction:column}
+.d-scroll{flex:1;overflow-y:auto;overscroll-behavior:contain}
+.d-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px 10px 24px;border-bottom:1px solid var(--beton)}
+.d-bar p{font-size:.92rem;color:var(--taupe)}
+.d-close{background:none;border:1px solid var(--beton);border-radius:2px;min-height:44px;padding:0 16px;cursor:pointer}
+.car{position:relative}
+.car-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;aspect-ratio:4/3;background:var(--pierre)}
+.car-track::-webkit-scrollbar{display:none}
+.car-track img{flex:0 0 100%;width:100%;height:100%;object-fit:cover;scroll-snap-align:start}
+.car-ctrl{position:absolute;right:12px;bottom:12px;display:flex;align-items:center;gap:2px;background:var(--chaux);border-radius:2px}
+.car-ctrl button{width:44px;height:44px;border:0;background:none;cursor:pointer;display:grid;place-items:center}
+.car-ctrl button svg{width:16px;height:16px}
+.car-ctrl span{font-size:.88rem;min-width:3.4em;text-align:center}
+.d-body{padding:28px 24px 32px}
+.d-body .lieu{color:var(--taupe);font-size:.95rem}
+.d-body h2{font-size:clamp(2rem,5vw,2.6rem);margin-top:6px}
+.d-body .prix{font:300 1.9rem/1.1 var(--serif);margin-top:14px}
+.d-specs{display:grid;grid-template-columns:repeat(3,1fr);margin:24px 0 0;border-top:1px solid var(--beton)}
+.d-specs div{padding:12px 0;border-bottom:1px solid var(--beton)}
+.d-specs dt{font-size:.85rem;color:var(--taupe)}
+.d-specs dd{margin:2px 0 0;font-weight:500}
+.d-body .desc{margin-top:24px;max-width:58ch}
+.d-atouts{margin:20px 0 0;padding:0 0 0 1.1em;columns:2;column-gap:28px}
+.d-atouts li{margin-bottom:6px;break-inside:avoid}
+.d-atouts li::marker{color:var(--laiton)}
+.d-actions{display:flex;flex-wrap:wrap;gap:10px;padding:14px 24px;border-top:1px solid var(--beton);background:var(--chaux)}
+.d-actions .btn{flex:1 1 200px}
+@media (prefers-reduced-motion:no-preference){
+  dialog#drawer[open]{animation:slide .55s var(--ease)}
+  dialog#drawer[open]::backdrop{animation:fade .4s ease}
+  @keyframes slide{from{transform:translateX(100%)}to{transform:none}}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+}
+
+/* ---------- MRE ---------- */
+.mre{background:var(--cypres);color:var(--chaux);padding-block:clamp(80px,10vw,140px)}
+.mre-in{display:grid;grid-template-columns:1fr 1fr;gap:48px clamp(40px,6vw,96px);align-items:start}
+.mre h2{max-width:16ch}
+.mre .lead{margin-top:24px;max-width:46ch;color:#C9D3CE}
+.mre .frame{aspect-ratio:4/5;margin-top:40px;max-width:520px}
+.steps{list-style:none;margin:0;padding:0;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:3rem 1fr;gap:4px 12px;padding:22px 0;border-top:1px solid rgba(237,236,231,.18)}
+.steps li::before{content:counter(s);font:300 1.8rem/1 var(--serif);color:var(--laiton);grid-row:span 2}
+.steps h3{font-size:1.3rem}
+.steps p{color:#C9D3CE;max-width:46ch}
+.fee{margin-top:32px;padding:26px 0 0;border-top:1px solid var(--laiton)}
+.fee .big{font:300 clamp(2.2rem,4vw,3rem)/1 var(--serif)}
+.fee p{margin-top:10px;color:#C9D3CE;max-width:46ch}
+.fee .btn{margin-top:22px}
+
+/* ---------- simulator ---------- */
+.sim{padding-block:clamp(80px,10vw,140px)}
+.sim-in{display:grid;grid-template-columns:1fr 1fr;gap:48px clamp(40px,6vw,96px);align-items:start}
+.sim form{display:grid;gap:22px;margin-top:32px}
+.sim .unit{position:relative}
+.sim .unit input{padding-right:4.2em}
+.sim .unit span{position:absolute;right:.9em;top:50%;translate:0 -50%;color:var(--taupe);font-size:.92rem;pointer-events:none}
+.result{background:var(--pierre);padding:clamp(24px,4vw,48px);border-top:2px solid var(--cypres)}
+.result .lab{color:var(--taupe)}
+.result .m{font:300 clamp(3rem,7vw,5rem)/1 var(--serif);letter-spacing:-.02em;margin-top:8px}
+.result .m small{font:400 1.05rem var(--sans);color:var(--taupe);letter-spacing:0;margin-left:.3em}
+.result dl{margin:28px 0 0;display:grid;gap:0}
+.result dl div{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-top:1px solid var(--beton)}
+.result dt{color:var(--taupe)}
+.result dd{margin:0;font-weight:500;text-align:right}
+.result .note{margin-top:18px;font-size:.88rem;color:var(--taupe)}
+
+/* ---------- estimate ---------- */
+.estim{background:var(--pierre);padding-block:clamp(80px,10vw,140px)}
+.estim-in{display:grid;grid-template-columns:.9fr 1.1fr;gap:48px clamp(40px,6vw,96px);align-items:start}
+.estim .lead{margin-top:20px;max-width:42ch;color:var(--taupe)}
+.estim .frame{aspect-ratio:4/3;margin-top:40px}
+.estim form{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.estim fieldset{grid-column:1/-1;border:0;margin:0;padding:0}
+.estim legend{font-size:.9rem;color:var(--taupe);margin-bottom:8px;padding:0}
+.estim .seg{flex-wrap:wrap;background:transparent}
+.estim .seg label{position:relative;cursor:pointer}
+.estim .seg input{position:absolute;opacity:0;inset:0;min-height:0;cursor:pointer}
+.estim .seg span{display:flex;align-items:center;min-height:40px;padding:0 1em;color:var(--cypres);font-weight:500;border-radius:1px}
+.estim .seg input:checked+span{background:var(--cypres);color:var(--chaux)}
+.estim .seg input:focus-visible+span{outline:2px solid var(--cypres);outline-offset:2px}
+.estim .full{grid-column:1/-1}
+.estim select,.estim input,.estim textarea{background-color:var(--chaux)}
+.estim .btn{grid-column:1/-1;justify-self:start}
+
+/* ---------- contact ---------- */
+.contact{padding-block:clamp(80px,10vw,140px)}
+.contact-in{display:grid;grid-template-columns:.8fr 1.2fr;gap:40px clamp(40px,6vw,96px);align-items:start}
+.contact dl{margin:28px 0 0}
+.contact dt{font-size:.9rem;color:var(--taupe);margin-top:18px}
+.contact dd{margin:2px 0 0}
+.contact dd a{text-underline-offset:4px;text-decoration-thickness:1px}
+.map{width:100%;aspect-ratio:4/3;border:0;filter:grayscale(.55) contrast(1.02);background:var(--pierre)}
+
+/* ---------- footer ---------- */
+footer{background:var(--cypres-deep);color:#B9C6C0;padding-block:48px 96px;font-size:.92rem}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px 48px}
+.foot .logo{color:var(--chaux)}
+.foot .logo svg{color:var(--laiton)}
+.foot .logo span{color:#B9C6C0}
+.foot p{margin-top:12px}
+
+/* ---------- fixed bits ---------- */
+.demo-pill{position:fixed;left:16px;bottom:16px;z-index:35;padding:.6em 1.05em;border-radius:999px;background:var(--chaux);color:var(--cypres);border:1px solid var(--beton);font:500 .8rem/1.2 var(--sans);text-decoration:none}
+.demo-pill:hover{background:#fff}
+.fab{position:fixed;right:16px;bottom:16px;z-index:35;width:56px;height:56px;border-radius:50%;background:var(--cypres);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(21,42,37,.28)}
+.fab:hover{background:var(--cypres-deep)}
+.fab svg{width:28px;height:28px}
+
+/* ---------- responsive ---------- */
+@media (max-width:1100px){
+  .filters{grid-template-columns:1fr 1fr;}
+  .filters .f-budget{grid-column:1/-1}
+}
+@media (max-width:980px){
+  .nav-links{display:none}
+  .nav-links.open{display:flex;flex-direction:column;gap:0;position:absolute;top:var(--hdr);left:0;right:0;background:var(--chaux);border-bottom:1px solid var(--beton);padding:8px var(--gutter) 16px}
+  .nav-links.open a{padding:12px 0;font-size:1.05rem;color:var(--ardoise);border-bottom:1px solid var(--pierre)}
+  .menu-btn{display:block}
+  .hero-top,.intro,.mre-in,.sim-in,.estim-in,.contact-in{grid-template-columns:1fr}
+  .q-grid{grid-template-columns:1fr 1fr}
+  .grid{grid-template-columns:1fr 1fr}
+  .mre .frame{max-width:none;aspect-ratio:4/3}
+}
+@media (max-width:720px){
+  .nav{gap:12px}
+  .nav .btn{display:none}
+  .hero-pic{height:auto;aspect-ratio:4/5;min-height:0}
+  .search .seg{width:100%}
+  .search .seg button{flex:1}
+  .search select,.search .btn{flex:1 1 100%}
+  .q-grid{grid-template-columns:1fr}
+  .q-grid .frame{aspect-ratio:4/3}
+  .feature-steps{grid-template-columns:1fr}
+  .grid{grid-template-columns:1fr;gap:44px}
+  .toolbar .seg{width:100%}
+  .toolbar .seg button{flex:1}
+  .toolbar .count{width:100%;order:3}
+  .filt-btn{display:inline-flex;flex:1}
+  .toolbar .sort{flex:1}
+  .toolbar .sort span{display:none}
+  .toolbar .sort select{min-width:0}
+  .filters{display:none;grid-template-columns:1fr}
+  .filters.open{display:grid}
+  .filters .f-budget{grid-column:auto}
+  .chips button{flex:1}
+  .d-specs{grid-template-columns:1fr 1fr}
+  .d-atouts{columns:1}
+  .estim form{grid-template-columns:1fr}
+  .estim .btn{justify-self:stretch}
+  .fee .btn{width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .bien figure img{transition:none}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="wa" viewBox="0 0 24 24"><path fill="currentColor" d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Zm5.8 14.03c-.24.68-1.42 1.3-1.95 1.35-.5.05-.97.23-3.26-.68-2.75-1.08-4.5-3.9-4.63-4.08-.13-.18-1.1-1.47-1.1-2.8 0-1.34.7-2 .95-2.27.24-.27.53-.34.71-.34h.51c.16 0 .39-.06.6.46.24.56.8 1.93.87 2.07.07.14.11.3.02.48-.09.18-.14.3-.27.46-.14.16-.29.36-.41.48-.14.13-.28.28-.12.55.16.27.71 1.17 1.52 1.9 1.05.93 1.93 1.22 2.2 1.36.27.13.43.11.59-.07.16-.18.68-.8.86-1.07.18-.27.36-.23.61-.14.25.09 1.58.75 1.85.88.27.14.45.2.52.32.07.11.07.66-.17 1.33Z"/></symbol>
+  <symbol id="mark" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 21H21V3H3V21H7"/><path d="M7 21V14A7 7 0 0 1 14 21" stroke-width="1"/></g></symbol>
+  <symbol id="chev" viewBox="0 0 16 16"><path d="M10 2 4 8l6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+</svg>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#top" aria-label="Bayt Immobilier, accueil"><svg aria-hidden="true"><use href="#mark"/></svg><b>Bayt</b><span>Immobilier</span></a>
+    <nav class="nav-links" id="navLinks" aria-label="Sections">
+      <a href="#biens">Biens</a>
+      <a href="#gestion">Gestion MRE</a>
+      <a href="#simulateur">Simulateur</a>
+      <a href="#estimer">Estimer</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a class="btn wa-generic" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#wa"/></svg>WhatsApp</a>
+    <button class="menu-btn" type="button" id="menuBtn" aria-expanded="false" aria-controls="navLinks">Menu</button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <div class="hero-top">
+      <h1 id="hero-title">Habiter Casablanca, d'Anfa à la côte.</h1>
+      <div>
+        <p class="lead">Bayt Immobilier vend, loue et gère des appartements et des villas à Anfa, Californie, Bouskoura et Dar Bouazza. Chaque bien est visité et mesuré par nous avant d'être proposé.</p>
+        <form class="search" id="heroSearch" aria-label="Recherche rapide">
+          <div class="seg" role="group" aria-label="Projet">
+            <button type="button" data-offre="Vente" aria-pressed="true">Acheter</button>
+            <button type="button" data-offre="Location" aria-pressed="false">Louer</button>
+          </div>
+          <label class="sr" for="heroQ">Quartier</label>
+          <select id="heroQ" name="q">
+            <option value="all">Tous les quartiers</option>
+            <option>Anfa</option><option>Californie</option><option>Bouskoura</option><option>Dar Bouazza</option>
+          </select>
+          <button class="btn" type="submit">Voir les biens</button>
+        </form>
+      </div>
+    </div>
+    <div class="frame hero-pic" data-reveal="doors" data-when="load">
+      <div class="pane"><img src="https://images.unsplash.com/photo-1782720829237-ec146b0afe0a?w=2000&q=75&auto=format&fit=crop" alt="Villa contemporaine blanche entourée de palmiers, en fin de journée" width="2000" height="1333" fetchpriority="high"></div>
+    </div>
+    <p class="hero-cap"><span>Villa jumelée à Dar Bouazza, à 400 m de la plage. Réf. BAY-D02</span><button class="link" type="button" data-open="BAY-D02">Voir ce bien</button></p>
+  </section>
+
+  <!-- QUARTIERS -->
+  <section class="quartiers wrap" id="quartiers" aria-labelledby="q-title">
+    <div class="intro">
+      <h2 id="q-title">Quatre quartiers que nous connaissons rue par rue.</h2>
+      <p>Nous ne travaillons que là où nous pouvons vous dire quelle rue est calme le soir, quelle résidence a un syndic sérieux et combien vaut vraiment le mètre carré.</p>
+    </div>
+    <ul class="q-grid">
+      <li class="q">
+        <div class="frame" data-reveal="shutter"><div class="pane"><img loading="lazy" src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&q=75&auto=format&fit=crop" alt="Résidence moderne blanche aux balcons en bois" width="800" height="1067"></div></div>
+        <h3>Anfa</h3>
+        <p>Villas sur grandes parcelles et résidences récentes entre le boulevard d'Anfa et la corniche. Le quartier le plus demandé de la ville.</p>
+        <p class="ref"><strong class="num">22 000 MAD/m²</strong>prix moyen de vente</p>
+        <button class="link" type="button" data-q="Anfa">Voir les biens à Anfa</button>
+      </li>
+      <li class="q">
+        <div class="frame" data-reveal="shutter"><div class="pane"><img loading="lazy" src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=75&auto=format&fit=crop" alt="Maison blanche aux lignes simples sous un ciel bleu" width="800" height="1067"></div></div>
+        <h3>Californie</h3>
+        <p>Rues calmes, écoles et commerces à pied. Des appartements familiaux à des prix plus doux qu'au centre-ville.</p>
+        <p class="ref"><strong class="num">14 500 MAD/m²</strong>prix moyen de vente</p>
+        <button class="link" type="button" data-q="Californie">Voir les biens à Californie</button>
+      </li>
+      <li class="q">
+        <div class="frame" data-reveal="shutter"><div class="pane"><img loading="lazy" src="https://images.unsplash.com/photo-1781795414968-8ece31826420?w=800&q=75&auto=format&fit=crop" alt="Villa avec piscine au milieu d'un jardin très végétalisé" width="800" height="1067"></div></div>
+        <h3>Bouskoura</h3>
+        <p>Résidences fermées en bordure de forêt, autour du golf. Pour avoir un vrai jardin à vingt minutes du centre.</p>
+        <p class="ref"><strong class="num">12 000 MAD/m²</strong>prix moyen de vente</p>
+        <button class="link" type="button" data-q="Bouskoura">Voir les biens à Bouskoura</button>
+      </li>
+      <li class="q">
+        <div class="frame" data-reveal="shutter"><div class="pane"><img loading="lazy" src="https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=800&q=75&auto=format&fit=crop" alt="Maison aux murs vitrés au bord d'une piscine" width="800" height="1067"></div></div>
+        <h3>Dar Bouazza</h3>
+        <p>Sur la côte, au sud-ouest de la ville. Villas avec piscine à quelques minutes des plages de Tamaris.</p>
+        <p class="ref"><strong class="num">11 000 MAD/m²</strong>prix moyen de vente</p>
+        <button class="link" type="button" data-q="Dar Bouazza">Voir les biens à Dar Bouazza</button>
+      </li>
+    </ul>
+    <p class="foot-note">Prix moyens constatés sur nos ventes d'appartements et de villas en 2025 et 2026, à titre indicatif.</p>
+  </section>
+
+  <!-- FEATURED VILLA -->
+  <section class="feature" id="a-la-une" aria-labelledby="f-title">
+    <div class="wrap feature-in">
+      <div class="feature-head">
+        <p class="over">À la une ce mois-ci</p>
+        <h2 id="f-title">Villa Les Cyprès</h2>
+        <p class="meta">Anfa Supérieur, 480 m² habitables sur un terrain de 950 m², cinq suites. Titre foncier, libre à la vente.</p>
+        <div class="row"><p class="price num">14 500 000 MAD</p><button class="btn btn-ghost" type="button" data-open="BAY-A12">Voir la fiche</button></div>
+      </div>
+
+      <figure class="plan-wrap">
+        <svg class="plan" id="plan" viewBox="0 0 420 330" preserveAspectRatio="xMinYMid meet" role="img" aria-label="Plan du rez-de-chaussée : séjour, cuisine, entrée, bureau, terrasse et piscine">
+          <rect class="room" data-room="sejour" x="20" y="20" width="200" height="180"/>
+          <rect class="room" data-room="cuisine" x="220" y="20" width="180" height="80"/>
+          <rect class="room" data-room="entree" x="220" y="100" width="80" height="100"/>
+          <g class="room" data-room="jardin"><rect x="20" y="200" width="200" height="40"/><rect x="50" y="262" width="240" height="50"/></g>
+          <path class="dash fade" d="M6 6H414V324H6Z"/>
+          <path class="dash fade" d="M20 200V240H220V200"/>
+          <path class="draw w-ext" d="M20 200V20H70 M170 20H270 M350 20H400V200H280 M245 200H200 M60 200H20"/>
+          <path class="draw thin" d="M70 17H170 M70 23H170 M270 17H350 M270 23H350 M60 197H200 M60 203H200"/>
+          <path class="draw w-int" d="M220 20V40 M220 85V130 M220 170V200 M220 100H245 M275 100H400 M300 100V130 M300 160V200"/>
+          <path class="draw thin" d="M280 200V165A35 35 0 0 0 245 200 M300 160H330A30 30 0 0 0 300 130"/>
+          <path class="draw thin" d="M20 90H32V130H20 M232 32H390V92 M290 52H350V66H290Z M268 106H296V158H268Z M268 119H296 M268 132H296 M268 145H296"/>
+          <path class="draw thin" d="M50 262H290V312H50Z M56 268H284V306H56Z"/>
+          <g class="fade">
+            <text x="120" y="114" text-anchor="middle">Séjour</text>
+            <text x="320" y="86" text-anchor="middle">Cuisine</text>
+            <text x="244" y="145" text-anchor="middle">Entrée</text>
+            <text x="350" y="152" text-anchor="middle">Bureau</text>
+            <text x="120" y="225" text-anchor="middle">Terrasse</text>
+            <text x="170" y="291" text-anchor="middle">Piscine</text>
+          </g>
+        </svg>
+        <figcaption>Plan du rez-de-chaussée, simplifié.</figcaption>
+      </figure>
+
+      <ol class="feature-steps">
+        <li class="fstep" data-room="entree">
+          <figure><img loading="lazy" src="https://images.unsplash.com/photo-1613977257363-707ba9348227?w=1200&q=75&auto=format&fit=crop" alt="Façade blanche de la villa, piscine et transats" width="1200" height="900"></figure>
+          <div class="fstep-txt"><h3>L'arrivée</h3><p>Une allée de cyprès, puis un hall double hauteur. La porte s'ouvre dans l'axe de la maison : on voit la piscine dès le seuil.</p></div>
+        </li>
+        <li class="fstep" data-room="sejour">
+          <figure><img loading="lazy" src="https://images.unsplash.com/photo-1757524503555-b62633f47670?w=1200&q=75&auto=format&fit=crop" alt="Séjour contemporain avec cheminée et grandes baies" width="1200" height="900"></figure>
+          <div class="fstep-txt"><h3>Le séjour <span class="s num">68 m²</span></h3><p>Cheminée, sol en travertin et quatorze mètres de baies coulissantes sur la terrasse. Exposé plein sud.</p></div>
+        </li>
+        <li class="fstep" data-room="cuisine">
+          <figure><img loading="lazy" src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1200&q=75&auto=format&fit=crop" alt="Cuisine moderne avec îlot et réfrigérateur en inox" width="1200" height="900"></figure>
+          <div class="fstep-txt"><h3>La cuisine <span class="s num">32 m²</span></h3><p>Ouverte sur le séjour, avec îlot central, office et accès direct au garage pour les courses.</p></div>
+        </li>
+        <li class="fstep" data-room="jardin">
+          <figure><img loading="lazy" src="https://images.unsplash.com/photo-1613977257592-4871e5fcd7c4?w=1200&q=75&auto=format&fit=crop" alt="Piscine de la villa et jardin, vue de côté" width="1200" height="900"></figure>
+          <div class="fstep-txt"><h3>Terrasse et piscine <span class="s num">470 m² de jardin</span></h3><p>Piscine chauffée de 12 m, terrasse couverte de 80 m², arrosage automatique. Pas de vis-à-vis.</p></div>
+        </li>
+      </ol>
+      <ol class="fprog" aria-label="Visite de la villa">
+        <li><button type="button" data-step="0">Arrivée</button></li>
+        <li><button type="button" data-step="1">Séjour</button></li>
+        <li><button type="button" data-step="2">Cuisine</button></li>
+        <li><button type="button" data-step="3">Jardin</button></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- LISTING -->
+  <section class="biens wrap" id="biens" aria-labelledby="b-title">
+    <div class="intro">
+      <h2 id="b-title">Biens disponibles</h2>
+      <p>Photos prises par nous, surfaces mesurées, prix vérifiés avec les propriétaires. Ouvrez une fiche pour demander une visite.</p>
+    </div>
+
+    <div class="toolbar">
+      <div class="seg" role="group" aria-label="Type d'offre" id="offreSeg">
+        <button type="button" data-offre="Vente" aria-pressed="true">Vente</button>
+        <button type="button" data-offre="Location" aria-pressed="false">Location</button>
+      </div>
+      <p class="count" id="count" aria-live="polite"></p>
+      <button class="btn btn-ghost filt-btn" type="button" id="filtBtn" aria-expanded="false" aria-controls="filters">Filtres</button>
+      <label class="sort"><span>Trier par</span>
+        <select id="sort" aria-label="Trier les biens">
+          <option value="recent">Plus récents</option>
+          <option value="asc">Prix croissant</option>
+          <option value="desc">Prix décroissant</option>
+          <option value="surface">Plus grande surface</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="filters" id="filters">
+      <label class="field">Type de bien
+        <select id="fType">
+          <option value="all">Tous les types</option>
+          <option>Appartement</option><option>Villa</option><option>Penthouse</option>
+        </select>
+      </label>
+      <label class="field">Quartier
+        <select id="fQ">
+          <option value="all">Tous les quartiers</option>
+          <option>Anfa</option><option>Californie</option><option>Bouskoura</option><option>Dar Bouazza</option>
+        </select>
+      </label>
+      <div class="field f-budget">
+        <div class="lab"><label for="fBudget">Budget maximum</label><output for="fBudget" id="budgetOut" class="num"></output></div>
+        <input type="range" id="fBudget">
+      </div>
+      <div class="field">
+        <span id="chLab">Chambres</span>
+        <div class="chips" role="group" aria-labelledby="chLab" id="chips">
+          <button type="button" data-ch="0" aria-pressed="true">Toutes</button>
+          <button type="button" data-ch="2" aria-pressed="false">2+</button>
+          <button type="button" data-ch="3" aria-pressed="false">3+</button>
+          <button type="button" data-ch="4" aria-pressed="false">4+</button>
+        </div>
+      </div>
+      <button class="link reset" type="button" id="reset">Réinitialiser</button>
+    </div>
+
+    <ul class="grid" id="grid"></ul>
+    <div class="empty" id="empty" hidden>
+      <h3>Aucun bien ne correspond à ces critères.</h3>
+      <p class="muted">Élargissez le budget ou choisissez un autre quartier. Nous avons aussi des biens qui ne sont pas encore en ligne : décrivez-nous votre recherche.</p>
+      <div class="row">
+        <button class="btn btn-ghost" type="button" id="reset2">Réinitialiser les filtres</button>
+        <a class="link" id="waSearch" href="#" target="_blank" rel="noopener">Envoyer ma recherche sur WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MRE -->
+  <section class="mre dark" id="gestion" aria-labelledby="m-title">
+    <div class="wrap mre-in">
+      <div>
+        <h2 id="m-title">Votre appartement à Casablanca, géré pendant que vous êtes à Paris, Montréal ou Dubaï.</h2>
+        <p class="lead">Pour les Marocains résidant à l'étranger : nous trouvons le locataire, encaissons le loyer et suivons l'entretien. Après chaque passage, vous recevez des photos sur WhatsApp.</p>
+        <div class="frame" data-reveal="doors"><div class="pane"><img loading="lazy" src="https://images.unsplash.com/photo-1758448756362-e323282ccbcc?w=1000&q=75&auto=format&fit=crop" alt="Entrée d'une résidence moderne avec bassin" width="1000" height="1250"></div></div>
+      </div>
+      <div>
+        <ol class="steps">
+          <li><h3>Visite et mise en location</h3><p>Nous visitons le bien, le photographions et fixons le loyer avec vous, chiffres du quartier à l'appui.</p></li>
+          <li><h3>Choix du locataire</h3><p>Dossier vérifié : pièce d'identité, revenus, garant. Bail et état des lieux signés en notre présence.</p></li>
+          <li><h3>Gestion au quotidien</h3><p>Encaissement et relances, petites réparations avec nos artisans, suivi du syndic et de la taxe de services communaux.</p></li>
+          <li><h3>Votre relevé chaque mois</h3><p>Loyer viré sur votre compte le 5 du mois, en dirhams ou en devises, avec un relevé détaillé.</p></li>
+        </ol>
+        <div class="fee">
+          <p class="big num">8 % HT</p>
+          <p>des loyers encaissés. Pas de frais d'entrée, contrat résiliable avec trois mois de préavis.</p>
+          <a class="btn btn-light wa-mre" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#wa"/></svg>Parler de mon bien</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SIMULATOR -->
+  <section class="sim wrap" id="simulateur" aria-labelledby="s-title">
+    <div class="sim-in">
+      <div>
+        <h2 id="s-title">Simuler votre crédit immobilier</h2>
+        <form id="simForm" onsubmit="return false">
+          <label class="field">Prix du bien
+            <span class="unit"><input type="number" name="prix" id="sPrix" inputmode="numeric" min="100000" step="10000" value="1950000"><span>MAD</span></span>
+          </label>
+          <div class="field">
+            <div class="lab"><label for="sApport">Apport personnel</label><output for="sApport" id="oApport" class="num"></output></div>
+            <input type="range" name="apport" id="sApport" min="0" max="60" step="1" value="20">
+          </div>
+          <div class="field">
+            <div class="lab"><label for="sDuree">Durée</label><output for="sDuree" id="oDuree" class="num"></output></div>
+            <input type="range" name="duree" id="sDuree" min="5" max="25" step="1" value="20">
+          </div>
+          <label class="field">Taux annuel
+            <span class="unit"><input type="number" name="taux" id="sTaux" inputmode="decimal" min="0" max="12" step="0.05" value="4.5"><span>%</span></span>
+          </label>
+        </form>
+      </div>
+      <div class="result" aria-live="polite">
+        <p class="lab">Mensualité estimée</p>
+        <p class="m num" id="rM">0<small>MAD/mois</small></p>
+        <dl>
+          <div><dt>Montant emprunté</dt><dd class="num" id="rP"></dd></div>
+          <div><dt>Coût total des intérêts</dt><dd class="num" id="rI"></dd></div>
+          <div><dt>Revenu net conseillé</dt><dd class="num" id="rR"></dd></div>
+          <div><dt>Frais d'achat à prévoir</dt><dd class="num" id="rF"></dd></div>
+        </dl>
+        <p class="note">Simulation indicative, hors assurance emprunteur. Les banques limitent en général la mensualité à 40 % du revenu net. Les frais d'achat (droits d'enregistrement, conservation foncière, notaire) représentent environ 6,5 % du prix.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ESTIMATE -->
+  <section class="estim" id="estimer" aria-labelledby="e-title">
+    <div class="wrap estim-in">
+      <div>
+        <h2 id="e-title">Estimer mon bien</h2>
+        <p class="lead">Décrivez votre bien : nous vous rappelons pour fixer une visite, puis vous recevez une estimation écrite sous 48 heures. Gratuit et sans engagement.</p>
+        <div class="frame" data-reveal="doors"><div class="pane"><img loading="lazy" src="https://images.unsplash.com/photo-1748063578185-3d68121b11ff?w=1000&q=75&auto=format&fit=crop" alt="Maison moderne éclairée de l'intérieur à la tombée de la nuit" width="1000" height="750"></div></div>
+      </div>
+      <form id="estForm">
+        <fieldset>
+          <legend>Votre projet</legend>
+          <div class="seg">
+            <label><input type="radio" name="projet" value="Vendre" checked><span>Vendre</span></label>
+            <label><input type="radio" name="projet" value="Louer" ><span>Louer</span></label>
+            <label><input type="radio" name="projet" value="Confier la gestion (MRE)"><span>Faire gérer</span></label>
+          </div>
+        </fieldset>
+        <label class="field">Type de bien
+          <select name="type" required>
+            <option>Appartement</option><option>Villa</option><option>Penthouse</option><option>Terrain</option>
+          </select>
+        </label>
+        <label class="field">Quartier
+          <select name="quartier" required>
+            <option>Anfa</option><option>Californie</option><option>Bouskoura</option><option>Dar Bouazza</option><option>Autre quartier de Casablanca</option>
+          </select>
+        </label>
+        <label class="field">Surface (m²)
+          <input type="number" name="surface" min="15" max="5000" inputmode="numeric" required placeholder="120">
+        </label>
+        <label class="field">Chambres
+          <input type="number" name="chambres" min="0" max="12" inputmode="numeric" value="3" required>
+        </label>
+        <label class="field">État
+          <select name="etat">
+            <option>Neuf</option><option selected>Bon état</option><option>À rafraîchir</option><option>À rénover</option>
+          </select>
+        </label>
+        <label class="field">Votre prénom
+          <input type="text" name="prenom" autocomplete="given-name" required>
+        </label>
+        <label class="field full">Ville où vous vivez <span class="muted">(facultatif)</span>
+          <input type="text" name="ville" autocomplete="address-level2" placeholder="Casablanca, Paris, Bruxelles…">
+        </label>
+        <label class="field full">Précisions <span class="muted">(facultatif)</span>
+          <textarea name="note" placeholder="Étage, terrasse, parking, travaux récents…"></textarea>
+        </label>
+        <button class="btn" type="submit"><svg aria-hidden="true"><use href="#wa"/></svg>Envoyer sur WhatsApp</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact wrap" id="contact" aria-labelledby="c-title">
+    <div class="contact-in">
+      <div>
+        <h2 id="c-title">L'agence</h2>
+        <dl>
+          <dt>Adresse</dt><dd>27, boulevard d'Anfa, Casablanca</dd>
+          <dt>Horaires</dt><dd>Du lundi au vendredi, 9 h à 19 h<br>Le samedi, 9 h 30 à 13 h. Visites possibles le samedi après-midi sur rendez-vous.</dd>
+          <dt>Téléphone et WhatsApp</dt><dd><a href="tel:+212600000000">+212 6 00 00 00 00</a></dd>
+          <dt>E-mail</dt><dd><a href="mailto:contact@example.com">contact@example.com</a></dd>
+        </dl>
+      </div>
+      <iframe class="map" title="Carte : quartier d'Anfa, Casablanca" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Anfa,+Casablanca&z=13&output=embed"></iframe>
+    </div>
+  </section>
+</main>
+
+<footer class="dark">
+  <div class="wrap foot">
+    <div>
+      <a class="logo" href="#top"><svg aria-hidden="true"><use href="#mark"/></svg><b>Bayt</b><span>Immobilier</span></a>
+      <p>27, boulevard d'Anfa, Casablanca. Vente, location et gestion locative.</p>
+    </div>
+    <p>Site de démonstration : entreprise fictive. Photos Unsplash.</p>
+  </div>
+</footer>
+
+<a href="../" class="demo-pill">Démo réalisée par Ghali</a>
+<a class="fab wa-generic" href="#" target="_blank" rel="noopener" aria-label="Nous écrire sur WhatsApp"><svg aria-hidden="true"><use href="#wa"/></svg></a>
+
+<dialog id="drawer" aria-labelledby="dTitle">
+  <div class="d-in">
+    <div class="d-bar"><p id="dRef"></p><button class="d-close" type="button" id="dClose">Fermer</button></div>
+    <div class="d-scroll">
+      <div class="car">
+        <div class="car-track" id="carTrack" tabindex="0" aria-label="Photos du bien, utilisez les flèches pour défiler"></div>
+        <div class="car-ctrl">
+          <button type="button" id="carPrev" aria-label="Photo précédente"><svg aria-hidden="true"><use href="#chev"/></svg></button>
+          <span id="carCount" class="num" aria-live="polite"></span>
+          <button type="button" id="carNext" aria-label="Photo suivante"><svg aria-hidden="true" style="transform:scaleX(-1)"><use href="#chev"/></svg></button>
+        </div>
+      </div>
+      <div class="d-body">
+        <p class="lieu" id="dLieu"></p>
+        <h2 id="dTitle"></h2>
+        <p class="prix num" id="dPrix"></p>
+        <dl class="d-specs" id="dSpecs"></dl>
+        <p class="desc" id="dDesc"></p>
+        <ul class="d-atouts" id="dAtouts"></ul>
+      </div>
+    </div>
+    <div class="d-actions">
+      <a class="btn" id="dVisit" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#wa"/></svg>Demander une visite</a>
+      <button class="btn btn-ghost" type="button" id="dSim">Simuler le crédit</button>
+    </div>
+  </div>
+</dialog>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+/* ============ CONFIG ============ */
+const WHATSAPP = "212600000000";   // numéro WhatsApp de l'agence : format international, sans + ni espaces
+const AGENCE = "Bayt Immobilier";
+
+const img = (id, w) => `https://images.unsplash.com/photo-${id}?w=${w}&q=75&auto=format&fit=crop`;
+const waURL = text => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
+const nf = new Intl.NumberFormat("fr-FR", {maximumFractionDigits:0});
+const fmt = n => nf.format(Math.round(n));
+const prixTxt = b => b.offre === "Vente" ? `${fmt(b.prix)} MAD` : `${fmt(b.prix)} MAD/mois`;
+
+/* ============ BIENS (ajout = jours depuis la mise en ligne) ============ */
+const BIENS = [
+  {ref:"BAY-A12", titre:"Villa Les Cyprès", type:"Villa", offre:"Vente", quartier:"Anfa", secteur:"Anfa Supérieur",
+   prix:14500000, surface:480, terrain:950, ch:5, sdb:5, ajout:3,
+   photos:["1613977257363-707ba9348227","1757524503555-b62633f47670","1613977257592-4871e5fcd7c4"],
+   alts:["Façade blanche de la villa et piscine","Séjour avec cheminée","Piscine et jardin de la villa"],
+   desc:"Villa construite en 2012 et rénovée en 2024, sur une parcelle plate à deux rues du boulevard d'Anfa. Séjour de 68 m² ouvert sur la terrasse et la piscine, cuisine avec office, cinq suites dont une parentale avec dressing à l'étage.",
+   atouts:["Piscine chauffée","Jardin de 470 m²","Garage deux voitures","Chauffage central","Logement de gardien","Titre foncier"]},
+  {ref:"BAY-C07", titre:"Appartement traversant, rue calme", type:"Appartement", offre:"Vente", quartier:"Californie", secteur:"Californie",
+   prix:1950000, surface:128, ch:3, sdb:2, ajout:6,
+   photos:["1583847268964-b28dc8f51f92","1484154218962-a197022b5858"],
+   alts:["Séjour lumineux avec grande fenêtre","Cuisine équipée en inox"],
+   desc:"Au 3e étage d'une résidence de 2019 avec ascenseur, à cinq minutes à pied des écoles du quartier. Séjour double orienté sud-ouest, cuisine fermée équipée, deux balcons.",
+   atouts:["Ascenseur","Parking en sous-sol","Cave","Syndic actif","Double vitrage","Titre foncier"]},
+  {ref:"BAY-B03", titre:"Villa au bord de la forêt", type:"Villa", offre:"Vente", quartier:"Bouskoura", secteur:"Bouskoura, quartier du golf",
+   prix:6900000, surface:350, terrain:600, ch:4, sdb:4, ajout:12,
+   photos:["1781795414968-8ece31826420","1580587771525-78b9dba3b914"],
+   alts:["Villa avec piscine entourée de végétation","Façade blanche et bois de la villa"],
+   desc:"Dans une résidence fermée avec gardiennage, face à la forêt de Bouskoura. Pièces de vie de plain-pied, quatre chambres à l'étage, piscine et jardin arboré.",
+   atouts:["Résidence gardée 24 h/24","Piscine","Jardin de 300 m²","Panneaux solaires","Titre foncier"]},
+  {ref:"BAY-D05", titre:"Villa vitrée près de la plage", type:"Villa", offre:"Location", quartier:"Dar Bouazza", secteur:"Dar Bouazza, Tamaris",
+   prix:35000, surface:400, terrain:800, ch:4, sdb:3, ajout:2,
+   photos:["1582268611958-ebfd161ef9cf","1512917774080-9991f1c4c750"],
+   alts:["Maison aux murs vitrés et piscine","Villa blanche et grise au bord de la piscine"],
+   desc:"À 300 m de la plage, villa sur deux niveaux avec piscine. Louée meublée, bail d'un an minimum. L'entretien du jardin et de la piscine est inclus dans le loyer. Disponible le 1er janvier 2027.",
+   atouts:["Meublée","Piscine","Vue mer depuis l'étage","Entretien jardin et piscine inclus","Deux mois de caution"]},
+  {ref:"BAY-A21", titre:"Appartement meublé avec concierge", type:"Appartement", offre:"Location", quartier:"Anfa", secteur:"Anfa, près de la corniche",
+   prix:16500, surface:140, ch:3, sdb:2, ajout:9,
+   photos:["1613490493576-7fde63acd811","1759691555393-60cd5355d840","1522708323590-d24dbb6b0267"],
+   alts:["Résidence blanche aux balcons en bois","Séjour avec canapé blanc et tableaux","Chambre meublée et rangée"],
+   desc:"Entièrement meublé et équipé, dans un immeuble avec concierge, à dix minutes à pied de la corniche. Trois chambres dont une suite, séjour ouvert sur un balcon filant.",
+   atouts:["Meublé","Concierge","Climatisation réversible","Parking","Disponible immédiatement"]},
+  {ref:"BAY-A30", titre:"Penthouse avec terrasse de 90 m²", type:"Penthouse", offre:"Vente", quartier:"Anfa", secteur:"Anfa Supérieur",
+   prix:5900000, surface:210, ch:3, sdb:3, ajout:20,
+   photos:["1757524492552-d47a66a2b63e","1502672260266-1c1ef2d93688"],
+   alts:["Grandes baies vitrées éclairées au crépuscule","Coin salon avec canapé gris et table en bois"],
+   desc:"Dernier étage d'une petite résidence de six appartements. Terrasse de 90 m² sur trois côtés, vue dégagée jusqu'à l'océan, trois suites et un bureau.",
+   atouts:["Terrasse de 90 m²","Vue océan","Deux places de parking","Cave","Titre foncier"]},
+  {ref:"BAY-C14", titre:"Deux chambres près des écoles", type:"Appartement", offre:"Location", quartier:"Californie", secteur:"Californie",
+   prix:8500, surface:95, ch:2, sdb:1, ajout:5,
+   photos:["1560448204-e02f11c3d0e2","1758448756362-e323282ccbcc"],
+   alts:["Séjour avec canapé beige et fauteuil","Entrée de la résidence avec bassin"],
+   desc:"Appartement non meublé au 2e étage, dans une résidence récente avec jardin intérieur. Cuisine équipée, grand séjour, rangements dans chaque chambre.",
+   atouts:["Non meublé","Ascenseur","Parking en sous-sol","Résidence gardée"]},
+  {ref:"BAY-B11", titre:"Villa familiale en résidence fermée", type:"Villa", offre:"Location", quartier:"Bouskoura", secteur:"Bouskoura",
+   prix:22000, surface:300, terrain:500, ch:4, sdb:3, ajout:15,
+   photos:["1600596542815-ffad4c1539a9","1748063578185-3d68121b11ff"],
+   alts:["Maison blanche moderne sous un ciel bleu","Villa éclairée de l'intérieur à la nuit tombée"],
+   desc:"Villa récente non meublée, à vingt minutes du centre par l'autoroute. Quatre chambres, salle de jeux au sous-sol, jardin privatif et accès au parc de la résidence.",
+   atouts:["Non meublée","Jardin privatif","Résidence gardée 24 h/24","Proche écoles internationales"]},
+  {ref:"BAY-D02", titre:"Villa jumelée près de la plage", type:"Villa", offre:"Vente", quartier:"Dar Bouazza", secteur:"Dar Bouazza",
+   prix:3450000, surface:220, terrain:350, ch:4, sdb:3, ajout:8,
+   photos:["1782720829237-ec146b0afe0a","1773578978637-c9771e7a9913"],
+   alts:["Villa blanche entourée de palmiers","Salle à manger ouverte sur le séjour"],
+   desc:"À 400 m de la plage, villa jumelée livrée en 2023. Grand séjour-salle à manger, quatre chambres, toit-terrasse aménageable et petite piscine.",
+   atouts:["Piscine","Toit-terrasse","Garage","Livrée en 2023","Titre foncier"]}
+];
+const byRef = Object.fromEntries(BIENS.map(b => [b.ref, b]));
+
+/* ============ LISTING + FILTERS ============ */
+const RANGES = {Vente:{min:1500000, max:15000000, step:250000}, Location:{min:5000, max:40000, step:1000}};
+const state = {offre:"Vente", type:"all", quartier:"all", budget:RANGES.Vente.max, ch:0, sort:"recent"};
+const $ = id => document.getElementById(id);
+const grid = $("grid"), empty = $("empty"), count = $("count"), budget = $("fBudget"), budgetOut = $("budgetOut");
+
+function syncControls(){
+  document.querySelectorAll("#offreSeg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.offre === state.offre));
+  const r = RANGES[state.offre];
+  budget.min = r.min; budget.max = r.max; budget.step = r.step; budget.value = state.budget;
+  budgetOut.textContent = state.budget >= r.max ? "Sans limite" : `${fmt(state.budget)} MAD${state.offre === "Location" ? "/mois" : ""}`;
+  $("fType").value = state.type; $("fQ").value = state.quartier; $("sort").value = state.sort;
+  document.querySelectorAll("#chips button").forEach(b => b.setAttribute("aria-pressed", +b.dataset.ch === state.ch));
+  const n = (state.type !== "all") + (state.quartier !== "all") + (state.budget < r.max) + (state.ch > 0);
+  $("filtBtn").textContent = n ? `Filtres (${n})` : "Filtres";
+}
+
+function card(b){
+  return `<li class="bien">
+    <figure><img loading="lazy" src="${img(b.photos[0], 800)}" alt="${b.alts[0]}" width="800" height="600"><span class="tag">${b.offre}</span></figure>
+    <p class="lieu">${b.secteur}</p>
+    <h3><button type="button" data-open="${b.ref}">${b.titre}</button></h3>
+    <p class="prix num">${prixTxt(b)}</p>
+    <ul class="specs"><li>${b.surface} m²</li><li>${b.ch} chambres</li><li>${b.sdb} salle${b.sdb > 1 ? "s" : ""} de bain</li><li>Réf. ${b.ref}</li></ul>
+  </li>`;
+}
+
+function render(){
+  const max = RANGES[state.offre].max;
+  let list = BIENS.filter(b => b.offre === state.offre
+    && (state.type === "all" || b.type === state.type)
+    && (state.quartier === "all" || b.quartier === state.quartier)
+    && (state.budget >= max || b.prix <= state.budget)
+    && b.ch >= state.ch);
+  const sorters = {recent:(a,b) => a.ajout - b.ajout, asc:(a,b) => a.prix - b.prix, desc:(a,b) => b.prix - a.prix, surface:(a,b) => b.surface - a.surface};
+  list.sort(sorters[state.sort]);
+  grid.innerHTML = list.map(card).join("");
+  empty.hidden = list.length > 0;
+  const n = list.length;
+  count.textContent = `${n} bien${n > 1 ? "s" : ""} ${state.offre === "Vente" ? "à vendre" : "à louer"}`;
+  syncControls();
+  if (motionOn) refreshSoon();
+}
+
+let refreshT;
+function refreshSoon(){ clearTimeout(refreshT); refreshT = setTimeout(() => ScrollTrigger.refresh(), 200); }
+function setOffre(o){ state.offre = o; state.budget = RANGES[o].max; }
+function resetFilters(){ state.type = "all"; state.quartier = "all"; state.ch = 0; state.budget = RANGES[state.offre].max; state.sort = "recent"; render(); }
+
+document.querySelectorAll("#offreSeg button").forEach(b => b.addEventListener("click", () => { setOffre(b.dataset.offre); render(); }));
+$("fType").addEventListener("change", e => { state.type = e.target.value; render(); });
+$("fQ").addEventListener("change", e => { state.quartier = e.target.value; render(); });
+$("sort").addEventListener("change", e => { state.sort = e.target.value; render(); });
+budget.addEventListener("input", () => { state.budget = +budget.value; render(); });
+document.querySelectorAll("#chips button").forEach(b => b.addEventListener("click", () => { state.ch = +b.dataset.ch; render(); }));
+$("reset").addEventListener("click", resetFilters);
+$("reset2").addEventListener("click", resetFilters);
+$("filtBtn").addEventListener("click", e => {
+  const open = $("filters").classList.toggle("open");
+  e.currentTarget.setAttribute("aria-expanded", open);
+});
+
+const goToListing = () => $("biens").scrollIntoView({behavior: motionOn ? "smooth" : "auto"});
+
+/* hero quick search */
+let heroOffre = "Vente";
+document.querySelectorAll("#heroSearch .seg button").forEach(b => b.addEventListener("click", () => {
+  heroOffre = b.dataset.offre;
+  document.querySelectorAll("#heroSearch .seg button").forEach(x => x.setAttribute("aria-pressed", x === b));
+}));
+$("heroSearch").addEventListener("submit", e => {
+  e.preventDefault();
+  setOffre(heroOffre); state.quartier = $("heroQ").value; state.type = "all"; state.ch = 0;
+  render(); goToListing();
+});
+
+/* quartier links */
+document.querySelectorAll("[data-q]").forEach(b => b.addEventListener("click", () => {
+  state.quartier = b.dataset.q; state.type = "all"; state.ch = 0; state.budget = RANGES[state.offre].max;
+  if (!BIENS.some(x => x.quartier === state.quartier && x.offre === state.offre)) setOffre(state.offre === "Vente" ? "Location" : "Vente");
+  render(); goToListing();
+}));
+
+/* ============ DRAWER ============ */
+const drawer = $("drawer"), track = $("carTrack");
+let current = null, opener = null;
+
+function openBien(ref, from){
+  const b = byRef[ref]; if (!b) return;
+  current = b; opener = from || document.activeElement;
+  $("dRef").textContent = `Réf. ${b.ref}`;
+  $("dLieu").textContent = `${b.secteur}, Casablanca`;
+  $("dTitle").textContent = b.titre;
+  $("dPrix").textContent = prixTxt(b);
+  const specs = [["Type", b.type], ["Offre", b.offre], ["Surface", `${b.surface} m²`], ["Chambres", b.ch], ["Salles de bain", b.sdb], ["Terrain", b.terrain ? `${b.terrain} m²` : "Sans objet"]];
+  $("dSpecs").innerHTML = specs.map(([k,v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join("");
+  $("dDesc").textContent = b.desc;
+  $("dAtouts").innerHTML = b.atouts.map(a => `<li>${a}</li>`).join("");
+  track.innerHTML = b.photos.map((p,i) => `<img src="${img(p, 1200)}" alt="${b.alts[i] || b.titre}" width="1200" height="900" ${i ? 'loading="lazy"' : ""}>`).join("");
+  track.scrollLeft = 0; updateCount();
+  $("dVisit").href = waURL(`Bonjour ${AGENCE},\nJe souhaite visiter le bien réf. ${b.ref} : ${b.titre}, ${b.secteur} (${prixTxt(b)}).\nQuelles sont vos disponibilités ?\nMerci.`);
+  $("dSim").hidden = b.offre !== "Vente";
+  document.documentElement.classList.add("lock");
+  drawer.showModal();
+  drawer.querySelector(".d-scroll").scrollTop = 0;
+}
+function updateCount(){
+  const n = track.children.length, i = Math.round(track.scrollLeft / (track.clientWidth || 1));
+  $("carCount").textContent = `${Math.min(i + 1, n)} / ${n}`;
+}
+const slide = dir => track.scrollBy({left: dir * track.clientWidth, behavior: motionOn ? "smooth" : "auto"});
+$("carPrev").addEventListener("click", () => {
+  if (track.scrollLeft <= 2) track.scrollTo({left: track.scrollWidth}); else slide(-1);
+});
+$("carNext").addEventListener("click", () => {
+  if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 2) track.scrollTo({left: 0}); else slide(1);
+});
+track.addEventListener("scroll", () => requestAnimationFrame(updateCount), {passive:true});
+track.addEventListener("keydown", e => {
+  if (e.key === "ArrowRight") { e.preventDefault(); $("carNext").click(); }
+  if (e.key === "ArrowLeft") { e.preventDefault(); $("carPrev").click(); }
+});
+$("dClose").addEventListener("click", () => drawer.close());
+drawer.addEventListener("click", e => { if (e.target === drawer) drawer.close(); });
+drawer.addEventListener("close", () => {
+  document.documentElement.classList.remove("lock");
+  if (opener && document.contains(opener)) opener.focus({preventScroll:true});
+});
+$("dSim").addEventListener("click", () => {
+  if (!current) return;
+  $("sPrix").value = current.prix; calc();
+  opener = null; drawer.close();
+  $("simulateur").scrollIntoView({behavior: motionOn ? "smooth" : "auto"});
+});
+document.addEventListener("click", e => {
+  const t = e.target.closest("[data-open]");
+  if (t) openBien(t.dataset.open, t);
+});
+
+/* ============ SIMULATEUR ============ */
+function calc(){
+  const prix = Math.max(0, +$("sPrix").value || 0);
+  const pct = +$("sApport").value, ans = +$("sDuree").value, taux = Math.max(0, +$("sTaux").value || 0);
+  const apport = prix * pct / 100, P = prix - apport, n = ans * 12, r = taux / 1200;
+  const m = P <= 0 ? 0 : (r ? P * r / (1 - Math.pow(1 + r, -n)) : P / n);
+  $("oApport").textContent = `${pct} %, soit ${fmt(apport)} MAD`;
+  $("oDuree").textContent = `${ans} ans`;
+  $("rM").innerHTML = `${fmt(m)}<small>MAD/mois</small>`;
+  $("rP").textContent = `${fmt(P)} MAD`;
+  $("rI").textContent = `${fmt(Math.max(0, m * n - P))} MAD`;
+  $("rR").textContent = `${fmt(m / 0.4)} MAD/mois`;
+  $("rF").textContent = `environ ${fmt(prix * 0.065)} MAD`;
+}
+["sPrix","sApport","sDuree","sTaux"].forEach(id => $(id).addEventListener("input", calc));
+
+/* ============ ESTIMER -> WHATSAPP ============ */
+$("estForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const f = e.target.elements;
+  const lines = [
+    `Bonjour ${AGENCE},`,
+    `Je souhaite faire estimer mon bien.`,
+    `Projet : ${f.projet.value}`,
+    `Type : ${f.type.value}`,
+    `Quartier : ${f.quartier.value}`,
+    `Surface : ${f.surface.value} m²`,
+    `Chambres : ${f.chambres.value}`,
+    `État : ${f.etat.value}`,
+    `Je m'appelle ${f.prenom.value.trim()}${f.ville.value.trim() ? `, j'habite à ${f.ville.value.trim()}` : ""}.`
+  ];
+  if (f.note.value.trim()) lines.push(`Précisions : ${f.note.value.trim()}`);
+  window.open(waURL(lines.join("\n")), "_blank", "noopener");
+});
+
+/* ============ GENERIC WHATSAPP LINKS ============ */
+document.querySelectorAll(".wa-generic").forEach(a => a.href = waURL(`Bonjour ${AGENCE}, je cherche un bien à Casablanca.`));
+document.querySelectorAll(".wa-mre").forEach(a => a.href = waURL(`Bonjour ${AGENCE}, je vis à l'étranger et je voudrais vous confier la gestion de mon bien à Casablanca.`));
+$("waSearch").addEventListener("click", () => {
+  const t = state.offre === "Vente" ? "acheter" : "louer";
+  const q = state.quartier === "all" ? "Casablanca" : state.quartier;
+  const ty = state.type === "all" ? "un bien" : state.type.toLowerCase() === "villa" ? "une villa" : `un ${state.type.toLowerCase()}`;
+  $("waSearch").href = waURL(`Bonjour ${AGENCE}, je cherche à ${t} ${ty} à ${q}${state.ch ? `, ${state.ch} chambres minimum` : ""}${state.budget < RANGES[state.offre].max ? `, budget ${fmt(state.budget)} MAD${state.offre === "Location" ? "/mois" : ""}` : ""}.`);
+});
+
+/* mobile menu */
+$("menuBtn").addEventListener("click", e => {
+  const open = $("navLinks").classList.toggle("open");
+  e.currentTarget.setAttribute("aria-expanded", open);
+});
+$("navLinks").addEventListener("click", e => {
+  if (e.target.closest("a")) { $("navLinks").classList.remove("open"); $("menuBtn").setAttribute("aria-expanded", "false"); }
+});
+
+/* ============ MOTION (GSAP) ============ */
+const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const motionOn = !reduce && typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined";
+
+/* split plan paths into one path per wall segment so each can draw itself */
+document.querySelectorAll("#plan path.draw").forEach(p => {
+  const parts = p.getAttribute("d").trim().split(/(?=M)/);
+  if (parts.length < 2) return;
+  parts.forEach(d => { const c = p.cloneNode(); c.setAttribute("d", d.trim()); p.before(c); });
+  p.remove();
+});
+
+function edge(cls, parent){ const i = document.createElement("i"); i.className = "edge " + cls; i.setAttribute("aria-hidden", "true"); parent.appendChild(i); return i; }
+
+function initReveals(){
+  let shutters = 0;
+  document.querySelectorAll("[data-reveal]").forEach(frame => {
+    const pane = frame.querySelector(".pane"), pic = pane.querySelector("img");
+    const tl = gsap.timeline({paused:true, defaults:{ease:"power3.inOut"}});
+    if (frame.dataset.reveal === "doors") {
+      const [l, r] = [edge("v", frame), edge("v", frame)];
+      gsap.set(pane, {clipPath:"inset(0% 50% 0% 50%)"});
+      gsap.set([l, r], {left:"50%", scaleY:0});
+      gsap.set(pic, {scale:1.16});
+      tl.to([l, r], {scaleY:1, duration:.55, ease:"power2.out"})
+        .to(pane, {clipPath:"inset(0% 0% 0% 0%)", duration:1.4})
+        .to(l, {left:"0%", duration:1.4}, "<")
+        .to(r, {left:"100%", duration:1.4}, "<")
+        .to(pic, {scale:1, duration:1.9, ease:"power2.out"}, "<")
+        .to([l, r], {opacity:0, duration:.5}, "-=.6");
+    } else {
+      const h = edge("h", frame);
+      gsap.set(pane, {clipPath:"inset(100% 0% 0% 0%)"});
+      gsap.set(h, {top:"100%", scaleX:0, transformOrigin:"left center"});
+      gsap.set(pic, {scale:1.12, yPercent:6});
+      const delay = (shutters++ % 4) * .12;
+      tl.to(h, {scaleX:1, duration:.5, ease:"power2.out", delay})
+        .to(pane, {clipPath:"inset(0% 0% 0% 0%)", duration:1.3})
+        .to(h, {top:"0%", duration:1.3}, "<")
+        .to(pic, {scale:1, yPercent:0, duration:1.7, ease:"power2.out"}, "<")
+        .to(h, {opacity:0, duration:.4}, "-=.5");
+    }
+    if (frame.dataset.when === "load") tl.delay(.25).play();
+    else ScrollTrigger.create({trigger:frame, start:"top 85%", once:true, onEnter:() => tl.play(), onLeave:() => tl.play()});
+  });
+
+  /* hero parallax */
+  gsap.fromTo(".hero-pic img", {yPercent:0}, {yPercent:-12, ease:"none",
+    scrollTrigger:{trigger:".hero-pic", start:"top 70%", end:"bottom top", scrub:true}});
+}
+
+function initFeature(){
+  const mm = gsap.matchMedia();
+  mm.add("(min-width: 900px) and (min-height: 700px)", () => {
+    const sec = document.querySelector(".feature");
+    sec.classList.add("is-pinned");
+    const figs = [...sec.querySelectorAll(".fstep figure")];
+    const txts = [...sec.querySelectorAll(".fstep-txt")];
+    const steps = [...sec.querySelectorAll(".fstep")].map(s => s.dataset.room);
+    const room = name => sec.querySelector(`.room[data-room="${name}"]`);
+    const walls = [...sec.querySelectorAll("#plan .draw")];
+    const fades = sec.querySelectorAll("#plan .fade");
+    const prog = [...sec.querySelectorAll(".fprog button")];
+
+    walls.forEach(p => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; });
+    gsap.set(figs.slice(1), {clipPath:"inset(0% 50% 0% 50%)"});
+    gsap.set(txts.slice(1), {autoAlpha:0, y:24});
+    gsap.set(fades, {opacity:0});
+
+    const setStep = i => prog.forEach((b, k) => k === i ? b.setAttribute("aria-current", "step") : b.removeAttribute("aria-current"));
+    const tl = gsap.timeline({
+      defaults:{ease:"none"},
+      scrollTrigger:{trigger:sec, start:"top top", end:"+=340%", pin:true, scrub:.6, anticipatePin:1, refreshPriority:1},
+      onUpdate(){
+        const t = this.time(); let s = 0;
+        ["s1","s2","s3"].forEach((l, i) => { if (t >= this.labels[l]) s = i + 1; });
+        setStep(s);
+      }
+    });
+    tl.addLabel("s0")
+      .to(walls, {strokeDashoffset:0, duration:.7, stagger:.06, ease:"power1.inOut"})
+      .to(fades, {opacity:1, duration:.4}, "-=.3")
+      .to(room(steps[0]), {opacity:1, duration:.3}, "<");
+    for (let i = 1; i < figs.length; i++) {
+      tl.to({}, {duration:.6})
+        .to(figs[i], {clipPath:"inset(0% 0% 0% 0%)", duration:1, ease:"power2.inOut"})
+        .to(txts[i-1], {autoAlpha:0, y:-24, duration:.35}, "<")
+        .to(room(steps[i-1]), {opacity:0, duration:.35}, "<")
+        .addLabel("s" + i, "<.45")
+        .to(txts[i], {autoAlpha:1, y:0, duration:.45}, "<.45")
+        .to(room(steps[i]), {opacity:1, duration:.4}, "<");
+    }
+    tl.to({}, {duration:.7});
+    setStep(0);
+
+    prog.forEach((b, i) => b.addEventListener("click", () => {
+      const st = tl.scrollTrigger, target = i ? tl.labels["s" + i] + .5 : 0;
+      window.scrollTo({top: st.start + (target / tl.duration()) * (st.end - st.start) + 2, behavior:"smooth"});
+    }));
+
+    return () => {
+      sec.classList.remove("is-pinned");
+      walls.forEach(p => { p.style.strokeDasharray = ""; p.style.strokeDashoffset = ""; });
+      prog.forEach(b => b.replaceWith(b.cloneNode(true)));
+    };
+  });
+}
+
+/* ============ START ============ */
+syncControls();
+render();
+calc();
+if (motionOn) {
+  gsap.registerPlugin(ScrollTrigger);
+  initFeature();
+  initReveals();
+  window.addEventListener("load", () => ScrollTrigger.refresh());
+}
+</script>
+</body>
+</html>

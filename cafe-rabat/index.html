@@ -1,0 +1,943 @@
+<!doctype html>
+<!--
+DESIGN PLAN : Kahwa Atelier (coffee shop + boulangerie, Agdal, Rabat)
+
+Idée : le site est un verre de nous-nous. Le nous-nous (moitié café, moitié lait,
+servi dans un verre à facettes) est LA boisson des cafés marocains. Il se remplit
+à mesure qu'on descend dans la page : espresso, puis café cassé, puis nous-nous, puis mousse.
+
+Palette (lumière du jour, bruns espresso + une couleur fraîche inattendue)
+  --chaux     #FBF9F5  mur blanchi à la chaux (fond, presque blanc, pas crème)
+  --espresso  #2B1810  texte, sections sombres
+  --roast     #6B3A1F  brun torréfié, texte secondaire
+  --caramel   #D9A066  crema, numéros, détails
+  --milk      #EFE3D1  lait, mousse
+  --oudaya    #2D5BFF  bleu des murs de la Kasbah des Oudayas (la couleur fraîche)
+
+Typo
+  Anybody (variable, largeur 50–150) : display, gros, utilisé condensé ET étiré,
+  la typo elle-même fait le décor (bandeau des boissons qui alterne les largeurs).
+  Hanken Grotesk : texte courant et interface.
+
+Mise en page
+  [header : logo | carte  le grain  travailler ici  horaires | statut | panier]
+  HERO      | On torréfie,        | [photo espresso, bloc bleu décalé]
+            | vous restez.        |  [VERRE] déborde en bas à gauche
+  BANDEAU   bleu Oudayas : noms des boissons en très grand + pastilles photo, bougent au scroll
+  GRAINE    fond espresso, épinglé : un grain qui torréfie (vert > jaune > cannelle > brun)
+            et 4 étapes numérotées (vraie séquence)
+  CARTE     filtres (Café, Thé & infusions, Viennoiseries, Salé), liste en 2 colonnes, Ajouter
+  TRAVAILLER mur blanc/bleu des Oudayas derrière les photos, infos wifi / prises / terrasse
+  HORAIRES  statut « Ouvert maintenant » (Africa/Casablanca), tableau, carte Google
+  Tout aligné à gauche, grands titres serrés, beaucoup d'air.
+
+Élément signature : le verre de nous-nous qui part du hero, se pose sur un sous-verre
+fixe (desktop) et se remplit au scroll, avec un filet qui coule quand on défile.
+
+Relecture du plan : ma première idée était un fond crème + accent terracotta : c'est le
+défaut « IA ». Remplacé par un blanc chaux plus froid et le bleu des Oudayas, ancré à Rabat.
+J'avais aussi prévu des cartes arrondies pour la carte : remplacées par une liste de
+comptoir (nom, description, prix) plus proche d'un vrai menu de café.
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kahwa Atelier, café de spécialité à Agdal (Rabat)</title>
+<meta name="description" content="Kahwa Atelier, coffee shop et boulangerie à Agdal, Rabat. Café torréfié sur place, croissants et msemen le matin, wifi et terrasse. Commande à emporter sur WhatsApp.">
+<meta name="theme-color" content="#2D5BFF">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,100..900&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --chaux:#FBF9F5;
+  --espresso:#2B1810;
+  --roast:#6B3A1F;
+  --caramel:#D9A066;
+  --milk:#EFE3D1;
+  --oudaya:#2D5BFF;
+  --oudaya-deep:#1F43C9;
+  --soft:#6B4A3A;
+  --line:rgba(43,24,16,.14);
+  --display:"Anybody","Arial Narrow",sans-serif;
+  --body:"Hanken Grotesk",system-ui,sans-serif;
+  --gutter:clamp(16px,4vw,48px);
+  --max:1240px;
+  --head:72px;
+}
+*{box-sizing:border-box}
+html,body{overflow-x:clip}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+section[id]{scroll-margin-top:calc(var(--head) + 8px)}
+body{margin:0;background:var(--chaux);color:var(--espresso);font:400 1.0625rem/1.6 var(--body);-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:inherit}
+p{margin:0}
+h1,h2,h3{font-family:var(--display);margin:0;font-weight:800;line-height:.95}
+h2{font-size:clamp(2.5rem,6.4vw,5rem);font-stretch:120%;letter-spacing:-.02em}
+h3{font-size:1.35rem;font-weight:700}
+:focus-visible{outline:3px solid var(--oudaya);outline-offset:3px;border-radius:6px}
+[hidden]{display:none!important}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.wrap{max-width:var(--max);margin-inline:auto;padding-inline:var(--gutter)}
+html.has-dock .wrap{padding-inline:max(var(--gutter),min(136px,calc(136px - (100vw - var(--max)) / 2)))}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.55em;min-height:52px;padding:0 1.5em;border-radius:999px;font:700 1rem/1 var(--body);text-decoration:none;border:2px solid transparent;cursor:pointer;transition:background-color .2s,color .2s}
+.btn svg{width:1.2em;height:1.2em;flex:none}
+.btn-blue{background:var(--oudaya);color:#fff}
+.btn-blue:hover{background:var(--oudaya-deep)}
+.btn-line{border-color:var(--espresso);color:var(--espresso);background:transparent}
+.btn-line:hover{background:var(--espresso);color:var(--chaux)}
+
+/* ---------- header ---------- */
+header{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--chaux) 90%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.nav{display:flex;align-items:center;gap:28px;height:var(--head)}
+.logo{display:flex;align-items:baseline;gap:.3em;text-decoration:none;margin-inline-end:auto;font-family:var(--display);line-height:1}
+.logo b{font-weight:850;font-stretch:135%;font-size:1.45rem;letter-spacing:-.02em}
+.logo span{font-weight:400;font-stretch:70%;font-size:1.3rem;color:var(--roast)}
+.nav-links{display:flex;gap:24px}
+.nav-links a{text-decoration:none;font-weight:600;color:var(--soft);padding-block:10px}
+.nav-links a:hover{color:var(--espresso)}
+.chip{display:inline-flex;align-items:center;gap:.5em;font-weight:600;font-size:.92rem;color:var(--soft);white-space:nowrap}
+.dot{width:9px;height:9px;border-radius:50%;background:#A08070;flex:none}
+.is-open .dot{background:#1E9E5A;box-shadow:0 0 0 4px rgba(30,158,90,.16)}
+.cart-btn{display:inline-flex;align-items:center;gap:.55em;min-height:46px;padding:0 1.1em 0 .9em;border-radius:999px;border:0;background:var(--espresso);color:var(--chaux);font:700 .98rem/1 var(--body);cursor:pointer}
+.cart-btn svg{width:22px;height:22px}
+.badge{min-width:24px;height:24px;padding:0 6px;border-radius:999px;background:var(--oudaya);color:#fff;display:inline-grid;place-items:center;font-size:.82rem}
+.badge.bump{animation:bump .35s ease}
+@keyframes bump{40%{transform:scale(1.3)}}
+
+/* ---------- hero ---------- */
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(40px,6vw,96px);align-items:center;padding-block:clamp(32px,6vw,72px) clamp(96px,11vw,150px)}
+.hero h1{font-size:clamp(3.4rem,7.4vw,7rem);font-weight:850;font-stretch:72%;line-height:.88;letter-spacing:-.01em;text-wrap:balance}
+.hero h1 span{display:block}
+.lead{max-width:40ch;margin-top:28px;font-size:1.18rem;color:var(--soft)}
+.lead strong{color:var(--espresso)}
+.ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.hero-status{display:inline-flex;align-items:center;gap:.6em;margin-top:22px;font-weight:600;text-decoration:none;min-height:44px}
+.hero-status:hover span:last-child{text-decoration:underline;text-underline-offset:4px}
+.facts{display:flex;flex-wrap:wrap;gap:10px 28px;margin:36px 0 0;padding:28px 0 0;list-style:none;border-top:2px solid var(--espresso);max-width:560px}
+.facts li{font-size:.98rem;color:var(--soft)}
+.facts strong{display:block;color:var(--espresso);font:700 1.05rem/1.2 var(--display);font-stretch:115%}
+
+.hero-visual{position:relative;margin:0;justify-self:end;width:100%;max-width:500px}
+.photo-wall{position:relative;aspect-ratio:4/5}
+.photo-wall::before{content:"";position:absolute;inset:22% -9% -7% 16%;background:var(--oudaya);border-radius:28px}
+.photo-wall img{position:relative;width:100%;height:100%;object-fit:cover;border-radius:28px}
+.glass-slot{position:absolute;left:-15%;bottom:-11%;width:36%;aspect-ratio:120/190;z-index:2}
+.glass{width:100%;filter:drop-shadow(0 14px 18px rgba(43,24,16,.28))}
+.glass svg{display:block;width:100%;height:auto;overflow:visible}
+.glass.is-fixed{position:fixed;left:0;top:0;z-index:26;pointer-events:none;transform-origin:0 0}
+.hero-visual figcaption{margin:30px 0 0 26%;max-width:30ch;font-size:.95rem;color:var(--soft)}
+.hero-visual figcaption strong{color:var(--espresso)}
+.coaster{display:none}
+html.has-dock .coaster{display:block;position:fixed;right:20px;top:50%;width:92px;height:152px;margin-top:-76px;z-index:25;border-radius:22px;background:#fff;box-shadow:0 10px 30px rgba(43,24,16,.18),0 0 0 1px var(--line);pointer-events:none}
+.coaster span{position:absolute;left:4px;right:4px;bottom:12px;text-align:center;font:700 .72rem/1.1 var(--body);color:var(--espresso)}
+
+/* ---------- strip (drinks) ---------- */
+.strip{background:var(--oudaya);color:#fff;padding-block:clamp(44px,6vw,80px);overflow:hidden}
+.row{display:flex;align-items:center;width:max-content;gap:clamp(20px,3vw,44px);margin:0;padding:0;list-style:none;white-space:nowrap}
+.row-a span{font:850 clamp(3.2rem,9vw,8.5rem)/1 var(--display);letter-spacing:-.02em}
+.row-a .n{font-stretch:58%}
+.row-a .w{font-stretch:145%;font-weight:700}
+.row-a svg{width:clamp(28px,3vw,48px);height:auto;flex:none;color:var(--milk)}
+.row-b{margin-top:clamp(28px,4vw,48px);gap:14px}
+.row-b li{display:flex;align-items:center;gap:14px;padding:8px 24px 8px 8px;border-radius:999px;background:rgba(255,255,255,.14)}
+.row-b img{width:64px;height:64px;border-radius:50%;object-fit:cover}
+.row-b b{display:block;font-weight:700;font-size:1.05rem}
+.row-b small{font-size:.92rem;opacity:.9}
+
+/* ---------- from bean to cup ---------- */
+.roast{background:var(--espresso);color:var(--milk)}
+.roast-pin{padding-block:clamp(80px,10vw,140px)}
+.roast h2{color:#fff}
+.roast-intro{max-width:52ch;margin-top:18px;color:rgba(239,227,209,.82)}
+.roast-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(32px,6vw,96px);align-items:start;margin-top:clamp(40px,6vw,72px)}
+.roast-visual{position:sticky;top:120px}
+.bean{width:min(100%,320px);height:auto;display:block}
+.readout{display:flex;gap:28px;margin-top:28px}
+.readout p{display:grid;gap:2px;font-size:.88rem;color:rgba(239,227,209,.75)}
+.readout strong{font:800 1.6rem/1.1 var(--display);font-stretch:110%;color:#fff;font-variant-numeric:tabular-nums}
+.roast-progress{display:none}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:72px}
+.step{display:grid;grid-template-columns:auto 1fr;gap:0 24px;align-items:start}
+.num{grid-row:span 4;font:900 clamp(4.5rem,9vw,7.5rem)/.8 var(--display);font-stretch:55%;color:transparent;-webkit-text-stroke:2px var(--caramel)}
+.step h3{font-size:clamp(1.9rem,3.4vw,2.8rem);font-stretch:118%;color:#fff;margin-bottom:14px}
+.step p{max-width:44ch}
+.fact{display:inline-block;margin-top:18px;padding:.5em 1em;border-radius:999px;border:1.5px solid rgba(217,160,102,.55);color:var(--caramel);font-weight:700;font-size:.95rem}
+.origins{display:grid;gap:10px;margin:20px 0 0;padding:0;list-style:none}
+.origins li{display:flex;flex-wrap:wrap;gap:4px 12px;padding-bottom:10px;border-bottom:1px solid rgba(239,227,209,.18)}
+.origins b{color:#fff;min-width:9.5em}
+.step-bean{width:34px;height:auto;margin-top:16px;display:none}
+.roast.is-pinned .roast-pin{height:100vh;min-height:560px;display:flex;flex-direction:column;padding-block:calc(var(--head) + 24px) 40px}
+.roast.is-pinned .roast-grid{flex:1;min-height:0;grid-template-rows:minmax(0,1fr);align-items:center;margin-top:24px}
+.roast.is-pinned .roast-visual{position:relative;top:auto}
+.roast.is-pinned .bean{width:auto;height:min(40vh,340px)}
+.roast.is-pinned .steps{position:relative;align-self:stretch;display:block;height:100%;min-height:360px}
+.roast.is-pinned .step{position:absolute;inset:0;align-content:center}
+.roast.is-pinned .roast-progress{display:flex;gap:8px;margin:28px 0 0;padding:0;list-style:none}
+.roast-progress li{width:36px;height:4px;border-radius:2px;background:rgba(239,227,209,.22);transition:background-color .3s}
+.roast-progress li.on{background:var(--caramel)}
+
+/* ---------- menu ---------- */
+.carte{padding-block:clamp(80px,10vw,140px)}
+.carte-head{display:grid;grid-template-columns:1fr 1fr;gap:20px 64px;align-items:end}
+.carte-head p{max-width:46ch;color:var(--soft)}
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin-top:40px}
+.filters button{min-height:46px;padding:0 20px;border-radius:999px;border:2px solid var(--espresso);background:transparent;color:var(--espresso);font:600 1rem/1 var(--body);cursor:pointer}
+.filters button:hover{background:rgba(43,24,16,.06)}
+.filters button[aria-pressed=true]{background:var(--espresso);color:var(--chaux)}
+.menu{columns:2 400px;column-gap:72px;margin-top:48px}
+.group{break-inside:avoid;margin-bottom:56px}
+.group h3{font-size:clamp(1.9rem,3vw,2.5rem);font-stretch:125%;padding-bottom:14px;border-bottom:3px solid var(--espresso)}
+.menu.is-single{columns:1}
+.menu.is-single .items{columns:2 380px;column-gap:72px}
+.menu.is-single .group{animation:show .35s ease}
+@keyframes show{from{opacity:0;transform:translateY(8px)}}
+.items{list-style:none;margin:0;padding:0}
+.item{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:18px 0;border-bottom:1px solid var(--line);break-inside:avoid}
+.item-name{font-weight:700;font-size:1.1rem}
+.tag{display:inline-block;margin-left:8px;padding:.15em .6em;border-radius:999px;background:rgba(45,91,255,.1);color:var(--oudaya-deep);font-size:.78rem;font-weight:700;vertical-align:2px}
+.item-desc{margin-top:2px;font-size:.95rem;color:var(--soft);max-width:40ch}
+.item-side{display:flex;align-items:center;gap:14px;flex:none}
+.price{font:700 1.08rem/1 var(--display);font-stretch:105%;font-variant-numeric:tabular-nums;white-space:nowrap}
+.add{min-height:44px;padding:0 18px;border-radius:999px;border:2px solid var(--oudaya);background:var(--oudaya);color:#fff;font:700 .95rem/1 var(--body);cursor:pointer}
+.add:hover{background:var(--oudaya-deep);border-color:var(--oudaya-deep)}
+.stepper{display:inline-flex;align-items:center;border:2px solid var(--oudaya);border-radius:999px;background:#fff}
+.stepper button{width:44px;height:44px;border:0;background:none;color:var(--oudaya-deep);font:700 1.3rem/1 var(--body);cursor:pointer;border-radius:999px}
+.stepper button:hover{background:rgba(45,91,255,.1)}
+.stepper output{min-width:1.4em;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+
+/* ---------- work here ---------- */
+.work{padding-block:clamp(40px,6vw,80px) clamp(80px,10vw,140px)}
+.work-in{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,7vw,110px);align-items:center}
+.work-text > p{margin-top:18px;max-width:44ch;color:var(--soft)}
+.perks{margin:36px 0 0;display:grid;gap:0}
+.perks div{display:grid;grid-template-columns:9em 1fr;gap:4px 20px;padding:16px 0;border-top:1px solid var(--line)}
+.perks dt{font:700 1.05rem/1.3 var(--display);font-stretch:112%}
+.perks dd{margin:0;color:var(--soft)}
+.wall{position:relative;padding:0 0 56px 0}
+.wall::before{content:"";position:absolute;left:-8%;right:-8%;bottom:0;height:58%;background:var(--oudaya);border-radius:28px}
+.wall img{position:relative;border-radius:22px;object-fit:cover}
+.wall .a{width:72%;aspect-ratio:4/5}
+.wall .b{position:absolute;right:0;bottom:24px;width:46%;aspect-ratio:1;border:6px solid var(--chaux)}
+
+/* ---------- visit ---------- */
+.visit{padding-block:clamp(80px,10vw,140px);border-top:2px solid var(--espresso)}
+.visit-in{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(40px,6vw,96px);align-items:start}
+.status-big{display:flex;align-items:center;gap:14px;margin-top:24px;font:800 clamp(1.5rem,2.6vw,2rem)/1.15 var(--display);font-stretch:108%}
+.status-big .dot{width:14px;height:14px}
+.hours{width:100%;max-width:460px;border-collapse:collapse;margin-top:28px}
+.hours th,.hours td{text-align:left;padding:12px 0;border-bottom:1px solid var(--line);font-weight:500}
+.hours td{text-align:right;font-variant-numeric:tabular-nums}
+.hours tr.today th,.hours tr.today td{font-weight:800;color:var(--oudaya-deep)}
+.hours tr.today th::after{content:"aujourd’hui";margin-left:10px;padding:.15em .6em;border-radius:999px;background:var(--oudaya);color:#fff;font-size:.75rem;font-weight:700;vertical-align:2px}
+.addr{margin:32px 0 0;display:grid;gap:14px}
+.addr dt{font-weight:700}
+.addr dd{margin:2px 0 0;color:var(--soft)}
+.addr a{text-underline-offset:3px}
+.visit .ctas{margin-top:32px}
+.map{width:100%;aspect-ratio:4/5;max-height:640px;border:0;border-radius:28px;background:var(--milk)}
+
+/* ---------- footer ---------- */
+footer{background:var(--espresso);color:rgba(239,227,209,.82);padding-block:56px 96px;font-size:.95rem}
+.foot{display:flex;flex-wrap:wrap;gap:24px 56px;justify-content:space-between;align-items:end}
+.foot .logo{color:#fff}
+.foot .logo span{color:var(--caramel)}
+.foot p{margin-top:10px}
+footer a{color:#fff}
+footer :focus-visible{outline-color:var(--caramel)}
+
+/* ---------- fixed bits ---------- */
+.demo-pill{position:fixed;left:12px;bottom:12px;z-index:40;font:600 .74rem/1 var(--body);padding:.7em 1em;border-radius:999px;background:rgba(43,24,16,.84);color:var(--chaux);text-decoration:none;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.demo-pill::after{content:"";position:absolute;inset:-8px}
+.demo-pill:hover{background:var(--espresso)}
+.fab{display:none;position:fixed;right:16px;bottom:16px;z-index:40;width:58px;height:58px;border-radius:50%;background:#25D366;color:#fff;align-items:center;justify-content:center;box-shadow:0 8px 22px rgba(43,24,16,.3)}
+.fab svg{width:30px;height:30px}
+.toast{position:fixed;left:50%;bottom:24px;z-index:45;display:flex;align-items:center;gap:14px;padding:8px 8px 8px 20px;border-radius:999px;background:var(--espresso);color:var(--chaux);font-weight:600;box-shadow:0 12px 30px rgba(43,24,16,.3);transform:translate(-50%,20px);opacity:0;transition:transform .3s,opacity .3s;max-width:calc(100vw - 32px)}
+.toast.show{transform:translate(-50%,0);opacity:1}
+.toast button{min-height:44px;padding:0 16px;border-radius:999px;border:0;background:var(--oudaya);color:#fff;font:700 .92rem/1 var(--body);cursor:pointer;white-space:nowrap}
+
+/* ---------- cart drawer ---------- */
+dialog.cart{position:fixed;inset:0 0 0 auto;margin:0;width:min(440px,100%);max-width:100%;height:100%;max-height:100%;border:0;padding:0;background:var(--chaux);color:var(--espresso)}
+dialog.cart[open]{display:flex;flex-direction:column}
+dialog.cart::backdrop{background:rgba(43,24,16,.55)}
+.cart-top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 20px 14px 24px;border-bottom:2px solid var(--espresso)}
+.cart-top h2{font-size:1.9rem;font-stretch:115%}
+.x{width:44px;height:44px;border-radius:50%;border:0;background:rgba(43,24,16,.07);color:var(--espresso);font-size:1.5rem;line-height:1;cursor:pointer}
+.cart-scroll{flex:1;overflow:auto;padding:8px 24px 24px}
+.cart-list{list-style:none;margin:0;padding:0}
+.cart-list li{display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center;padding:16px 0;border-bottom:1px solid var(--line)}
+.cart-list .nm{font-weight:700}
+.cart-list .sub{font-size:.9rem;color:var(--soft)}
+.cart-list .line{font:700 1rem/1 var(--display);text-align:right}
+.empty{padding:32px 0;color:var(--soft)}
+.empty p{max-width:30ch;margin-bottom:20px}
+.order{display:grid;gap:16px;margin-top:24px}
+.order label{display:grid;gap:6px;font-weight:600;font-size:.95rem}
+.order input,.order select,.order textarea{font:500 1rem var(--body);padding:.75em .9em;border-radius:12px;border:1.5px solid rgba(43,24,16,.3);background:#fff;color:var(--espresso);width:100%;min-height:48px}
+.order textarea{min-height:80px;resize:vertical}
+.err{color:#A3261A;font-weight:600;font-size:.9rem}
+.closed-note{padding:12px 14px;border-radius:12px;background:rgba(45,91,255,.08);color:var(--oudaya-deep);font-weight:600;font-size:.93rem}
+.cart-foot{padding:16px 24px 20px;border-top:1px solid var(--line);background:#fff}
+.total{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;font-weight:600}
+.total strong{font:850 1.7rem/1 var(--display);font-stretch:110%}
+.cart-foot .btn{width:100%}
+.cart-foot .btn[disabled]{opacity:.45;cursor:not-allowed}
+.hint{margin-top:10px;font-size:.85rem;color:var(--soft);text-align:center}
+
+/* ---------- responsive ---------- */
+@media (max-width:1100px){
+  .chip-head{display:none}
+}
+@media (max-width:999px){
+  .roast-grid{grid-template-columns:1fr}
+  .roast-visual{display:none}
+  .step-bean{display:block}
+  .carte-head,.work-in,.visit-in{grid-template-columns:1fr}
+  .wall{max-width:560px}
+}
+@media (max-width:860px){
+  .nav-links{display:none}
+  .hero{grid-template-columns:1fr;gap:72px;padding-bottom:96px}
+  .hero-visual{justify-self:start;max-width:min(400px,78vw);margin-left:15%}
+  .hero-visual figcaption{margin-left:26%}
+}
+@media (max-width:600px){
+  :root{--head:64px}
+  .logo b{font-size:1.25rem}
+  .logo span{font-size:1.15rem}
+  .cart-btn .lbl{display:none}
+  .cart-btn{padding:0 .8em}
+  .ctas .btn{flex:1 1 100%}
+  .fab{display:flex}
+  .toast{bottom:86px}
+  .step{gap:0 16px}
+  .perks div{grid-template-columns:1fr}
+  .item{align-items:flex-start;flex-direction:column;gap:10px}
+  .item-side{width:100%;justify-content:space-between}
+  .menu.is-single .items{columns:1}
+  .hero-visual figcaption{margin-left:0;margin-top:96px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+@media (prefers-reduced-motion:no-preference){
+  dialog.cart[open]{animation:slide .32s cubic-bezier(.2,.8,.2,1)}
+  @keyframes slide{from{transform:translateX(40px);opacity:0}}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="wa" viewBox="0 0 24 24"><path fill="currentColor" d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Zm5.8 14.03c-.24.68-1.42 1.3-1.95 1.35-.5.05-.97.23-3.26-.68-2.75-1.08-4.5-3.9-4.63-4.08-.13-.18-1.1-1.47-1.1-2.8 0-1.34.7-2 .95-2.27.24-.27.53-.34.71-.34h.51c.16 0 .39-.06.6.46.24.56.8 1.93.87 2.07.07.14.11.3.02.48-.09.18-.14.3-.27.46-.14.16-.29.36-.41.48-.14.13-.28.28-.12.55.16.27.71 1.17 1.52 1.9 1.05.93 1.93 1.22 2.2 1.36.27.13.43.11.59-.07.16-.18.68-.8.86-1.07.18-.27.36-.23.61-.14.25.09 1.58.75 1.85.88.27.14.45.2.52.32.07.11.07.66-.17 1.33Z"/></symbol>
+  <symbol id="bean" viewBox="0 0 40 52"><ellipse cx="20" cy="26" rx="16" ry="23" transform="rotate(-18 20 26)" fill="currentColor"/><path d="M22 5c-8 9 4 22-4 42" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="3" stroke-linecap="round"/></symbol>
+  <symbol id="cup" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M5 8h14l-1.6 12.2a2 2 0 0 1-2 1.8H8.6a2 2 0 0 1-2-1.8L5 8Zm-1-3h16v3H4zM8 2h8l1 3H7z"/></symbol>
+</svg>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#top" aria-label="Kahwa Atelier, accueil"><b>Kahwa</b><span>Atelier</span></a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#carte">La carte</a>
+      <a href="#grain">Le grain</a>
+      <a href="#travailler">Travailler ici</a>
+      <a href="#horaires">Horaires</a>
+    </nav>
+    <span class="chip chip-head status"><span class="dot"></span><span data-status="short">Horaires</span></span>
+    <button class="cart-btn" type="button" id="cartBtn" aria-haspopup="dialog">
+      <svg aria-hidden="true"><use href="#cup"/></svg><span class="lbl">À emporter</span><span class="badge" id="cartCount">0</span>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+  <section class="wrap hero" aria-labelledby="hero-title">
+    <div>
+      <h1 id="hero-title"><span>On torréfie,</span> <span>vous restez.</span></h1>
+      <p class="lead"><strong>Kahwa Atelier</strong> est le coffee shop et la boulangerie d’Agdal. Nos grains d’Éthiopie, de Colombie et du Brésil sont torréfiés dans l’atelier, au fond de la salle. Croissants et msemen sortent du four dès 7&nbsp;h&nbsp;30.</p>
+      <div class="ctas">
+        <a class="btn btn-blue" href="#carte">Commander à emporter</a>
+        <a class="btn btn-line" href="#horaires">Nous trouver</a>
+      </div>
+      <a class="hero-status status" href="#horaires"><span class="dot"></span><span data-status="long">Agdal, Rabat</span></a>
+      <ul class="facts">
+        <li><strong>Torréfié ici</strong>mardi et vendredi</li>
+        <li><strong>Wifi fibre</strong>et une prise par table</li>
+        <li><strong>Terrasse</strong>sous les jacarandas</li>
+      </ul>
+    </div>
+
+    <figure class="hero-visual">
+      <div class="photo-wall">
+        <img src="https://images.unsplash.com/photo-1609050471053-8636409f9f5b?w=1000&q=75&auto=format&fit=crop" width="1000" height="1250" alt="Espresso qui coule du porte-filtre dans une tasse blanche" fetchpriority="high">
+        <div class="glass-slot">
+          <div class="glass" id="glass" aria-hidden="true">
+            <svg viewBox="0 0 120 190">
+              <defs>
+                <clipPath id="glassIn"><path d="M14 12H106L96 168H24Z"/></clipPath>
+                <linearGradient id="gCoffee" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6A3519"/><stop offset="1" stop-color="#2B1810"/></linearGradient>
+                <linearGradient id="gMilk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3E8D8"/><stop offset=".55" stop-color="#DCC3A2"/><stop offset="1" stop-color="#9C6A42"/></linearGradient>
+              </defs>
+              <rect id="stream" x="57" y="-34" width="6" height="0" rx="3" fill="#3A2116" opacity="0"/>
+              <path d="M8 8H112L100 176Q99.5 182 94 182H26Q20.5 182 20 176Z" fill="rgba(255,255,255,.62)"/>
+              <g clip-path="url(#glassIn)">
+                <rect id="lqCoffee" x="0" y="107" width="120" height="61" fill="url(#gCoffee)"/>
+                <rect id="lqMilk" x="0" y="40" width="120" height="67" fill="url(#gMilk)"/>
+                <rect id="lqFoam" x="0" y="28" width="120" height="12" fill="#FBF6EE"/>
+              </g>
+              <g stroke="rgba(43,24,16,.16)" stroke-width="1.4">
+                <path d="M28 64 33 168M38.7 64 42 168M49.3 64 51 168M60 64V168M70.7 64 69 168M81.3 64 78 168M92 64 87 168"/>
+              </g>
+              <path d="M21 24 28 160" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".7"/>
+              <path d="M8 8H112L100 176Q99.5 182 94 182H26Q20.5 182 20 176Z" fill="none" stroke="#2B1810" stroke-width="2.6" stroke-linejoin="round"/>
+              <path d="M24 168H96" stroke="#2B1810" stroke-width="1.6" opacity=".5"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <figcaption><strong>Le nous-nous</strong> : moitié café, moitié lait, servi en verre. <span class="cap-hint" hidden>Descendez la page, on vous le remplit.</span></figcaption>
+    </figure>
+  </section>
+
+  <section class="strip" aria-labelledby="strip-title">
+    <h2 id="strip-title" class="sr-only">Les boissons qu’on commande le plus</h2>
+    <div class="row row-a" aria-hidden="true">
+      <span class="n">Nous-nous</span><svg viewBox="0 0 40 52"><use href="#bean"/></svg>
+      <span class="w">Flat white</span><svg viewBox="0 0 40 52"><use href="#bean"/></svg>
+      <span class="n">Café cassé</span><svg viewBox="0 0 40 52"><use href="#bean"/></svg>
+      <span class="w">V60</span><svg viewBox="0 0 40 52"><use href="#bean"/></svg>
+      <span class="n">Spanish latte</span><svg viewBox="0 0 40 52"><use href="#bean"/></svg>
+      <span class="w">Espresso</span><svg viewBox="0 0 40 52"><use href="#bean"/></svg>
+      <span class="n">Atay chiba</span><svg viewBox="0 0 40 52"><use href="#bean"/></svg>
+      <span class="w">Cappuccino</span><svg viewBox="0 0 40 52"><use href="#bean"/></svg>
+    </div>
+    <ul class="row row-b">
+      <li><img loading="lazy" src="https://images.unsplash.com/photo-1760175445000-0e01e193d1cd?w=160&q=75&auto=format&fit=crop" width="64" height="64" alt="Café latte avec un cœur dessiné dans la mousse"><span><b>Latte</b><small>28 MAD</small></span></li>
+      <li><img loading="lazy" src="https://images.unsplash.com/photo-1564327367919-cb377ea6a88f?w=160&q=75&auto=format&fit=crop" width="64" height="64" alt="Cappuccino dans une tasse blanche"><span><b>Cappuccino</b><small>26 MAD</small></span></li>
+      <li><img loading="lazy" src="https://images.unsplash.com/photo-1787099812023-c9636ca620dc?w=160&q=75&auto=format&fit=crop" width="64" height="64" alt="Tasse rouge avec un dessin dans la mousse de lait"><span><b>Flat white</b><small>30 MAD</small></span></li>
+      <li><img loading="lazy" src="https://images.unsplash.com/photo-1529892485617-25f63cd7b1e9?w=160&q=75&auto=format&fit=crop" width="64" height="64" alt="Latte vu du dessus sur une table"><span><b>Spanish latte</b><small>34 MAD</small></span></li>
+      <li><img loading="lazy" src="https://images.unsplash.com/photo-1775203291807-c086b69cba1a?w=160&q=75&auto=format&fit=crop" width="64" height="64" alt="Plusieurs tasses de café décorées de latte art"><span><b>Nous-nous</b><small>20 MAD</small></span></li>
+      <li><img loading="lazy" src="https://images.unsplash.com/photo-1735132619395-a8f675a2dc66?w=160&q=75&auto=format&fit=crop" width="64" height="64" alt="Cappuccino posé sur une table en bois"><span><b>Café cassé</b><small>18 MAD</small></span></li>
+      <li><img loading="lazy" src="https://images.unsplash.com/photo-1497636577773-f1231844b336?w=160&q=75&auto=format&fit=crop" width="64" height="64" alt="Grand mug de café au lait"><span><b>Chaï latte</b><small>30 MAD</small></span></li>
+    </ul>
+  </section>
+
+  <section class="roast" id="grain" aria-labelledby="grain-title">
+    <div class="roast-pin">
+      <div class="wrap">
+        <h2 id="grain-title">De la graine à la tasse</h2>
+        <p class="roast-intro">Tout ce que nous servons passe par le petit torréfacteur de l’atelier. Quatre étapes, à peu près trois semaines.</p>
+      </div>
+      <div class="wrap roast-grid">
+        <div class="roast-visual" aria-hidden="true">
+          <svg class="bean" viewBox="0 0 200 260">
+            <ellipse id="beanBody" cx="100" cy="130" rx="80" ry="114" transform="rotate(-16 100 130)" fill="#6E3D20"/>
+            <path d="M112 22C70 70 132 160 92 240" fill="none" stroke="rgba(20,10,5,.42)" stroke-width="11" stroke-linecap="round"/>
+            <ellipse cx="62" cy="86" rx="16" ry="34" transform="rotate(-16 62 86)" fill="#fff" opacity=".14"/>
+          </svg>
+          <div class="readout">
+            <p>Couleur du grain <strong id="roName">Brun moyen</strong></p>
+            <p>Température <strong id="roTemp">205 °C</strong></p>
+          </div>
+          <ol class="roast-progress"><li class="on"></li><li></li><li></li><li></li></ol>
+        </div>
+        <ol class="steps">
+          <li class="step">
+            <span class="num" aria-hidden="true">1</span>
+            <h3>Le grain vert</h3>
+            <p>Il arrive cru, en sacs de jute de 60&nbsp;kg. Trois origines en ce moment&nbsp;:</p>
+            <ul class="origins">
+              <li><b>Éthiopie, Guji</b><span>bergamote, pêche blanche</span></li>
+              <li><b>Colombie, Huila</b><span>caramel, cerise</span></li>
+              <li><b>Brésil, Cerrado</b><span>cacao, noisette</span></li>
+            </ul>
+            <svg class="step-bean" viewBox="0 0 40 52" style="color:#9FAF7E" aria-hidden="true"><use href="#bean"/></svg>
+          </li>
+          <li class="step">
+            <span class="num" aria-hidden="true">2</span>
+            <h3>La torréfaction</h3>
+            <p>Le mardi et le vendredi matin, par fournées de 5&nbsp;kg. Le grain jaunit, devient cannelle, puis craque vers la neuvième minute&nbsp;: c’est là qu’on décide de l’arrêter.</p>
+            <span class="fact">205&nbsp;°C, 11&nbsp;minutes</span>
+            <svg class="step-bean" viewBox="0 0 40 52" style="color:#B97A43" aria-hidden="true"><use href="#bean"/></svg>
+          </li>
+          <li class="step">
+            <span class="num" aria-hidden="true">3</span>
+            <h3>Le repos</h3>
+            <p>Un café fraîchement torréfié est encore plein de gaz. On le laisse reposer une semaine en sacs à valve avant de le passer au moulin.</p>
+            <span class="fact">7 jours minimum</span>
+            <svg class="step-bean" viewBox="0 0 40 52" style="color:#6E3D20" aria-hidden="true"><use href="#bean"/></svg>
+          </li>
+          <li class="step">
+            <span class="num" aria-hidden="true">4</span>
+            <h3>La tasse</h3>
+            <p>Moulu à la commande, jamais à l’avance. Nos grains sont aussi en vente au comptoir, en grains ou moulus pour votre cafetière.</p>
+            <span class="fact">18&nbsp;g de café, 36&nbsp;g d’espresso, 28&nbsp;secondes</span>
+            <svg class="step-bean" viewBox="0 0 40 52" style="color:#55301A" aria-hidden="true"><use href="#bean"/></svg>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="carte wrap" id="carte" aria-labelledby="carte-title">
+    <div class="carte-head">
+      <h2 id="carte-title">La carte</h2>
+      <p>Sur place ou à emporter. Ajoutez ce qui vous fait envie, choisissez l’heure de retrait&nbsp;: la commande part sur WhatsApp et vous attend au comptoir.</p>
+    </div>
+    <div class="filters" role="group" aria-label="Filtrer la carte">
+      <button type="button" data-filter="all" aria-pressed="true">Tout</button>
+      <button type="button" data-filter="cafe" aria-pressed="false">Café</button>
+      <button type="button" data-filter="the" aria-pressed="false">Thé &amp; infusions</button>
+      <button type="button" data-filter="vien" aria-pressed="false">Viennoiseries</button>
+      <button type="button" data-filter="sale" aria-pressed="false">Salé</button>
+    </div>
+    <div class="menu" id="menu"></div>
+    <noscript><p>Activez JavaScript pour voir la carte et commander, ou écrivez-nous sur WhatsApp au +212 6 00 00 00 00.</p></noscript>
+  </section>
+
+  <section class="work wrap" id="travailler" aria-labelledby="work-title">
+    <div class="work-in">
+      <div class="work-text">
+        <h2 id="work-title">Votre bureau, en mieux</h2>
+        <p>Entre deux cours à la fac ou pour une journée en télétravail&nbsp;: la salle du fond est faite pour rester. Personne ne vous pressera de partir.</p>
+        <dl class="perks">
+          <div><dt>Wifi fibre</dt><dd>Le code est imprimé sur votre ticket. Il change chaque lundi.</dd></div>
+          <div><dt>Prises</dt><dd>Sous chaque table de la salle du fond, 22 places assises.</dd></div>
+          <div><dt>Terrasse</dt><dd>28 places à l’ombre des jacarandas de la rue, chauffée l’hiver.</dd></div>
+          <div><dt>Heures calmes</dt><dd>De 9&nbsp;h à 12&nbsp;h et après 15&nbsp;h, musique basse. Idéal pour réviser.</dd></div>
+          <div><dt>Carte étudiant</dt><dd>Filtre V60 à 25&nbsp;MAD avant 10&nbsp;h, sur présentation de la carte.</dd></div>
+        </dl>
+      </div>
+      <div class="wall">
+        <img class="a" loading="lazy" src="https://images.unsplash.com/photo-1680381792123-676305af82d8?w=900&q=75&auto=format&fit=crop" width="900" height="1125" alt="Cappuccino posé sur une table en bois, en terrasse">
+        <img class="b" loading="lazy" src="https://images.unsplash.com/photo-1564327368633-151ef1d45021?w=700&q=75&auto=format&fit=crop" width="700" height="700" alt="Café accompagné d’une assiette de viennoiseries">
+      </div>
+    </div>
+  </section>
+
+  <section class="visit" id="horaires" aria-labelledby="visit-title">
+    <div class="wrap visit-in">
+      <div>
+        <h2 id="visit-title">Passer nous voir</h2>
+        <p class="status-big status"><span class="dot"></span><span data-status="long">Horaires ci-dessous</span></p>
+        <table class="hours">
+          <caption class="sr-only">Horaires d’ouverture, heure de Rabat</caption>
+          <tbody>
+            <tr data-day="1"><th scope="row">Lundi</th><td>7 h 30 – 21 h</td></tr>
+            <tr data-day="2"><th scope="row">Mardi</th><td>7 h 30 – 21 h</td></tr>
+            <tr data-day="3"><th scope="row">Mercredi</th><td>7 h 30 – 21 h</td></tr>
+            <tr data-day="4"><th scope="row">Jeudi</th><td>7 h 30 – 21 h</td></tr>
+            <tr data-day="5"><th scope="row">Vendredi</th><td>7 h 30 – 21 h</td></tr>
+            <tr data-day="6"><th scope="row">Samedi</th><td>8 h – 21 h</td></tr>
+            <tr data-day="0"><th scope="row">Dimanche</th><td>8 h 30 – 18 h</td></tr>
+          </tbody>
+        </table>
+        <dl class="addr">
+          <div><dt>Adresse</dt><dd>14 rue Oued Baht, Agdal, Rabat. À deux pas des facs.</dd></div>
+          <div><dt>Téléphone</dt><dd><a href="tel:+212600000000">+212 6 00 00 00 00</a></dd></div>
+          <div><dt>E-mail</dt><dd><a href="mailto:contact@example.com">contact@example.com</a></dd></div>
+        </dl>
+        <div class="ctas">
+          <a class="btn btn-blue wa-link" href="https://wa.me/212600000000" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#wa"/></svg>Écrire sur WhatsApp</a>
+          <a class="btn btn-line" href="https://www.google.com/maps?q=Agdal,+Rabat" target="_blank" rel="noopener">Itinéraire</a>
+        </div>
+      </div>
+      <iframe class="map" title="Plan d’accès : Agdal, Rabat" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Agdal,+Rabat&z=15&output=embed"></iframe>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <a class="logo" href="#top" aria-label="Kahwa Atelier, haut de page"><b>Kahwa</b><span>Atelier</span></a>
+      <p>Café de spécialité et boulangerie. 14 rue Oued Baht, Agdal, Rabat.<br><a href="tel:+212600000000">+212 6 00 00 00 00</a>, <a href="mailto:contact@example.com">contact@example.com</a></p>
+    </div>
+    <p>Site de démonstration : entreprise fictive. Photos Unsplash.</p>
+  </div>
+</footer>
+
+<div class="coaster" id="coaster" aria-hidden="true"><span id="coasterLabel">Verre vide</span></div>
+
+<a class="fab wa-link" href="https://wa.me/212600000000" target="_blank" rel="noopener" aria-label="Écrire sur WhatsApp"><svg aria-hidden="true"><use href="#wa"/></svg></a>
+<a href="../" class="demo-pill">Démo réalisée par Ghali</a>
+
+<div class="toast" id="toast" hidden><span></span><button type="button" id="toastOpen">Voir la commande</button></div>
+<p class="sr-only" aria-live="polite" id="live"></p>
+
+<dialog class="cart" id="cart" aria-labelledby="cart-title">
+  <div class="cart-top">
+    <h2 id="cart-title">À emporter</h2>
+    <button type="button" class="x" id="cartClose" aria-label="Fermer la commande">×</button>
+  </div>
+  <div class="cart-scroll">
+    <div class="empty" id="cartEmpty">
+      <p>Votre commande est vide. Ajoutez un café ou un croissant depuis la carte.</p>
+      <a class="btn btn-line" href="#carte" id="toMenu">Voir la carte</a>
+    </div>
+    <ul class="cart-list" id="cartList"></ul>
+    <form class="order" id="orderForm" novalidate>
+      <p class="closed-note" id="closedNote" hidden></p>
+      <label>Prénom
+        <input name="name" autocomplete="given-name" placeholder="Pour vous appeler au comptoir" aria-describedby="nameErr">
+      </label>
+      <p class="err" id="nameErr" hidden>Indiquez un prénom pour que l’on puisse vous appeler au comptoir.</p>
+      <label>Retrait
+        <select name="pickup">
+          <option>Dès que possible (10 min)</option>
+          <option>Dans 20 min</option>
+          <option>Dans 30 min</option>
+          <option>Dans 45 min</option>
+          <option>Dans 1 h</option>
+        </select>
+      </label>
+      <label>Remarque (facultatif)
+        <textarea name="note" placeholder="Lait d’avoine, sans sucre, croissant réchauffé…"></textarea>
+      </label>
+    </form>
+  </div>
+  <div class="cart-foot">
+    <p class="total"><span>Total</span><strong id="cartTotal">0 MAD</strong></p>
+    <button class="btn btn-blue" type="submit" form="orderForm" id="sendBtn"><svg aria-hidden="true"><use href="#wa"/></svg>Envoyer la commande sur WhatsApp</button>
+    <p class="hint">Paiement au comptoir, en espèces ou par carte.</p>
+  </div>
+</dialog>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+/* ============ CONFIG ============ */
+// Numéro WhatsApp du client : format international, sans "+" ni espaces.
+const WHATSAPP = "212600000000";
+const SHOP = "Kahwa Atelier";
+const TZ = "Africa/Casablanca";
+// Horaires en minutes depuis minuit. 0 = dimanche … 6 = samedi (garder le tableau HTML en accord).
+const HOURS = {0:[510,1080],1:[450,1260],2:[450,1260],3:[450,1260],4:[450,1260],5:[450,1260],6:[480,1260]};
+
+const CATS = [
+  {id:"cafe", label:"Café"},
+  {id:"the",  label:"Thé & infusions"},
+  {id:"vien", label:"Viennoiseries"},
+  {id:"sale", label:"Salé"}
+];
+const MENU = [
+  {id:"espresso", cat:"cafe", name:"Espresso", price:16, desc:"Notre assemblage Brésil et Colombie : chocolat noir, noisette."},
+  {id:"casse", cat:"cafe", name:"Café cassé", price:18, desc:"Un espresso coupé d’un nuage de lait chaud."},
+  {id:"nousnous", cat:"cafe", name:"Nous-nous", price:20, desc:"Moitié café, moitié lait, servi en verre. Le classique."},
+  {id:"cappuccino", cat:"cafe", name:"Cappuccino", price:26, desc:"Espresso, lait texturé, mousse épaisse."},
+  {id:"latte", cat:"cafe", name:"Latte", price:28, desc:"Doux et généreux, en grande tasse."},
+  {id:"flatwhite", cat:"cafe", name:"Flat white", price:30, desc:"Double ristretto et lait soyeux, plus serré qu’un latte."},
+  {id:"spanish", cat:"cafe", name:"Spanish latte", price:34, desc:"Lait concentré sucré et espresso, chaud ou glacé."},
+  {id:"iced", cat:"cafe", name:"Iced latte", price:32, desc:"Double espresso, lait froid, glaçons."},
+  {id:"tonic", cat:"cafe", name:"Espresso tonic", price:36, desc:"Tonic, glaçons, zeste d’orange."},
+  {id:"v60", cat:"cafe", name:"Filtre V60", price:38, desc:"L’origine du jour, préparée à la main. En ce moment : Éthiopie Guji."},
+  {id:"atay", cat:"the", name:"Atay à la menthe", price:20, desc:"Thé vert gunpowder et menthe fraîche, en théière."},
+  {id:"chiba", cat:"the", name:"Atay chiba", price:22, desc:"À l’absinthe fraîche, pour les matins frais.", tag:"Hiver"},
+  {id:"verveine", cat:"the", name:"Verveine et citronnelle", price:20, desc:"Infusion sans théine, miel servi à part."},
+  {id:"chai", cat:"the", name:"Chaï latte", price:30, desc:"Thé noir épicé maison : cannelle, cardamome, gingembre."},
+  {id:"matcha", cat:"the", name:"Matcha latte", price:38, desc:"Matcha japonais, lait de vache ou d’avoine."},
+  {id:"croissant", cat:"vien", name:"Croissant au beurre", price:14, desc:"Feuilleté ici chaque nuit, sorti du four à 7 h 30."},
+  {id:"painchoc", cat:"vien", name:"Pain au chocolat", price:16, desc:"Deux barres de chocolat noir 60 %."},
+  {id:"amande", cat:"vien", name:"Croissant aux amandes", price:22, desc:"Crème d’amande, amandes effilées, sucre glace."},
+  {id:"roule", cat:"vien", name:"Roulé à la cannelle", price:24, desc:"Pâte briochée, cannelle, glaçage au fromage frais."},
+  {id:"cookie", cat:"vien", name:"Cookie noisette", price:20, desc:"Chocolat au lait, noisettes grillées, fleur de sel."},
+  {id:"banana", cat:"vien", name:"Banana bread", price:22, desc:"Une tranche épaisse, noix et beurre demi-sel."},
+  {id:"msemen", cat:"sale", name:"Msemen beurre et miel", price:16, desc:"Feuilleté à la plancha, beurre fondu, miel de thym.", tag:"Jusqu’à 12 h"},
+  {id:"msemenf", cat:"sale", name:"Msemen farci", price:22, desc:"Oignon, tomate, persil et épices.", tag:"Jusqu’à 12 h"},
+  {id:"baghrir", cat:"sale", name:"Baghrir", price:18, desc:"Crêpe mille trous, beurre et miel.", tag:"Jusqu’à 12 h"},
+  {id:"ftour", cat:"sale", name:"Ftour d’Agdal", price:65, desc:"Œufs au khlii, jben, olives, msemen et jus d’orange pressé."},
+  {id:"toast", cat:"sale", name:"Toast avocat", price:55, desc:"Pain au levain, avocat, œuf mollet, sésame, citron."},
+  {id:"focaccia", cat:"sale", name:"Focaccia poulet", price:58, desc:"Poulet rôti, pesto, roquette, tomates séchées."}
+];
+
+/* ============ helpers ============ */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const byId = Object.fromEntries(MENU.map(i => [i.id, i]));
+const mad = n => `${n} MAD`;
+const waURL = text => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
+const clamp01 = v => Math.min(1, Math.max(0, v));
+const hm = m => { const h = Math.floor(m / 60), mm = m % 60; return mm ? `${h} h ${String(mm).padStart(2, "0")}` : `${h} h`; };
+
+$$(".wa-link").forEach(a => a.href = waURL(`Bonjour ${SHOP}, j’ai une question.`));
+
+/* ============ opening status (Africa/Casablanca) ============ */
+function nowCasa(){
+  const parts = new Intl.DateTimeFormat("en-GB", {timeZone: TZ, weekday: "short", hour: "2-digit", minute: "2-digit", hourCycle: "h23"}).formatToParts(new Date());
+  const get = t => (parts.find(p => p.type === t) || {}).value;
+  const day = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(get("weekday"));
+  return {day, min: (parseInt(get("hour"), 10) % 24) * 60 + parseInt(get("minute"), 10)};
+}
+function getStatus(){
+  const {day, min} = nowCasa();
+  const [o, c] = HOURS[day];
+  if (min >= o && min < c) {
+    const soon = c - min <= 30;
+    return {open: true, day, short: soon ? "Ferme bientôt" : "Ouvert", long: soon ? `Ferme bientôt, à ${hm(c)}` : `Ouvert maintenant, jusqu’à ${hm(c)}`};
+  }
+  if (min < o) return {open: false, day, short: "Fermé", long: `Fermé, ouvre à ${hm(o)}`, opens: `aujourd’hui à ${hm(o)}`};
+  const next = HOURS[(day + 1) % 7][0];
+  return {open: false, day, short: "Fermé", long: `Fermé, ouvre demain à ${hm(next)}`, opens: `demain à ${hm(next)}`};
+}
+function renderStatus(){
+  const s = getStatus();
+  $$(".status").forEach(el => el.classList.toggle("is-open", s.open));
+  $$("[data-status]").forEach(el => el.textContent = el.dataset.status === "short" ? s.short : s.long);
+  $$(".hours tr").forEach(tr => tr.classList.toggle("today", +tr.dataset.day === s.day));
+  return s;
+}
+renderStatus();
+setInterval(renderStatus, 60000);
+
+/* ============ menu ============ */
+const menuEl = $("#menu");
+const itemHTML = i => `<li class="item" data-id="${i.id}">
+  <div><span class="item-name">${i.name}</span>${i.tag ? `<span class="tag">${i.tag}</span>` : ""}<p class="item-desc">${i.desc}</p></div>
+  <div class="item-side"><span class="price">${mad(i.price)}</span><span class="act"></span></div></li>`;
+CATS.forEach(c => {
+  const g = document.createElement("section");
+  g.className = "group";
+  g.dataset.cat = c.id;
+  g.setAttribute("aria-labelledby", `g-${c.id}`);
+  g.innerHTML = `<h3 id="g-${c.id}">${c.label.replace("&", "&amp;")}</h3><ul class="items">${MENU.filter(i => i.cat === c.id).map(itemHTML).join("")}</ul>`;
+  menuEl.appendChild(g);
+});
+
+$$(".filters button").forEach(b => b.addEventListener("click", () => {
+  const f = b.dataset.filter;
+  $$(".filters button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  $$(".group", menuEl).forEach(g => g.hidden = f !== "all" && g.dataset.cat !== f);
+  menuEl.classList.toggle("is-single", f !== "all");
+  if (window.ScrollTrigger) ScrollTrigger.refresh();
+}));
+
+/* ============ cart ============ */
+let cart = {};
+try { const saved = JSON.parse(localStorage.getItem("kahwa-cart") || "{}"); for (const k in saved) if (byId[k] && saved[k] > 0) cart[k] = Math.min(20, saved[k] | 0); } catch (e) {}
+const save = () => { try { localStorage.setItem("kahwa-cart", JSON.stringify(cart)); } catch (e) {} };
+
+const stepperHTML = (id, q) => {
+  const n = byId[id].name;
+  return `<span class="stepper" role="group" aria-label="Quantité : ${n}"><button type="button" data-dec="${id}" aria-label="Retirer : ${n}">−</button><output>${q}</output><button type="button" data-inc="${id}" aria-label="Ajouter : ${n}">+</button></span>`;
+};
+function renderAct(id){
+  const slot = $(`.item[data-id="${id}"] .act`, menuEl);
+  if (!slot) return;
+  const q = cart[id] || 0;
+  slot.innerHTML = q ? stepperHTML(id, q) : `<button type="button" class="add" data-inc="${id}" aria-label="Ajouter ${byId[id].name} à la commande">Ajouter</button>`;
+}
+function renderCart(){
+  const ids = Object.keys(cart);
+  const count = ids.reduce((s, k) => s + cart[k], 0);
+  const total = ids.reduce((s, k) => s + cart[k] * byId[k].price, 0);
+  const badge = $("#cartCount");
+  badge.textContent = count;
+  $("#cartBtn").setAttribute("aria-label", count ? `Commande à emporter : ${count} article${count > 1 ? "s" : ""}, ${mad(total)}` : "Commande à emporter, vide");
+  $("#cartTotal").textContent = mad(total);
+  $("#cartEmpty").hidden = count > 0;
+  $("#orderForm").hidden = count === 0;
+  $("#sendBtn").disabled = count === 0;
+  $("#cartList").innerHTML = ids.map(k => `<li><div><div class="nm">${byId[k].name}</div><div class="sub">${mad(byId[k].price)} l’unité</div></div><span class="line">${mad(cart[k] * byId[k].price)}</span><div style="grid-column:1/-1">${stepperHTML(k, cart[k])}</div></li>`).join("");
+  return {count, total};
+}
+let toastTimer;
+function toast(msg){
+  const t = $("#toast");
+  $("span", t).textContent = msg;
+  t.hidden = false;
+  requestAnimationFrame(() => t.classList.add("show"));
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.classList.remove("show"); setTimeout(() => { t.hidden = true; }, 320); }, 3200);
+}
+function change(id, d, trigger){
+  const before = cart[id] || 0;
+  const q = Math.max(0, Math.min(20, before + d));
+  if (q) cart[id] = q; else delete cart[id];
+  save();
+  const inCart = trigger && trigger.closest("#cartList");
+  const hadFocus = trigger && document.activeElement === trigger;
+  renderAct(id);
+  renderCart();
+  const badge = $("#cartCount");
+  badge.classList.remove("bump"); void badge.offsetWidth; badge.classList.add("bump");
+  $("#live").textContent = q ? `${byId[id].name} : ${q} dans la commande.` : `${byId[id].name} retiré de la commande.`;
+  if (before === 0 && q === 1 && !inCart) toast(`${byId[id].name} ajouté`);
+  if (hadFocus) {
+    const scope = inCart ? $("#cartList") : $(`.item[data-id="${id}"]`, menuEl);
+    const sel = q ? (d > 0 ? `[data-inc="${id}"]` : `[data-dec="${id}"]`) : `[data-inc="${id}"]`;
+    const el = scope && $(sel, scope);
+    if (el) el.focus(); else if (inCart) $("#cartClose").focus();
+  }
+}
+document.addEventListener("click", e => {
+  const inc = e.target.closest("[data-inc]"), dec = e.target.closest("[data-dec]");
+  if (inc) change(inc.dataset.inc, 1, inc);
+  else if (dec) change(dec.dataset.dec, -1, dec);
+});
+MENU.forEach(i => renderAct(i.id));
+renderCart();
+
+const dlg = $("#cart");
+function openCart(){
+  const s = getStatus(), note = $("#closedNote"), pick = $("#orderForm").elements.pickup;
+  note.hidden = s.open;
+  pick.disabled = !s.open;
+  if (!s.open) note.textContent = `Nous sommes fermés pour le moment. Envoyez quand même : votre commande sera prête à l’ouverture, ${s.opens}.`;
+  $("#toast").hidden = true;
+  if (typeof dlg.showModal === "function") dlg.showModal(); else dlg.setAttribute("open", "");
+}
+$("#cartBtn").addEventListener("click", openCart);
+$("#toastOpen").addEventListener("click", openCart);
+$("#cartClose").addEventListener("click", () => dlg.close());
+dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
+$("#toMenu").addEventListener("click", () => dlg.close());
+
+$("#orderForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const f = e.target.elements, name = f.name.value.trim();
+  $("#nameErr").hidden = !!name;
+  f.name.setAttribute("aria-invalid", String(!name));
+  if (!name) { f.name.focus(); return; }
+  const s = getStatus();
+  const {total} = renderCart();
+  const lines = Object.keys(cart).map(k => `- ${cart[k]} × ${byId[k].name} (${mad(cart[k] * byId[k].price)})`);
+  const msg = [
+    `Bonjour ${SHOP}, je voudrais commander à emporter :`,
+    ...lines,
+    `Total : ${mad(total)}`,
+    `Retrait : ${s.open ? f.pickup.value.toLowerCase() : "à l’ouverture"}`,
+    `Prénom : ${name}`,
+    f.note.value.trim() ? `Remarque : ${f.note.value.trim()}` : "",
+    "Merci !"
+  ].filter(Boolean).join("\n");
+  const w = window.open(waURL(msg), "_blank", "noopener");
+  if (!w) location.href = waURL(msg);
+});
+
+/* ============ the glass (signature) ============ */
+const glass = $("#glass"), slot = $(".glass-slot"), coaster = $("#coaster"), coasterLabel = $("#coasterLabel");
+const L = {coffee: $("#lqCoffee"), milk: $("#lqMilk"), foam: $("#lqFoam"), stream: $("#stream")};
+const BASE = 168, H = 146;
+let fillP = 1;
+function setFill(p){
+  fillP = p;
+  const c = H * .42 * clamp01(p / .36);
+  const m = H * .46 * clamp01((p - .40) / .42);
+  const f = H * .08 * clamp01((p - .86) / .12);
+  const top = BASE - c - m - f;
+  L.coffee.setAttribute("y", BASE - c); L.coffee.setAttribute("height", c);
+  L.milk.setAttribute("y", BASE - c - m); L.milk.setAttribute("height", m);
+  L.foam.setAttribute("y", top); L.foam.setAttribute("height", f);
+  L.stream.setAttribute("height", Math.max(0, top + 34));
+  L.stream.setAttribute("fill", p < .4 ? "#3A2116" : "#F3E8D8");
+  coasterLabel.textContent = p < .03 ? "Verre vide" : p < .40 ? "Espresso" : p < .60 ? "Café cassé" : p < .95 ? "Nous-nous" : "Bien servi";
+}
+let streamTimer;
+function pour(velocity){
+  if (!window.gsap || velocity <= 0 || fillP >= .97) return;
+  gsap.to(L.stream, {opacity: 1, duration: .12, overwrite: true});
+  clearTimeout(streamTimer);
+  streamTimer = setTimeout(() => gsap.to(L.stream, {opacity: 0, duration: .35, overwrite: true}), 160);
+}
+
+/* ============ bean roast readout ============ */
+const beanBody = $("#beanBody"), roName = $("#roName"), roTemp = $("#roTemp");
+const progressBars = $$(".roast-progress li");
+function roastAt(t){
+  let color;
+  if (window.gsap) {
+    const lerp = gsap.utils.interpolate;
+    if (t <= 1) color = "#9FAF7E";
+    else if (t <= 1.35) color = lerp("#9FAF7E", "#D8C47E", (t - 1) / .35);
+    else if (t <= 1.65) color = lerp("#D8C47E", "#B97A43", (t - 1.35) / .3);
+    else if (t <= 1.95) color = lerp("#B97A43", "#6E3D20", (t - 1.65) / .3);
+    else if (t <= 3) color = "#6E3D20";
+    else color = lerp("#6E3D20", "#55301A", Math.min(1, t - 3));
+    beanBody.setAttribute("fill", color);
+  }
+  const temp = t <= 1 ? 20 : t <= 2 ? 20 + 185 * Math.min(1, (t - 1) / .95) : t <= 3 ? 205 - 183 * (t - 2) : 22;
+  roTemp.textContent = `${Math.round(temp)} °C`;
+  roName.textContent = t < 1.2 ? "Vert" : t < 1.5 ? "Jaune paille" : t < 1.8 ? "Cannelle" : t < 3 ? "Brun moyen" : "Prêt à moudre";
+  const idx = Math.min(3, Math.floor(t));
+  progressBars.forEach((b, i) => b.classList.toggle("on", i <= idx));
+}
+
+/* ============ scroll moments ============ */
+if (window.gsap && window.ScrollTrigger) {
+  gsap.registerPlugin(ScrollTrigger);
+  const mm = gsap.matchMedia();
+  const root = document.documentElement;
+
+  mm.add({
+    desk: "(min-width: 1000px) and (prefers-reduced-motion: no-preference)",
+    mob: "(max-width: 999px) and (prefers-reduced-motion: no-preference)"
+  }, ctx => {
+    const {desk} = ctx.conditions;
+    $(".cap-hint").hidden = false;
+    setFill(0);
+
+    /* 1. drinks strip moves with the scroll */
+    gsap.fromTo(".row-a", {xPercent: 0}, {xPercent: -38, ease: "none", scrollTrigger: {trigger: ".strip", start: "top bottom", end: "bottom top", scrub: .4}});
+    gsap.fromTo(".row-b", {xPercent: -30}, {xPercent: 0, ease: "none", scrollTrigger: {trigger: ".strip", start: "top bottom", end: "bottom top", scrub: .4}});
+
+    if (desk) {
+      /* 2. the glass leaves the hero and lands on a fixed coaster, then fills with the page */
+      root.classList.add("has-dock");
+      document.body.appendChild(glass);
+      glass.classList.add("is-fixed");
+      const DOCK = 64;
+      const slotW = () => slot.getBoundingClientRect().width;
+      const sizeGlass = () => { glass.style.width = slotW() + "px"; };
+      sizeGlass();
+      ScrollTrigger.addEventListener("refreshInit", sizeGlass);
+      gsap.set(coaster, {autoAlpha: 0});
+      gsap.fromTo(glass,
+        {x: () => slot.getBoundingClientRect().left, y: () => slot.getBoundingClientRect().top + window.scrollY, scale: 1},
+        {x: () => coaster.getBoundingClientRect().left + (92 - DOCK) / 2, y: () => coaster.getBoundingClientRect().top + 12, scale: () => DOCK / slotW(), ease: "power1.inOut",
+         scrollTrigger: {trigger: ".hero", start: 0, end: "bottom 35%", scrub: .6, invalidateOnRefresh: true}});
+      gsap.to(coaster, {autoAlpha: 1, ease: "none", scrollTrigger: {trigger: ".hero", start: "bottom 60%", end: "bottom 35%", scrub: true}});
+
+      /* 3. pinned roast: the bean changes colour while the steps change */
+      const roast = $(".roast");
+      roast.classList.add("is-pinned");
+      const steps = $$(".step");
+      gsap.set(steps.slice(1), {autoAlpha: 0, y: 48});
+      roastAt(0);
+      const tl = gsap.timeline({scrollTrigger: {trigger: ".roast-pin", start: "top top", end: "+=320%", pin: true, scrub: .6, anticipatePin: 1, onUpdate: s => roastAt(s.progress * 4)}});
+      steps.forEach((s, i) => {
+        if (!i) return;
+        tl.to(steps[i - 1], {autoAlpha: 0, y: -48, duration: .22, ease: "power1.in"}, i - .22)
+          .to(s, {autoAlpha: 1, y: 0, duration: .22, ease: "power1.out"}, i);
+      });
+      tl.to({}, {duration: .01}, 4);
+
+      ScrollTrigger.create({start: 0, end: "max", onUpdate: s => { setFill(s.progress); pour(s.getVelocity()); }});
+
+      return () => {
+        ScrollTrigger.removeEventListener("refreshInit", sizeGlass);
+        root.classList.remove("has-dock");
+        slot.appendChild(glass);
+        glass.classList.remove("is-fixed");
+        glass.style.width = "";
+        roast.classList.remove("is-pinned");
+        roastAt(1.95);
+      };
+    }
+
+    /* mobile: the glass fills while you scroll past the hero picture */
+    ScrollTrigger.create({trigger: ".hero-visual", start: "top 75%", end: "bottom 15%", onUpdate: s => { setFill(s.progress); pour(s.getVelocity()); }});
+    return () => {};
+  });
+
+  mm.add("(prefers-reduced-motion: reduce)", () => { $(".cap-hint").hidden = true; setFill(1); });
+
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
+}
+</script>
+</body>
+</html>

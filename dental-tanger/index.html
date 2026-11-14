@@ -1,0 +1,1198 @@
+<!doctype html>
+<!--
+=====================================================================
+  ATLAS DENTAL STUDIO, Malabata, Tanger — design plan
+=====================================================================
+Idea: the light of the Strait of Gibraltar seen from a 2nd-floor clinic
+in Malabata. Mist, whitewashed Kasbah walls, and one deep sea colour.
+A dental clinic that feels calm because it is precise, not because it is
+"medical blue".
+
+Palette (cool, airy, one deep colour)
+  --chaux    #F7F9F8  whitewash of the Kasbah walls (main surface)
+  --brume    #E6EDEF  sea mist over the Strait (hero sky, alt sections)
+  --ecume    #C5D3D8  foam / far coastline / hairlines
+  --detroit  #0C3A48  the one deep sea colour (text accents, buttons, dark sections)
+  --abysse   #072630  deeper water (footer)
+  --ardoise  #1A2B31  body text;  --galet #4D646C secondary text (AA on brume)
+  --sable    #D9C9A6  tiny warm point: the "sun" dot on the horizon, focus on dark
+
+Type
+  Spectral 200/300 (display): a light, screen-drawn serif; thin strokes = precision,
+  calm. Hanken Grotesk 400/500/600 (text + UI), tabular figures for prices.
+  Scale ≈ 1.25: 14.5 / 17 / 21 / 27 / 34–56 / 44–104 px. Left-aligned throughout.
+
+Layout sketch (desktop)
+  [mark  Atlas Dental Studio      Soins Visite Estimation FAQ Accès  FR|ES  Rendez-vous]
+  ┌─────────────────────────────────────────────────────────────┐
+  │  Des soins dentaires                          (mist sky)    │
+  │  sans hâte, face au détroit.     ~~~ Spanish coast ~~/\~~   │
+  ├──────────── HORIZON LINE (draws on load) ───────────────────┤
+  │   lead + CTA            |  Tarifa, 30 km   Gibraltar, 55 km │
+  └─────────────────────────────────────────────────────────────┘
+  [ panorama of the treatment room, opens from a slit at the horizon on scroll ]
+  [ clinic facts (dl) ]  [ treatments & prices: category column | rows ]
+  [ whitening before/after slider, shade A3 → A1 ]
+  [ PINNED first visit: steps travel along a horizon timeline in minutes ]
+  [ estimator: checkboxes | sticky deep-sea result panel ]
+  [ appointment form → WhatsApp ]  [ FAQ ]  [ access + map ]  [ footer ]
+
+Signature element: THE HORIZON LINE. A single 1.5px sea-blue line: the hero
+headline rises from behind it (like the sun / a coast from the mist), the
+clinic photo opens from it, and it becomes the first-visit timeline where a
+small sand "sun" travels minute by minute. The logo mark is the same line with
+a smile-shaped curve under it.
+
+Review vs. generic defaults: no bright medical blue / cyan, no rounded card grid,
+no caps eyebrows, numbers only on the real 4-step visit, one orchestrated load
+moment + 2 scroll moments (pano reveal, pinned visit). Prices as a quiet list.
+=====================================================================
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atlas Dental Studio · Cabinet dentaire à Tanger</title>
+<meta name="description" content="Atlas Dental Studio, cabinet dentaire à Malabata, Tanger : soins courants, blanchiment, aligneurs invisibles, implants et enfants. On parle français et espagnol.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://images.unsplash.com">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;1,300&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --chaux:#F7F9F8;
+  --brume:#E6EDEF;
+  --ecume:#C5D3D8;
+  --detroit:#0C3A48;
+  --abysse:#072630;
+  --ardoise:#1A2B31;
+  --galet:#4D646C;
+  --sable:#D9C9A6;
+  --on-dark:#E4EDF0;
+  --on-dark-2:#A9C0C7;
+  --display:"Spectral", Georgia, serif;
+  --body:"Hanken Grotesk", system-ui, sans-serif;
+  --gutter:clamp(16px,4.5vw,64px);
+  --max:1240px;
+  --head:68px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+section[id]{scroll-margin-top:var(--head)}
+body{margin:0;background:var(--chaux);color:var(--ardoise);font:400 1.0625rem/1.6 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit}
+p{margin:0}
+h1,h2,h3{font-family:var(--display);font-weight:300;margin:0;line-height:1.08;letter-spacing:-.015em;color:var(--detroit)}
+h2{font-size:clamp(2.1rem,4.4vw,3.5rem)}
+h3{font-size:clamp(1.4rem,2vw,1.7rem);font-weight:400;letter-spacing:-.005em}
+:focus-visible{outline:2px solid var(--detroit);outline-offset:3px;border-radius:2px}
+.dark :focus-visible{outline-color:var(--sable)}
+.wrap{max-width:var(--max);margin-inline:auto;padding-inline:var(--gutter)}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:12px;top:-60px;z-index:100;background:var(--detroit);color:#fff;padding:12px 16px;text-decoration:none}
+.skip:focus{top:12px}
+.num{font-variant-numeric:tabular-nums lining-nums}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.6em;min-height:52px;padding:0 1.5em;border-radius:3px;border:1.5px solid transparent;font:600 1rem/1.1 var(--body);letter-spacing:.005em;text-decoration:none;cursor:pointer;transition:background-color .2s,color .2s,border-color .2s}
+.btn svg{width:1.2em;height:1.2em;flex:none}
+.btn-sea{background:var(--detroit);color:#fff}
+.btn-sea:hover{background:var(--abysse)}
+.btn-line{border-color:var(--detroit);color:var(--detroit);background:transparent}
+.btn-line:hover{background:var(--detroit);color:#fff}
+.btn-light{background:var(--chaux);color:var(--detroit)}
+.btn-light:hover{background:#fff}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.link{color:var(--detroit);font-weight:600;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px}
+.link:hover{text-decoration-thickness:2px}
+
+/* ---------- header ---------- */
+.site-head{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--chaux) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid transparent;transition:border-color .3s}
+.site-head.scrolled{border-bottom-color:var(--ecume)}
+.nav{display:flex;align-items:center;gap:22px;height:var(--head)}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--detroit);margin-inline-end:auto;min-height:44px}
+.brand svg{width:30px;height:18px;flex:none}
+.brand span{font:400 1.32rem/1 var(--display);letter-spacing:-.01em;white-space:nowrap}
+.nav-links{display:flex;gap:20px}
+.nav-links a{text-decoration:none;font-size:.95rem;font-weight:500;color:var(--galet);padding-block:10px}
+.nav-links a:hover{color:var(--detroit)}
+.lang{display:flex;gap:2px}
+.lang button{min-width:44px;min-height:44px;background:none;border:0;border-bottom:1.5px solid transparent;font:600 .9rem/1 var(--body);color:var(--galet);cursor:pointer;letter-spacing:.04em}
+.lang button[aria-pressed=true]{color:var(--detroit);border-bottom-color:var(--detroit)}
+.nav .btn{min-height:44px;padding:0 1.15em;font-size:.95rem}
+
+/* ---------- hero: the horizon ---------- */
+.hero{position:relative}
+.sky{position:relative;background:linear-gradient(180deg,var(--chaux) 0%,#EDF2F3 45%,var(--brume) 100%);padding-top:clamp(56px,11vh,140px)}
+.coast{position:absolute;left:0;right:0;bottom:0;width:100%;height:clamp(34px,6.2vw,92px);pointer-events:none}
+.coast path{fill:var(--ecume)}
+.coast .far{opacity:.55}
+.sky-mask{position:relative;overflow:hidden;padding-top:.2em}
+.hero h1{font-weight:200;font-size:clamp(2.65rem,8.4vw,6.9rem);line-height:1.02;letter-spacing:-.028em;max-width:13.5ch;padding-bottom:.12em}
+.horizon-line{height:1.5px;background:var(--detroit);transform-origin:left center}
+.sea{background:linear-gradient(180deg,#D6E2E6 0%,#E3EBEE 40%,var(--chaux) 100%);position:relative}
+.marks{position:relative;height:42px}
+.marks span{position:absolute;top:0;font:300 italic .95rem/1 var(--display);color:var(--galet);padding-top:14px;white-space:nowrap;translate:-50% 0}
+.marks span::before{content:"";position:absolute;left:50%;top:0;width:1px;height:9px;background:var(--detroit)}
+.sea-in{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:32px clamp(32px,6vw,96px);padding-block:clamp(28px,4vw,48px) clamp(56px,8vw,104px)}
+.lead{font-size:clamp(1.12rem,1.6vw,1.3rem);line-height:1.55;max-width:40ch}
+.ctas{display:flex;flex-wrap:wrap;align-items:center;gap:14px 26px;margin-top:30px}
+.facts{margin:0;display:grid;gap:18px;align-content:start;border-left:1px solid var(--ecume);padding-left:clamp(20px,3vw,36px)}
+.facts dt{font-size:.85rem;color:var(--galet)}
+.facts dd{margin:2px 0 0;font-weight:500}
+
+/* ---------- panorama (opens from the horizon) ---------- */
+.pano{padding-inline:var(--gutter);max-width:calc(var(--max) + 160px);margin-inline:auto}
+.pano-frame{overflow:hidden;aspect-ratio:21/9;background:var(--brume)}
+.pano-frame img{width:100%;height:100%;object-fit:cover;object-position:50% 55%}
+.pano figcaption{margin-top:12px;font-size:.9rem;color:var(--galet)}
+
+/* ---------- clinic ---------- */
+.clinic{padding-block:clamp(72px,10vw,136px) clamp(56px,8vw,104px)}
+.clinic-in{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px clamp(40px,7vw,120px)}
+.clinic h2{max-width:15ch}
+.clinic .intro{margin-top:24px;max-width:46ch;color:var(--galet)}
+.clinic dl{margin:0;display:grid;gap:30px}
+.clinic dl div{border-top:1px solid var(--ecume);padding-top:16px}
+.clinic dt{font:400 1.3rem/1.25 var(--display);color:var(--detroit)}
+.clinic dd{margin:8px 0 0;max-width:48ch}
+
+/* ---------- treatments & prices ---------- */
+.care{background:var(--brume);padding-block:clamp(72px,10vw,136px)}
+.care-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px clamp(40px,7vw,120px);align-items:end;margin-bottom:clamp(40px,6vw,72px)}
+.care-head p{max-width:48ch;color:var(--galet)}
+.cat{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:24px clamp(32px,6vw,96px);padding-block:clamp(32px,4vw,48px);border-top:1.5px solid var(--detroit)}
+.cat:last-child{padding-bottom:0}
+.cat-head p{margin-top:10px;color:var(--galet);max-width:34ch}
+.cat-head img{margin-top:22px;width:100%;max-width:340px;aspect-ratio:4/3;object-fit:cover}
+.rows{list-style:none;margin:0;padding:0}
+.rows li{display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding-block:16px;border-bottom:1px solid var(--ecume)}
+.rows li:first-child{padding-top:4px}
+.rows .n{font-weight:500;display:block}
+.rows .d{display:block;font-size:.92rem;color:var(--galet);margin-top:2px}
+.rows .p{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums lining-nums;font-weight:600;color:var(--detroit)}
+.rows .p small{display:block;font-weight:400;font-size:.8rem;color:var(--galet)}
+.care-note{margin-top:32px;font-size:.92rem;color:var(--galet);max-width:70ch}
+
+/* ---------- before / after ---------- */
+.smile{padding-block:clamp(72px,10vw,136px)}
+.smile-in{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:40px clamp(40px,6vw,96px);align-items:center}
+.smile-text p{margin-top:20px;max-width:42ch}
+.smile-text .muted{color:var(--galet)}
+.shade{display:flex;align-items:center;gap:14px;margin-top:28px;font-size:.95rem}
+.shade i{display:inline-block;width:34px;height:46px;border-radius:40% 40% 46% 46% / 30% 30% 60% 60%;border:1px solid var(--ecume)}
+.shade .a3{background:#E9DDBE}.shade .a1{background:#F6F2EA}
+.ba-wrap figcaption{margin-top:14px;font-size:.9rem;color:var(--galet);max-width:60ch}
+.ba{--pos:50%;position:relative;aspect-ratio:3/2;overflow:hidden;background:#EEE;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:ew-resize}
+.ba img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.ba-before{position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--pos)) 0 0);isolation:isolate}
+.ba-before svg{position:absolute;inset:0;width:100%;height:100%;mix-blend-mode:multiply}
+.ba-line{position:absolute;top:0;bottom:0;left:var(--pos);width:1.5px;margin-left:-.75px;background:#fff;box-shadow:0 0 0 .5px rgba(12,58,72,.25)}
+.ba-knob{position:absolute;top:50%;left:50%;width:52px;height:52px;margin:-26px 0 0 -26px;border-radius:50%;background:var(--detroit);border:2px solid #fff;display:grid;place-items:center;cursor:grab;touch-action:none}
+.ba-knob svg{width:24px;height:24px;color:#fff}
+.ba-knob:focus-visible{outline:3px solid var(--sable);outline-offset:3px;border-radius:50%}
+.ba-tag{position:absolute;top:14px;font-size:.82rem;font-weight:600;color:var(--detroit);background:rgba(247,249,248,.88);padding:5px 10px;border-radius:2px;pointer-events:none}
+.ba-tag.l{left:14px}.ba-tag.r{right:14px}
+.ba-help{margin-top:10px;font-size:.88rem;color:var(--galet)}
+
+/* ---------- first visit (pinned on desktop) ---------- */
+.visit{background:var(--detroit);color:var(--on-dark)}
+.visit h2,.visit h3{color:#fff}
+.visit-in{padding-block:clamp(72px,10vw,128px)}
+.visit-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:12px 40px;margin-bottom:clamp(40px,6vw,64px)}
+.visit-head p{color:var(--on-dark-2);max-width:40ch}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:56px;counter-reset:s}
+.step{display:grid;gap:22px;border-left:1.5px solid rgba(217,201,166,.6);padding-left:20px}
+.step figure{margin:0}
+.step img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.step-time{font-size:.9rem;color:var(--sable);font-variant-numeric:tabular-nums}
+.step-n{font:200 1rem/1 var(--display);color:var(--on-dark-2);margin-bottom:10px}
+.step h3{font-size:clamp(1.7rem,3vw,2.6rem);font-weight:300;margin-top:6px}
+.step p.t{margin-top:14px;max-width:44ch;color:var(--on-dark)}
+.track{display:none}
+
+.visit.is-pinned .visit-in{height:100vh;height:100svh;display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding-block:calc(var(--head) + 28px) 40px}
+.visit.is-pinned .visit-head{margin-bottom:28px}
+.visit.is-pinned .steps{position:relative;display:block;min-height:0}
+.visit.is-pinned .step{position:absolute;inset:0;grid-template-columns:minmax(0,5fr) minmax(0,6fr);align-items:center;gap:clamp(40px,6vw,96px);border-left:0;padding-left:0}
+.visit.is-pinned .step img{aspect-ratio:auto;height:min(50vh,460px)}
+.visit.is-pinned .track{display:block;position:relative;height:92px;margin-top:28px}
+.track-line{position:absolute;left:0;right:0;top:14px;height:1.5px;background:rgba(228,237,240,.35)}
+.track-fill{position:absolute;left:0;top:14px;height:1.5px;background:var(--sable);width:0}
+.track-dot{position:absolute;top:14px;left:0;width:18px;height:18px;margin:-8.25px 0 0 -9px;border-radius:50%;background:var(--sable)}
+.track-clock{position:absolute;bottom:22px;left:50%;translate:-50% 0;font-size:.8rem;color:var(--sable);white-space:nowrap;font-variant-numeric:tabular-nums}
+.track-mark{position:absolute;top:30px;translate:-50% 0;font-size:.9rem;color:var(--on-dark-2);white-space:nowrap;transition:color .3s}
+.track-mark::before{content:"";position:absolute;left:50%;top:-20px;width:7px;height:7px;margin-left:-3.5px;border-radius:50%;background:var(--detroit);border:1.5px solid rgba(228,237,240,.5);transition:border-color .3s,background-color .3s}
+.track-mark small{display:block;font-size:.78rem;opacity:.8;font-variant-numeric:tabular-nums}
+.track-mark.on{color:#fff}
+.track-mark.on::before{border-color:var(--sable);background:var(--sable)}
+.track-mark:first-child{translate:0 0}.track-mark:first-child::before{left:0;margin-left:-3.5px}
+.track-mark:last-child{translate:-100% 0;text-align:right}.track-mark:last-child::before{left:100%}
+
+/* ---------- estimator ---------- */
+.est-sec{padding-block:clamp(72px,10vw,136px)}
+.est-head{max-width:720px;margin-bottom:clamp(36px,5vw,56px)}
+.est-head p{margin-top:18px;color:var(--galet);max-width:56ch}
+.est{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:32px clamp(32px,5vw,72px);align-items:start}
+.est-list fieldset{border:0;margin:0 0 30px;padding:0}
+.est-list legend{font:400 1.35rem/1.2 var(--display);color:var(--detroit);padding:0;margin-bottom:8px}
+.est-row{display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--ecume);min-height:60px}
+.est-row label{display:flex;align-items:center;gap:14px;flex:1;min-height:56px;cursor:pointer;padding-block:8px}
+.est-row input[type=checkbox]{appearance:none;-webkit-appearance:none;margin:0;width:22px;height:22px;flex:none;border:1.5px solid var(--galet);border-radius:3px;background:#fff;display:grid;place-items:center;cursor:pointer}
+.est-row input[type=checkbox]::after{content:"";width:11px;height:6px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translate(1px,-1px);opacity:0}
+.est-row input[type=checkbox]:checked{background:var(--detroit);border-color:var(--detroit)}
+.est-row input[type=checkbox]:checked::after{opacity:1}
+.est-row .n{flex:1;display:flex;justify-content:space-between;align-items:baseline;gap:16px}
+.est-row .r{font-size:.88rem;color:var(--galet);white-space:nowrap;font-variant-numeric:tabular-nums}
+.qty{display:flex;align-items:center;border:1px solid var(--ecume);border-radius:3px;background:#fff}
+.qty[hidden]{display:none}
+.qty button{width:44px;height:44px;border:0;background:none;font:500 1.25rem/1 var(--body);color:var(--detroit);cursor:pointer}
+.qty button:disabled{opacity:.3;cursor:default}
+.qty output{min-width:24px;text-align:center;font-weight:600;font-variant-numeric:tabular-nums}
+.est-side{position:sticky;top:calc(var(--head) + 24px);background:var(--detroit);color:var(--on-dark);padding:clamp(24px,3vw,36px)}
+.est-label{font-size:.92rem;color:var(--on-dark-2)}
+.est-total{font:300 clamp(1.9rem,3.2vw,2.6rem)/1.15 var(--display);color:#fff;margin-top:8px;font-variant-numeric:lining-nums tabular-nums}
+.est-total.empty{font-size:1.15rem;line-height:1.45;font-family:var(--body);font-weight:400;color:var(--on-dark)}
+.est-eur{margin-top:6px;font-size:.95rem;color:var(--sable)}
+.est-lines{list-style:none;margin:22px 0 0;padding:16px 0 0;border-top:1px solid rgba(228,237,240,.2);display:grid;gap:8px;font-size:.92rem}
+.est-lines:empty{display:none}
+.est-lines li{display:flex;justify-content:space-between;gap:12px}
+.est-lines li span:last-child{white-space:nowrap;color:var(--on-dark-2);font-variant-numeric:tabular-nums}
+.est-note{margin-top:22px;font-size:.88rem;line-height:1.55;color:var(--on-dark-2);border-left:2px solid var(--sable);padding-left:14px}
+.est-side .btn{margin-top:24px;width:100%}
+
+/* ---------- appointment form ---------- */
+.rdv{background:var(--brume);padding-block:clamp(72px,10vw,136px)}
+.rdv-in{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:40px clamp(40px,7vw,120px);align-items:start}
+.rdv-text p{margin-top:20px;max-width:40ch;color:var(--galet)}
+.rdv-text .contact{margin-top:28px;display:grid;gap:6px;color:var(--ardoise)}
+.rdv-text .contact a{font-weight:600;color:var(--detroit);text-underline-offset:4px}
+form{display:grid;grid-template-columns:1fr 1fr;gap:26px 20px}
+.field{display:grid;gap:8px;align-content:start}
+.field.full{grid-column:1/-1}
+.field>label,.field legend{font-weight:600;font-size:.95rem;color:var(--ardoise);padding:0}
+fieldset.field{border:0;margin:0;padding:0;min-width:0}
+input[type=text],select,textarea{width:100%;font:400 1rem/1.4 var(--body);color:var(--ardoise);background:var(--chaux);border:1px solid #9FB2B9;border-radius:3px;padding:13px 14px;min-height:52px}
+textarea{min-height:110px;resize:vertical}
+select{appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--detroit) 50%),linear-gradient(135deg,var(--detroit) 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 14px) 50%;background-size:6px 6px;background-repeat:no-repeat;padding-right:40px}
+input[type=text]:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--detroit);outline-offset:1px}
+[aria-invalid=true]{border-color:#9B2C2C!important}
+.err{font-size:.88rem;color:#9B2C2C;min-height:0}
+.err:empty{display:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{position:relative}
+.chip input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
+.chip span{display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border:1px solid #9FB2B9;border-radius:3px;background:var(--chaux);font-weight:500;font-size:.95rem;transition:background-color .15s,color .15s,border-color .15s}
+.chip input:checked+span{background:var(--detroit);border-color:var(--detroit);color:#fff}
+.chip input:focus-visible+span{outline:2px solid var(--detroit);outline-offset:2px}
+.chip input:disabled+span{opacity:.4;text-decoration:line-through}
+.hint{font-size:.85rem;color:var(--galet)}
+form .btn{grid-column:1/-1;justify-self:start}
+.form-foot{grid-column:1/-1;font-size:.88rem;color:var(--galet);margin-top:-8px}
+
+/* ---------- FAQ ---------- */
+.faq{padding-block:clamp(72px,10vw,136px)}
+.faq-in{display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr);gap:32px clamp(40px,7vw,120px)}
+.faq-list{border-top:1.5px solid var(--detroit)}
+.faq details{border-bottom:1px solid var(--ecume)}
+.faq summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:20px;min-height:64px;padding-block:16px;cursor:pointer;font:400 clamp(1.12rem,1.6vw,1.3rem)/1.35 var(--display);color:var(--detroit)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary i{position:relative;flex:none;width:16px;height:16px}
+.faq summary i::before,.faq summary i::after{content:"";position:absolute;left:0;top:7.25px;width:16px;height:1.5px;background:var(--detroit);transition:transform .3s}
+.faq summary i::after{transform:rotate(90deg)}
+.faq details[open] summary i::after{transform:rotate(0)}
+.faq details p{padding:0 40px 24px 0;max-width:62ch}
+
+/* ---------- access ---------- */
+.access{background:var(--brume);padding-block:clamp(72px,10vw,136px)}
+.access-in{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:40px clamp(40px,6vw,96px);align-items:start}
+.access dl{margin:28px 0 0;display:grid;gap:20px}
+.access dt{font-weight:600;color:var(--detroit)}
+.access dd{margin:4px 0 0;max-width:44ch}
+.map{width:100%;aspect-ratio:4/3;border:0;filter:saturate(.55) contrast(.95);background:var(--ecume)}
+
+/* ---------- footer ---------- */
+footer{background:var(--abysse);color:var(--on-dark-2);padding-block:56px 96px;font-size:.92rem}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:24px 48px}
+.foot .brand{color:#fff;margin:0 0 10px}
+.foot a{color:var(--on-dark)}
+.foot-line{height:1px;background:rgba(228,237,240,.18);margin-block:32px 20px}
+
+/* ---------- floating bits ---------- */
+.demo-pill{position:fixed;left:16px;bottom:16px;z-index:50;display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border-radius:999px;background:rgba(247,249,248,.92);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid var(--ecume);color:var(--galet);font:500 .8rem/1 var(--body);text-decoration:none}
+.demo-pill:hover{color:var(--detroit);border-color:var(--detroit)}
+.fab{display:none;position:fixed;right:16px;bottom:16px;z-index:50;width:58px;height:58px;border-radius:50%;background:var(--detroit);color:#fff;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(7,38,48,.28)}
+.fab svg{width:28px;height:28px}
+
+/* ---------- responsive ---------- */
+@media (max-width:1140px){
+  .nav-links{display:none}
+}
+@media (max-width:900px){
+  .sea-in,.clinic-in,.care-head,.cat,.smile-in,.est,.rdv-in,.faq-in,.access-in{grid-template-columns:minmax(0,1fr)}
+  .facts{border-left:0;padding-left:0;border-top:1px solid var(--ecume);padding-top:20px;grid-template-columns:1fr 1fr}
+  .cat-head img{max-width:none;aspect-ratio:16/9}
+  .pano-frame{aspect-ratio:4/3}
+  .step{grid-template-columns:minmax(0,1fr)}
+  /* estimator: total sticks to the bottom of the screen while you tick */
+  .est-side{display:contents}
+  .est-sum{position:sticky;bottom:84px;z-index:5;background:var(--detroit);color:var(--on-dark);padding:16px 20px;box-shadow:0 10px 30px rgba(7,38,48,.25)}
+  .est-more{background:var(--detroit);color:var(--on-dark);padding:4px 20px 24px;margin-top:-32px}
+  .est-total{font-size:1.7rem}
+  .est-total.empty{font-size:1rem}
+}
+@media (max-width:640px){
+  .nav{gap:8px}
+  .nav .btn{display:none}
+  .brand span{font-size:1.18rem}
+  .fab{display:flex}
+  .facts{grid-template-columns:1fr}
+  form{grid-template-columns:minmax(0,1fr)}
+  .ctas .btn{width:100%}
+  .rows li{flex-direction:column;align-items:flex-start;gap:6px}
+  .rows .p{text-align:left}
+  .rows .p small{display:inline;margin-right:4px}
+  .rows .p small:last-child{margin:0 0 0 4px}
+  .est-row{flex-wrap:wrap;padding-bottom:8px}
+  .est-row .r{display:block;margin-top:2px}
+  .est-row label .n{display:flex;flex-direction:column}
+  .marks span{font-size:.82rem}
+  .faq details p{padding-right:0}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main" data-i18n="skip">Aller au contenu</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 30 18"><path d="M0 5.5h30" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M6.5 9.5c2.4 4.4 14.6 4.4 17 0" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></symbol>
+  <symbol id="wa" viewBox="0 0 24 24"><path fill="currentColor" d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Zm5.8 14.03c-.24.68-1.42 1.3-1.95 1.35-.5.05-.97.23-3.26-.68-2.75-1.08-4.5-3.9-4.63-4.08-.13-.18-1.1-1.47-1.1-2.8 0-1.34.7-2 .95-2.27.24-.27.53-.34.71-.34h.51c.16 0 .39-.06.6.46.24.56.8 1.93.87 2.07.07.14.11.3.02.48-.09.18-.14.3-.27.46-.14.16-.29.36-.41.48-.14.13-.28.28-.12.55.16.27.71 1.17 1.52 1.9 1.05.93 1.93 1.22 2.2 1.36.27.13.43.11.59-.07.16-.18.68-.8.86-1.07.18-.27.36-.23.61-.14.25.09 1.58.75 1.85.88.27.14.45.2.52.32.07.11.07.66-.17 1.33Z"/></symbol>
+</svg>
+
+<header class="site-head" id="head">
+  <div class="wrap nav">
+    <a class="brand" href="#top">
+      <svg aria-hidden="true"><use href="#mark"/></svg><span>Atlas Dental Studio</span>
+    </a>
+    <nav class="nav-links" aria-label="Sections" data-i18n-attr="aria-label:nav_label">
+      <a href="#soins" data-i18n="nav_care">Soins et tarifs</a>
+      <a href="#visite" data-i18n="nav_visit">Première visite</a>
+      <a href="#estimation" data-i18n="nav_est">Estimation</a>
+      <a href="#faq" data-i18n="nav_faq">Questions</a>
+      <a href="#acces" data-i18n="nav_access">Accès</a>
+    </nav>
+    <div class="lang" role="group" aria-label="Langue / Idioma">
+      <button type="button" lang="fr" data-lang="fr" aria-pressed="true" aria-label="Français">FR</button>
+      <button type="button" lang="es" data-lang="es" aria-pressed="false" aria-label="Español">ES</button>
+    </div>
+    <a class="btn btn-sea" href="#rdv" data-i18n="nav_rdv">Rendez-vous</a>
+  </div>
+</header>
+
+<main id="main">
+  <!-- ============ HERO: the horizon ============ -->
+  <section class="hero" id="top" aria-labelledby="h1">
+    <div class="sky">
+      <svg class="coast" viewBox="0 0 1440 100" preserveAspectRatio="none" aria-hidden="true">
+        <path class="far" d="M0,100 V90 C180,88 300,84 420,80 C520,77 600,74 700,76 C820,78 900,72 1000,70 C1100,68 1200,74 1300,78 C1360,80 1400,82 1440,83 V100 Z"/>
+        <path d="M0,100 V88 C120,87 220,84 300,79 C360,75 400,63 450,59 C500,55 530,64 560,68 C600,72 640,66 690,62 C740,58 780,66 830,72 C880,77 930,74 980,76 C1040,78 1076,77 1098,72 C1116,62 1130,38 1146,30 C1156,26 1164,32 1172,46 C1184,66 1208,78 1250,83 C1320,88 1390,88 1440,89 V100 Z"/>
+      </svg>
+      <div class="wrap sky-mask">
+        <h1 id="h1" data-i18n="hero_h1">Des soins dentaires sans hâte, face au détroit.</h1>
+      </div>
+    </div>
+    <div class="horizon-line" aria-hidden="true"></div>
+    <div class="sea">
+      <div class="marks" aria-hidden="true">
+        <span style="left:34%" data-i18n="mark_tarifa">Tarifa, 30 km</span>
+        <span style="left:79.6%" data-i18n="mark_gib">Gibraltar, 55 km</span>
+      </div>
+      <div class="wrap sea-in">
+        <div>
+          <p class="lead" data-i18n="hero_lead">Soins courants, blanchiment, aligneurs invisibles, implants et soins pour enfants, à Malabata. On vous explique tout avant de commencer, en français, en espagnol ou en darija.</p>
+          <div class="ctas">
+            <a class="btn btn-sea" href="#rdv" data-i18n="hero_cta">Demander un rendez-vous</a>
+            <a class="link" href="#soins" data-i18n="hero_link">Voir les soins et les tarifs</a>
+          </div>
+        </div>
+        <dl class="facts">
+          <div><dt data-i18n="f_hours_t">Horaires</dt><dd data-i18n="f_hours">Lun–ven 9 h–19 h, sam 9 h–14 h</dd></div>
+          <div><dt data-i18n="f_lang_t">Langues parlées</dt><dd data-i18n="f_lang">Français, español, darija, English</dd></div>
+          <div><dt data-i18n="f_where_t">Adresse</dt><dd data-i18n="f_where">Bd Mohammed VI, Malabata, Tanger</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <figure class="pano">
+    <div class="pano-frame">
+      <img class="pano-img"
+        src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=2000&q=75&auto=format&fit=crop"
+        srcset="https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=1000&q=75&auto=format&fit=crop 1000w, https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=2000&q=75&auto=format&fit=crop 2000w"
+        sizes="(max-width:1400px) 100vw, 1400px" width="2000" height="1333" fetchpriority="high"
+        alt="Salle de soin lumineuse avec fauteuil dentaire blanc, plan de travail et grande fenêtre" data-i18n-attr="alt:alt_pano">
+    </div>
+    <figcaption data-i18n="pano_cap">Salle de soin n° 2, au deuxième étage. Les fauteuils sont tournés vers la fenêtre.</figcaption>
+  </figure>
+
+  <!-- ============ CLINIC ============ -->
+  <section class="clinic" aria-labelledby="clinic-t">
+    <div class="wrap clinic-in">
+      <div>
+        <h2 id="clinic-t" data-i18n="clinic_t">Un cabinet pensé pour ceux qui redoutent le dentiste.</h2>
+        <p class="intro" data-i18n="clinic_p">Des rendez-vous qui ne débordent pas, une salle d’attente presque vide, et un dentiste qui vous montre ce qu’il voit avant de toucher à quoi que ce soit.</p>
+      </div>
+      <dl>
+        <div><dt data-i18n="c1_t">Radiographie numérique sur place</dt><dd data-i18n="c1_p">Panoramique et clichés ciblés, à faible dose. Les images s’affichent à l’écran en quelques secondes et vous les regardez avec nous.</dd></div>
+        <div><dt data-i18n="c2_t">Stérilisation que vous pouvez vérifier</dt><dd data-i18n="c2_p">Autoclave de classe B. Chaque kit d’instruments est scellé, daté, et ouvert devant vous.</dd></div>
+        <div><dt data-i18n="c3_t">Une équipe de quatre</dt><dd data-i18n="c3_p">Dre Salma (implants et esthétique), Dr Karim (orthodontie et aligneurs), Nadia, hygiéniste, et Imane à l’accueil, qui répond aussi en espagnol.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============ TREATMENTS & PRICES ============ -->
+  <section class="care" id="soins" aria-labelledby="care-t">
+    <div class="wrap">
+      <div class="care-head">
+        <h2 id="care-t" data-i18n="care_t">Soins et tarifs</h2>
+        <p data-i18n="care_p">Tarifs 2026 en dirhams. Le prix exact dépend de votre bouche : il est fixé après l’examen, dans un devis écrit que vous emportez.</p>
+      </div>
+      <div id="careList"></div>
+      <p class="care-note" data-i18n="care_note">Facture détaillée remise à chaque séance, pour l’AMO, la CNOPS, votre mutuelle ou votre assurance européenne.</p>
+    </div>
+  </section>
+
+  <!-- ============ BEFORE / AFTER ============ -->
+  <section class="smile" aria-labelledby="smile-t">
+    <div class="wrap smile-in">
+      <div class="smile-text">
+        <h2 id="smile-t" data-i18n="smile_t">Jusqu’à trois teintes plus clair, en une heure.</h2>
+        <p data-i18n="smile_p1">Le blanchiment au fauteuil éclaircit l’émail sans le poncer. On protège d’abord les gencives, puis le gel agit en trois passages de quinze minutes.</p>
+        <p class="muted" data-i18n="smile_p2">Avant, un bilan vérifie qu’il n’y a ni carie ni gencive irritée : une dent malade se soigne d’abord.</p>
+        <div class="shade" aria-hidden="true"><i class="a3"></i><span data-i18n="shade_a3">Teinte A3</span><i class="a1"></i><span data-i18n="shade_a1">Teinte A1</span></div>
+      </div>
+      <figure class="ba-wrap" style="margin:0">
+        <div class="ba" id="ba">
+          <img src="https://images.unsplash.com/photo-1677026010083-78ec7f1b84ed?rect=2100,612,3300,2200&w=1200&q=75&auto=format&fit=crop" width="1200" height="800" loading="lazy" alt="Gros plan d’un sourire après blanchiment (simulation)" data-i18n-attr="alt:alt_after">
+          <div class="ba-before">
+            <img src="https://images.unsplash.com/photo-1677026010083-78ec7f1b84ed?rect=2100,612,3300,2200&w=1200&q=75&auto=format&fit=crop" width="1200" height="800" loading="lazy" alt="Le même sourire avant blanchiment, dents plus jaunes (simulation)" data-i18n-attr="alt:alt_before">
+            <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <defs><filter id="soft" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="7"/></filter></defs>
+              <g fill="#D3AE5E" fill-opacity=".5" filter="url(#soft)">
+                <path d="M286,340 L300,326 L360,318 L480,305 L600,300 L735,305 L760,300 L850,305 L870,330 L868,380 L840,410 L800,414 L735,402 L720,412 L650,426 L600,436 L560,438 L480,442 L470,460 L380,468 L330,466 L292,456 L282,400 Z"/>
+                <path d="M382,470 L440,460 L560,447 L650,444 L700,445 L702,460 L640,470 L560,478 L480,490 L402,505 L386,490 Z"/>
+              </g>
+            </svg>
+          </div>
+          <span class="ba-tag l" aria-hidden="true" data-i18n="ba_before">Avant</span>
+          <span class="ba-tag r" aria-hidden="true" data-i18n="ba_after">Après</span>
+          <div class="ba-line">
+            <div class="ba-knob" role="slider" tabindex="0" aria-orientation="horizontal" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50 %" aria-label="Comparer avant et après le blanchiment" data-i18n-attr="aria-label:ba_label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg>
+            </div>
+          </div>
+        </div>
+        <p class="ba-help" data-i18n="ba_help">Faites glisser la ligne, ou utilisez les flèches du clavier.</p>
+        <figcaption data-i18n="ba_cap">Simulation illustrative. Le résultat dépend de votre teinte de départ et de votre émail ; le dentiste vous dit ce qui est réaliste avant de commencer.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ FIRST VISIT (pinned on desktop) ============ -->
+  <section class="visit dark" id="visite" aria-labelledby="visit-t">
+    <div class="wrap visit-in">
+      <div class="visit-head">
+        <h2 id="visit-t" data-i18n="visit_t">Votre première visite</h2>
+        <p data-i18n="visit_p">Environ 45 minutes. 300 MAD, radio panoramique comprise.</p>
+      </div>
+      <ol class="steps">
+        <li class="step">
+          <figure><img loading="lazy" width="1000" height="750" src="https://images.unsplash.com/photo-1777331903190-341a3dd0441b?w=1000&q=75&auto=format&fit=crop" alt="Un dentiste discute avec une patiente assise dans le fauteuil" data-i18n-attr="alt:alt_s1"></figure>
+          <div>
+            <p class="step-n" data-i18n="s_n1">Étape 1 sur 4</p>
+            <p class="step-time num" data-i18n="s1_time">0 à 10 min</p>
+            <h3 data-i18n="s1_t">On fait connaissance</h3>
+            <p class="t" data-i18n="s1_p">Vos antécédents, vos traitements en cours et ce qui vous amène. Si le dentiste vous fait peur, dites-le : on adapte le rythme et on vous prévient avant chaque geste.</p>
+          </div>
+        </li>
+        <li class="step">
+          <figure><img loading="lazy" width="1000" height="750" src="https://images.unsplash.com/photo-1606811971618-4486d14f3f99?w=1000&q=75&auto=format&fit=crop" alt="Examen des dents avec un miroir et une sonde" data-i18n-attr="alt:alt_s2"></figure>
+          <div>
+            <p class="step-n" data-i18n="s_n2">Étape 2 sur 4</p>
+            <p class="step-time num" data-i18n="s2_time">10 à 25 min</p>
+            <h3 data-i18n="s2_t">Examen et radio</h3>
+            <p class="t" data-i18n="s2_p">Examen des dents, des gencives et de l’articulation, puis une radio panoramique sur place. Rien ne fait mal à ce stade.</p>
+          </div>
+        </li>
+        <li class="step">
+          <figure><img loading="lazy" width="1000" height="750" src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=1000&q=75&auto=format&fit=crop" alt="Un dentiste montre des radiographies dentaires sur un écran lumineux" data-i18n-attr="alt:alt_s3"></figure>
+          <div>
+            <p class="step-n" data-i18n="s_n3">Étape 3 sur 4</p>
+            <p class="step-time num" data-i18n="s3_time">25 à 40 min</p>
+            <h3 data-i18n="s3_t">Ce qu’on a vu, ce qu’on propose</h3>
+            <p class="t" data-i18n="s3_p">Le dentiste vous montre les images, explique les options possibles avec leurs limites, et vous remet un devis écrit. Rien n’est commencé sans votre accord.</p>
+          </div>
+        </li>
+        <li class="step">
+          <figure><img loading="lazy" width="1000" height="750" src="https://images.unsplash.com/photo-1728342057953-94bfad8f0e7e?w=1000&q=75&auto=format&fit=crop" alt="Fauteuil dentaire blanc près d’une fenêtre, prêt pour le patient suivant" data-i18n-attr="alt:alt_s4"></figure>
+          <div>
+            <p class="step-n" data-i18n="s_n4">Étape 4 sur 4</p>
+            <p class="step-time num" data-i18n="s4_time">40 à 45 min</p>
+            <h3 data-i18n="s4_t">La suite, à votre rythme</h3>
+            <p class="t" data-i18n="s4_p">En cas de douleur, on soulage le jour même. Sinon, on planifie les séances ; si vous venez d’Espagne, on les regroupe pour limiter les traversées.</p>
+          </div>
+        </li>
+      </ol>
+      <div class="track" aria-hidden="true">
+        <div class="track-line"></div>
+        <div class="track-fill"></div>
+        <div class="track-marks">
+          <span class="track-mark on" style="left:0%"><span data-i18n="tm1">Accueil</span><small>0 min</small></span>
+          <span class="track-mark" style="left:22.22%"><span data-i18n="tm2">Examen</span><small>10 min</small></span>
+          <span class="track-mark" style="left:55.55%"><span data-i18n="tm3">Explications</span><small>25 min</small></span>
+          <span class="track-mark" style="left:88.88%"><span data-i18n="tm4">La suite</span><small>40 min</small></span>
+        </div>
+        <div class="track-dot"><span class="track-clock">0 min</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ESTIMATOR ============ -->
+  <section class="est-sec" id="estimation" aria-labelledby="est-t">
+    <div class="wrap">
+      <div class="est-head">
+        <h2 id="est-t" data-i18n="est_t">Estimer le coût de vos soins</h2>
+        <p data-i18n="est_p">Cochez les soins dont vous pensez avoir besoin. Pour ceux qui se comptent par dent, indiquez combien.</p>
+      </div>
+      <div class="est">
+        <div class="est-list" id="estList"></div>
+        <div class="est-side">
+          <div class="est-sum" aria-live="polite">
+            <p class="est-label" data-i18n="est_label">Votre fourchette estimée</p>
+            <p class="est-total empty" id="estTotal">Cochez au moins un soin pour voir une fourchette de prix.</p>
+            <p class="est-eur" id="estEur"></p>
+          </div>
+          <div class="est-more">
+            <ul class="est-lines" id="estLines"></ul>
+            <p class="est-note" data-i18n="est_note">Estimation indicative, calculée à partir de nos tarifs 2026. Le montant exact est confirmé par le dentiste après l’examen clinique et la radio, dans un devis écrit.</p>
+            <button type="button" class="btn btn-light" id="estCta" disabled data-i18n="est_cta">Demander un rendez-vous pour ces soins</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ APPOINTMENT ============ -->
+  <section class="rdv" id="rdv" aria-labelledby="rdv-t">
+    <div class="wrap rdv-in">
+      <div class="rdv-text">
+        <h2 id="rdv-t" data-i18n="rdv_t">Demander un rendez-vous</h2>
+        <p data-i18n="rdv_p">Le formulaire prépare un message WhatsApp avec votre demande. Imane vous répond dans la journée, du lundi au samedi, pour fixer l’heure exacte.</p>
+        <div class="contact">
+          <span data-i18n="rdv_call">Vous préférez appeler ?</span>
+          <a href="tel:+212600000000">+212 6 00 00 00 00</a>
+          <a href="mailto:contact@example.com">contact@example.com</a>
+        </div>
+      </div>
+      <form id="rdvForm" novalidate>
+        <div class="field">
+          <label for="fName" data-i18n="f_name">Prénom</label>
+          <input type="text" id="fName" name="name" autocomplete="given-name" required aria-describedby="eName">
+          <p class="err" id="eName"></p>
+        </div>
+        <fieldset class="field">
+          <legend data-i18n="f_status">Vous êtes</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="status" value="new" checked><span data-i18n="f_new">Nouveau patient</span></label>
+            <label class="chip"><input type="radio" name="status" value="ret"><span data-i18n="f_ret">Déjà patient ici</span></label>
+          </div>
+        </fieldset>
+        <div class="field full">
+          <label for="fReason" data-i18n="f_reason">Motif du rendez-vous</label>
+          <select id="fReason" name="reason" required aria-describedby="eReason">
+            <option value="" data-i18n="r_choose">Choisir un motif</option>
+            <option value="bilan" data-i18n="r_bilan">Bilan ou contrôle</option>
+            <option value="douleur" data-i18n="r_douleur">Douleur ou urgence</option>
+            <option value="detartrage" data-i18n="r_detartrage">Détartrage</option>
+            <option value="esth" data-i18n="r_esth">Blanchiment ou facettes</option>
+            <option value="align" data-i18n="r_align">Aligneurs invisibles</option>
+            <option value="implant" data-i18n="r_implant">Implant ou couronne</option>
+            <option value="enfant" data-i18n="r_enfant">Consultation pour un enfant</option>
+            <option value="autre" data-i18n="r_autre">Autre</option>
+          </select>
+          <p class="err" id="eReason"></p>
+        </div>
+        <fieldset class="field full">
+          <legend data-i18n="f_day">Jour préféré</legend>
+          <div class="chips" id="dayChips">
+            <label class="chip"><input type="radio" name="day" value="any" checked><span data-i18n="d_any">Peu importe</span></label>
+            <label class="chip"><input type="radio" name="day" value="mon"><span data-i18n="d_mon">Lun</span></label>
+            <label class="chip"><input type="radio" name="day" value="tue"><span data-i18n="d_tue">Mar</span></label>
+            <label class="chip"><input type="radio" name="day" value="wed"><span data-i18n="d_wed">Mer</span></label>
+            <label class="chip"><input type="radio" name="day" value="thu"><span data-i18n="d_thu">Jeu</span></label>
+            <label class="chip"><input type="radio" name="day" value="fri"><span data-i18n="d_fri">Ven</span></label>
+            <label class="chip"><input type="radio" name="day" value="sat"><span data-i18n="d_sat">Sam</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="field full">
+          <legend data-i18n="f_time">Moment de la journée</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="time" value="any" checked><span data-i18n="t_any">Peu importe</span></label>
+            <label class="chip"><input type="radio" name="time" value="am"><span data-i18n="t_am">Matin, 9 h–12 h</span></label>
+            <label class="chip"><input type="radio" name="time" value="pm" id="tPm"><span data-i18n="t_pm">Après-midi, 14 h–19 h</span></label>
+          </div>
+          <p class="hint" id="satHint" hidden data-i18n="sat_hint">Le samedi, le cabinet ferme à 14 h.</p>
+        </fieldset>
+        <div class="field full">
+          <label for="fMsg" data-i18n="f_msg">Quelque chose à préciser ? <span style="font-weight:400;color:var(--galet)">(facultatif)</span></label>
+          <textarea id="fMsg" name="msg" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-sea"><svg aria-hidden="true"><use href="#wa"/></svg><span data-i18n="f_send">Ouvrir WhatsApp avec ma demande</span></button>
+        <p class="form-foot" data-i18n="f_foot">Rien n’est envoyé tant que vous n’appuyez pas sur Envoyer dans WhatsApp.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="faq" id="faq" aria-labelledby="faq-t">
+    <div class="wrap faq-in">
+      <h2 id="faq-t" data-i18n="faq_t">Vos questions</h2>
+      <div class="faq-list">
+        <details name="faq"><summary><span data-i18n="q1">Parlez-vous espagnol ?</span><i aria-hidden="true"></i></summary><p data-i18n="a1">Oui. Imane à l’accueil et Dre Salma parlent espagnol. Devis et factures peuvent être rédigés en espagnol pour votre assurance ou votre mutuelle.</p></details>
+        <details name="faq"><summary><span data-i18n="q2">Je viens d’Espagne : combien de voyages pour un implant ?</span><i aria-hidden="true"></i></summary><p data-i18n="a2">En général deux. Un premier pour poser l’implant, puis un second trois à quatre mois plus tard pour la couronne définitive. Pour les aligneurs, un contrôle toutes les huit à dix semaines suffit.</p></details>
+        <details name="faq"><summary><span data-i18n="q3">Mes soins sont-ils remboursés ?</span><i aria-hidden="true"></i></summary><p data-i18n="a3">Nous ne pratiquons pas le tiers payant, mais vous recevez une facture détaillée et une feuille de soins à chaque séance, à envoyer à l’AMO, à la CNOPS, à votre mutuelle ou à votre assurance européenne.</p></details>
+        <details name="faq"><summary><span data-i18n="q4">J’ai mal aujourd’hui. Que faire ?</span><i aria-hidden="true"></i></summary><p data-i18n="a4">Écrivez-nous sur WhatsApp ou appelez. Des créneaux sont gardés chaque jour pour les urgences, le samedi matin compris.</p></details>
+        <details name="faq"><summary><span data-i18n="q5">À partir de quel âge pour un enfant ?</span><i aria-hidden="true"></i></summary><p data-i18n="a5">Vers 3 ans, ou plus tôt en cas de gêne. La première visite sert surtout à découvrir le fauteuil, sans soin, pour que l’enfant revienne sans appréhension.</p></details>
+        <details name="faq"><summary><span data-i18n="q6">Comment peut-on payer ?</span><i aria-hidden="true"></i></summary><p data-i18n="a6">Espèces, carte bancaire marocaine ou étrangère, et virement. Pour les aligneurs et les implants, le paiement peut être réparti sur la durée du traitement.</p></details>
+        <details name="faq"><summary><span data-i18n="q7">Le blanchiment abîme-t-il les dents ?</span><i aria-hidden="true"></i></summary><p data-i18n="a7">Fait au cabinet après un bilan, non. Une sensibilité passagère est possible pendant 24 à 48 heures. Les couronnes et facettes existantes, elles, ne changent pas de couleur.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ACCESS ============ -->
+  <section class="access" id="acces" aria-labelledby="acc-t">
+    <div class="wrap access-in">
+      <div>
+        <h2 id="acc-t" data-i18n="acc_t">Venir au cabinet</h2>
+        <dl>
+          <div><dt data-i18n="acc_addr_t">Adresse</dt><dd data-i18n="acc_addr">Résidence Bahia, 2e étage, boulevard Mohammed VI, Malabata, Tanger</dd></div>
+          <div><dt data-i18n="acc_city_t">Depuis le centre-ville</dt><dd data-i18n="acc_city">Dix minutes en petit taxi : demandez Malabata, côté corniche.</dd></div>
+          <div><dt data-i18n="acc_ferry_t">Depuis Tarifa</dt><dd data-i18n="acc_ferry">Une heure de ferry jusqu’au port de Tanger Ville, puis dix minutes de taxi le long de la baie.</dd></div>
+          <div><dt data-i18n="acc_park_t">Stationnement</dt><dd data-i18n="acc_park">Places réservées aux patients au sous-sol de la résidence.</dd></div>
+          <div><dt data-i18n="acc_hours_t">Horaires</dt><dd data-i18n="acc_hours">Du lundi au vendredi de 9 h à 19 h, le samedi de 9 h à 14 h.</dd></div>
+        </dl>
+      </div>
+      <iframe class="map" src="https://www.google.com/maps?q=Malabata,+Tanger&amp;z=15&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Carte : Malabata, Tanger" data-i18n-attr="title:map_title"></iframe>
+    </div>
+  </section>
+</main>
+
+<footer class="dark">
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="brand" href="#top"><svg aria-hidden="true"><use href="#mark"/></svg><span>Atlas Dental Studio</span></a>
+        <p data-i18n="foot_tag">Cabinet dentaire, Malabata, Tanger</p>
+      </div>
+      <div>
+        <p><a href="tel:+212600000000">+212 6 00 00 00 00</a></p>
+        <p><a href="mailto:contact@example.com">contact@example.com</a></p>
+      </div>
+      <div>
+        <p data-i18n="foot_hours">Lun–ven 9 h–19 h, sam 9 h–14 h</p>
+      </div>
+    </div>
+    <div class="foot-line"></div>
+    <p>Site de démonstration : entreprise fictive. Photos Unsplash.</p>
+  </div>
+</footer>
+
+<a href="../" class="demo-pill">Démo réalisée par Ghali</a>
+<a class="fab wa-link" href="#" target="_blank" rel="noopener" aria-label="Écrire au cabinet sur WhatsApp" data-i18n-attr="aria-label:fab_label"><svg aria-hidden="true"><use href="#wa"/></svg></a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+/* ===== Numéro WhatsApp du cabinet : format international, sans "+" ni espaces ===== */
+const WHATSAPP = "212600000000";
+
+const CLINIC = "Atlas Dental Studio";
+const EUR_RATE = 10.9; // taux indicatif : 1 € ≈ 10,9 MAD (affichage en euros seulement)
+const NB = " ";   // espace fine insécable (typographie française)
+const img = (id, w, extra = "") => `https://images.unsplash.com/photo-${id}?${extra}w=${w}&q=75&auto=format&fit=crop`;
+
+/* ---------- treatments: one source for the price list AND the estimator ---------- */
+const CARE = [
+  {cat:"base", items:[
+    {id:"consult",    min:300,  max:300},
+    {id:"detartrage", min:400,  max:600},
+    {id:"carie",      min:500,  max:900,  tooth:true},
+    {id:"canal",      min:1500, max:3000, tooth:true}
+  ]},
+  {cat:"esth", photo:"1489278353717-f64c6ee8a4d2", items:[
+    {id:"blanch",     min:2800, max:3500},
+    {id:"blanchdom",  min:1800, max:2400},
+    {id:"facette",    min:3500, max:5500, tooth:true}
+  ]},
+  {cat:"ortho", items:[
+    {id:"alignlite",  min:12000, max:18000},
+    {id:"align",      min:22000, max:38000},
+    {id:"contention", min:1200,  max:1800}
+  ]},
+  {cat:"impl", photo:"1593022356769-11f762e25ed9", items:[
+    {id:"implant",    min:9500, max:14000, tooth:true},
+    {id:"couronne",   min:3000, max:5000,  tooth:true},
+    {id:"greffe",     min:3500, max:7000}
+  ]},
+  {cat:"kids", photo:"1657470179447-0f5aa16daa91", items:[
+    {id:"kidconsult", min:200, max:200},
+    {id:"sillons",    min:250, max:300, tooth:true},
+    {id:"kidcarie",   min:350, max:500, tooth:true}
+  ]}
+];
+const CAT_REASON = {base:"bilan", esth:"esth", ortho:"align", impl:"implant", kids:"enfant"};
+
+const CARE_TXT = {
+fr:{
+  cats:{
+    base:["Soins courants","Contrôle, détartrage et caries : l’entretien qui évite les gros soins."],
+    esth:["Esthétique du sourire","Blanchiment et facettes, après un bilan qui vérifie que dents et gencives sont saines."],
+    ortho:["Aligneurs invisibles","Des gouttières transparentes, changées toutes les deux semaines, pour aligner les dents sans bagues."],
+    impl:["Implants","Remplacer une dent manquante par une racine en titane et une couronne en céramique."],
+    kids:["Enfants","Dès 3 ans, des visites courtes et expliquées, pour que le dentiste ne fasse jamais peur."]
+  },
+  alts:{esth:"Femme souriante aux cheveux bouclés, gros plan sur ses dents", impl:"Maquette d’implant dentaire entre deux dents naturelles", kids:"Un dentiste soigne un jeune patient allongé dans le fauteuil"},
+  items:{
+    consult:["Consultation et bilan","Examen complet et radio panoramique"],
+    detartrage:["Détartrage et polissage","Une séance d’environ 40 minutes"],
+    carie:["Soin de carie","Composite de la couleur de la dent"],
+    canal:["Traitement de canal","Dévitalisation, en une ou deux séances"],
+    blanch:["Blanchiment au fauteuil","Une séance d’environ une heure"],
+    blanchdom:["Blanchiment à domicile","Gouttières sur mesure et gel pour deux semaines"],
+    facette:["Facette céramique","Fine pellicule collée sur la face visible"],
+    alignlite:["Aligneurs, cas simples","Petits décalages, moins de six mois"],
+    align:["Aligneurs, traitement complet","De douze à dix-huit mois, contrôles compris"],
+    contention:["Gouttière de contention","À porter la nuit, une fois les dents alignées"],
+    implant:["Implant et couronne céramique","En deux temps, à trois mois d’intervalle"],
+    couronne:["Couronne céramique","Sur une dent naturelle dévitalisée"],
+    greffe:["Greffe osseuse","Seulement si l’os manque, décidée après la radio"],
+    kidconsult:["Première visite enfant","Découverte du fauteuil, sans soin"],
+    sillons:["Scellement des sillons","Protège les molaires contre les caries"],
+    kidcarie:["Soin de dent de lait","Avec anesthésie douce si besoin"]
+  }
+},
+es:{
+  cats:{
+    base:["Cuidados básicos","Revisión, limpieza y caries: el mantenimiento que evita tratamientos mayores."],
+    esth:["Estética de la sonrisa","Blanqueamiento y carillas, tras una revisión que confirma que dientes y encías están sanos."],
+    ortho:["Alineadores invisibles","Férulas transparentes que se cambian cada dos semanas para alinear los dientes sin brackets."],
+    impl:["Implantes","Sustituir un diente perdido por una raíz de titanio y una corona de cerámica."],
+    kids:["Niños","Desde los 3 años, visitas cortas y explicadas para que el dentista nunca dé miedo."]
+  },
+  alts:{esth:"Mujer sonriente de pelo rizado, primer plano de sus dientes", impl:"Maqueta de implante dental entre dos dientes naturales", kids:"Un dentista atiende a un paciente joven tumbado en el sillón"},
+  items:{
+    consult:["Consulta y revisión","Examen completo y radiografía panorámica"],
+    detartrage:["Limpieza dental","Tartrectomía y pulido, unos 40 minutos"],
+    carie:["Empaste","Composite del color del diente"],
+    canal:["Endodoncia","Tratamiento de conductos, en una o dos sesiones"],
+    blanch:["Blanqueamiento en clínica","Una sesión de una hora aproximadamente"],
+    blanchdom:["Blanqueamiento en casa","Férulas a medida y gel para dos semanas"],
+    facette:["Carilla de cerámica","Lámina fina adherida a la cara visible"],
+    alignlite:["Alineadores, casos sencillos","Pequeñas desviaciones, menos de seis meses"],
+    align:["Alineadores, tratamiento completo","De doce a dieciocho meses, controles incluidos"],
+    contention:["Férula de retención","Para usar de noche al terminar el tratamiento"],
+    implant:["Implante y corona de cerámica","En dos fases, con tres meses de intervalo"],
+    couronne:["Corona de cerámica","Sobre un diente natural endodonciado"],
+    greffe:["Injerto óseo","Solo si falta hueso, se decide tras la radiografía"],
+    kidconsult:["Primera visita infantil","Conocer el sillón, sin tratamiento"],
+    sillons:["Sellado de fisuras","Protege las muelas de las caries"],
+    kidcarie:["Empaste de diente de leche","Con anestesia suave si hace falta"]
+  }
+}};
+
+/* ---------- interface strings used by scripts ---------- */
+const UI = {
+fr:{
+  locale:"fr-FR", sep:NB,
+  from:"à partir de", tooth:"par dent", mad:`${NB}MAD`,
+  qty:"Nombre de dents", minus:"Une dent de moins", plus:"Une dent de plus",
+  empty:"Cochez au moins un soin pour voir une fourchette de prix.",
+  range:(a,b)=> a===b ? `${a}${NB}MAD` : `Entre ${a} et ${b}${NB}MAD`,
+  eur:(a,b)=> a===b ? `soit environ ${a}${NB}€` : `soit environ ${a} à ${b}${NB}€`,
+  ba:v=>`${v}${NB}% de l’image montre l’avant`,
+  errName:"Indiquez votre prénom pour que l’on sache à qui répondre.",
+  errReason:"Choisissez un motif : cela nous aide à prévoir la bonne durée.",
+  days:{any:"peu importe",mon:"lundi",tue:"mardi",wed:"mercredi",thu:"jeudi",fri:"vendredi",sat:"samedi"},
+  times:{any:"peu importe",am:"le matin (9 h–12 h)",pm:"l’après-midi (14 h–19 h)"},
+  status:{new:"nouveau patient",ret:"déjà patient du cabinet"},
+  hello:`Bonjour ${CLINIC}, je souhaite prendre rendez-vous.`,
+  msg:o=>`Bonjour ${CLINIC},\nJe souhaite prendre rendez-vous.\n\nPrénom${NB}: ${o.name}\nJe suis${NB}: ${o.status}\nMotif${NB}: ${o.reason}\nJour souhaité${NB}: ${o.day}\nMoment${NB}: ${o.time}` + (o.msg ? `\nPrécisions${NB}: ${o.msg}` : "") + `\n\nMerci${NB}!`,
+  estMsg:(list,range)=>`Estimation faite sur le site${NB}: ${list}. ${range} (indicatif).`,
+  title:"Atlas Dental Studio · Cabinet dentaire à Tanger",
+  desc:"Atlas Dental Studio, cabinet dentaire à Malabata, Tanger : soins courants, blanchiment, aligneurs invisibles, implants et enfants. On parle français et espagnol."
+},
+es:{
+  locale:"es-ES", sep:".",
+  from:"desde", tooth:"por diente", mad:`${NB}MAD`,
+  qty:"Número de dientes", minus:"Un diente menos", plus:"Un diente más",
+  empty:"Marque al menos un tratamiento para ver un rango de precios.",
+  range:(a,b)=> a===b ? `${a}${NB}MAD` : `Entre ${a} y ${b}${NB}MAD`,
+  eur:(a,b)=> a===b ? `unos ${a}${NB}€` : `unos ${a} a ${b}${NB}€`,
+  ba:v=>`El ${v}${NB}% de la imagen muestra el antes`,
+  errName:"Indique su nombre para saber a quién responder.",
+  errReason:"Elija un motivo: nos ayuda a prever la duración de la cita.",
+  days:{any:"cualquier día",mon:"lunes",tue:"martes",wed:"miércoles",thu:"jueves",fri:"viernes",sat:"sábado"},
+  times:{any:"indiferente",am:"por la mañana (9:00–12:00)",pm:"por la tarde (14:00–19:00)"},
+  status:{new:"paciente nuevo",ret:"paciente de la clínica"},
+  hello:`Hola ${CLINIC}, quisiera pedir cita.`,
+  msg:o=>`Hola ${CLINIC}:\nQuisiera pedir cita.\n\nNombre: ${o.name}\nSoy: ${o.status}\nMotivo: ${o.reason}\nDía preferido: ${o.day}\nMomento: ${o.time}` + (o.msg ? `\nDetalles: ${o.msg}` : "") + `\n\n¡Gracias!`,
+  estMsg:(list,range)=>`Estimación hecha en la web: ${list}. ${range} (orientativo).`,
+  title:"Atlas Dental Studio · Clínica dental en Tánger",
+  desc:"Atlas Dental Studio, clínica dental en Malabata, Tánger: cuidados básicos, blanqueamiento, alineadores invisibles, implantes y niños. Hablamos español."
+}};
+
+/* ---------- Spanish copy for everything written in the HTML (French is read from the page) ---------- */
+const ES = {
+  skip:"Ir al contenido",
+  nav_label:"Secciones",
+  nav_care:"Tratamientos y precios", nav_visit:"Primera visita", nav_est:"Presupuesto", nav_faq:"Preguntas", nav_access:"Cómo llegar", nav_rdv:"Pedir cita",
+  hero_h1:"Cuidado dental sin estrés, frente al Estrecho.",
+  mark_tarifa:"Tarifa, 30 km", mark_gib:"Gibraltar, 55 km",
+  hero_lead:"Cuidados básicos, blanqueamiento, alineadores invisibles, implantes y odontopediatría, en Malabata. Le explicamos todo antes de empezar, en español, en francés o en dariya.",
+  hero_cta:"Pedir cita", hero_link:"Ver tratamientos y precios",
+  f_hours_t:"Horario", f_hours:"Lun–vie 9:00–19:00, sáb 9:00–14:00",
+  f_lang_t:"Idiomas", f_lang:"Español, français, dariya, English",
+  f_where_t:"Dirección", f_where:"Bd Mohammed VI, Malabata, Tánger",
+  alt_pano:"Sala de tratamiento luminosa con sillón dental blanco, encimera y gran ventana",
+  pano_cap:"Sala de tratamiento n.º 2, en la segunda planta. Los sillones miran hacia la ventana.",
+  clinic_t:"Una clínica pensada para quien teme al dentista.",
+  clinic_p:"Citas que no se alargan, una sala de espera casi vacía y un dentista que le enseña lo que ve antes de tocar nada.",
+  c1_t:"Radiografía digital en la clínica", c1_p:"Panorámica y radiografías puntuales, con dosis baja. Las imágenes aparecen en pantalla en segundos y las mira con nosotros.",
+  c2_t:"Esterilización que puede comprobar", c2_p:"Autoclave de clase B. Cada kit de instrumentos va sellado, fechado y se abre delante de usted.",
+  c3_t:"Un equipo de cuatro", c3_p:"Dra. Salma (implantes y estética), Dr. Karim (ortodoncia y alineadores), Nadia, higienista, e Imane en recepción, que también le atiende en español.",
+  care_t:"Tratamientos y precios",
+  care_p:"Precios 2026 en dírhams. El precio exacto depende de su boca: se fija tras el examen, en un presupuesto escrito que se lleva a casa.",
+  care_note:"Factura detallada en cada sesión, para su seguro europeo, su mutua, la AMO o la CNOPS.",
+  smile_t:"Hasta tres tonos más claro, en una hora.",
+  smile_p1:"El blanqueamiento en clínica aclara el esmalte sin desgastarlo. Primero protegemos las encías y después el gel actúa en tres pasadas de quince minutos.",
+  smile_p2:"Antes, una revisión comprueba que no hay caries ni encías irritadas: un diente enfermo se trata primero.",
+  shade_a3:"Tono A3", shade_a1:"Tono A1",
+  alt_after:"Primer plano de una sonrisa tras el blanqueamiento (simulación)",
+  alt_before:"La misma sonrisa antes del blanqueamiento, dientes más amarillos (simulación)",
+  ba_before:"Antes", ba_after:"Después",
+  ba_label:"Comparar antes y después del blanqueamiento",
+  ba_help:"Deslice la línea o use las flechas del teclado.",
+  ba_cap:"Simulación ilustrativa. El resultado depende de su tono inicial y de su esmalte; el dentista le dirá qué es realista antes de empezar.",
+  visit_t:"Su primera visita",
+  visit_p:"Unos 45 minutos. 300 MAD, radiografía panorámica incluida.",
+  s_n1:"Paso 1 de 4", s_n2:"Paso 2 de 4", s_n3:"Paso 3 de 4", s_n4:"Paso 4 de 4",
+  s1_time:"De 0 a 10 min", s1_t:"Nos conocemos",
+  s1_p:"Sus antecedentes, sus tratamientos actuales y el motivo de su visita. Si le da miedo el dentista, díganoslo: adaptamos el ritmo y le avisamos antes de cada gesto.",
+  s2_time:"De 10 a 25 min", s2_t:"Examen y radiografía",
+  s2_p:"Examen de dientes, encías y articulación, y una radiografía panorámica en la clínica. Nada duele en esta fase.",
+  s3_time:"De 25 a 40 min", s3_t:"Lo que vemos, lo que proponemos",
+  s3_p:"El dentista le enseña las imágenes, explica las opciones con sus límites y le entrega un presupuesto escrito. No se empieza nada sin su acuerdo.",
+  s4_time:"De 40 a 45 min", s4_t:"Lo siguiente, a su ritmo",
+  s4_p:"Si hay dolor, lo aliviamos el mismo día. Si no, planificamos las sesiones; si viene de España, las agrupamos para que cruce el Estrecho las menos veces posible.",
+  alt_s1:"Un dentista conversa con una paciente sentada en el sillón",
+  alt_s2:"Examen de los dientes con espejo y sonda",
+  alt_s3:"Un dentista muestra radiografías dentales en un negatoscopio",
+  alt_s4:"Sillón dental blanco junto a una ventana, listo para el siguiente paciente",
+  tm1:"Acogida", tm2:"Examen", tm3:"Explicaciones", tm4:"Lo siguiente",
+  est_t:"Calcule el coste de su tratamiento",
+  est_p:"Marque los tratamientos que cree necesitar. Para los que se cuentan por diente, indique cuántos.",
+  est_label:"Su rango estimado",
+  est_note:"Estimación orientativa, calculada con nuestros precios de 2026. El importe exacto lo confirma el dentista tras el examen clínico y la radiografía, en un presupuesto escrito.",
+  est_cta:"Pedir cita para estos tratamientos",
+  rdv_t:"Pedir cita",
+  rdv_p:"El formulario prepara un mensaje de WhatsApp con su solicitud. Imane le responde en el día, de lunes a sábado, para fijar la hora exacta.",
+  rdv_call:"¿Prefiere llamar?",
+  f_name:"Nombre", f_status:"Usted es", f_new:"Paciente nuevo", f_ret:"Ya soy paciente",
+  f_reason:"Motivo de la cita",
+  r_choose:"Elegir un motivo", r_bilan:"Revisión o control", r_douleur:"Dolor o urgencia", r_detartrage:"Limpieza dental",
+  r_esth:"Blanqueamiento o carillas", r_align:"Alineadores invisibles", r_implant:"Implante o corona", r_enfant:"Consulta para un niño", r_autre:"Otro",
+  f_day:"Día preferido", d_any:"Cualquiera", d_mon:"Lun", d_tue:"Mar", d_wed:"Mié", d_thu:"Jue", d_fri:"Vie", d_sat:"Sáb",
+  f_time:"Momento del día", t_any:"Indiferente", t_am:"Mañana, 9:00–12:00", t_pm:"Tarde, 14:00–19:00",
+  sat_hint:"Los sábados la clínica cierra a las 14:00.",
+  f_msg:"¿Algo que añadir? <span style=\"font-weight:400;color:var(--galet)\">(opcional)</span>",
+  f_send:"Abrir WhatsApp con mi solicitud",
+  f_foot:"No se envía nada hasta que pulse Enviar en WhatsApp.",
+  faq_t:"Sus preguntas",
+  q1:"¿Hablan español?", a1:"Sí. Imane en recepción y la Dra. Salma hablan español. Presupuestos y facturas pueden redactarse en español para su seguro o su mutua.",
+  q2:"Vengo de España: ¿cuántos viajes para un implante?", a2:"Normalmente dos. Uno para colocar el implante y otro, tres o cuatro meses después, para la corona definitiva. Con alineadores basta un control cada ocho a diez semanas.",
+  q3:"¿Me reembolsan los tratamientos?", a3:"No trabajamos con pago directo de aseguradoras, pero recibe una factura detallada en cada sesión para enviarla a su seguro europeo, su mutua, la AMO o la CNOPS.",
+  q4:"Hoy me duele. ¿Qué hago?", a4:"Escríbanos por WhatsApp o llame. Reservamos huecos cada día para urgencias, también el sábado por la mañana.",
+  q5:"¿A partir de qué edad para un niño?", a5:"Hacia los 3 años, o antes si hay molestias. La primera visita sirve sobre todo para conocer el sillón, sin tratamiento, para que el niño vuelva sin miedo.",
+  q6:"¿Cómo se puede pagar?", a6:"Efectivo, tarjeta marroquí o extranjera y transferencia. Para alineadores e implantes, el pago puede repartirse a lo largo del tratamiento.",
+  q7:"¿El blanqueamiento daña los dientes?", a7:"Hecho en clínica y tras una revisión, no. Puede haber algo de sensibilidad durante 24 a 48 horas. Las coronas y carillas que ya tenga no cambian de color.",
+  acc_t:"Cómo llegar",
+  acc_addr_t:"Dirección", acc_addr:"Residencia Bahia, 2.ª planta, bulevar Mohammed VI, Malabata, Tánger",
+  acc_city_t:"Desde el centro", acc_city:"Diez minutos en petit taxi: pida Malabata, por la corniche.",
+  acc_ferry_t:"Desde Tarifa", acc_ferry:"Una hora de ferry hasta el puerto de Tánger Ciudad y diez minutos de taxi por la bahía.",
+  acc_park_t:"Aparcamiento", acc_park:"Plazas reservadas para pacientes en el sótano de la residencia.",
+  acc_hours_t:"Horario", acc_hours:"De lunes a viernes de 9:00 a 19:00, sábados de 9:00 a 14:00.",
+  map_title:"Mapa: Malabata, Tánger",
+  foot_tag:"Clínica dental, Malabata, Tánger",
+  foot_hours:"Lun–vie 9:00–19:00, sáb 9:00–14:00",
+  fab_label:"Escribir a la clínica por WhatsApp"
+};
+
+/* ---------- capture the French copy from the page ---------- */
+const FR = {};
+document.querySelectorAll("[data-i18n]").forEach(el => { FR[el.dataset.i18n] = el.innerHTML; });
+document.querySelectorAll("[data-i18n-attr]").forEach(el => {
+  el.dataset.i18nAttr.split("|").forEach(pair => { const [attr,key] = pair.split(":"); FR[key] = el.getAttribute(attr); });
+});
+const DICT = {fr:FR, es:ES};
+
+let lang = "fr";
+const $ = s => document.querySelector(s);
+const waURL = text => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
+const fmt = n => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, UI[lang].sep);
+const roundEur = n => Math.round(n / EUR_RATE / 10) * 10;
+
+/* ---------- price list ---------- */
+function renderCare(){
+  const t = CARE_TXT[lang], u = UI[lang];
+  $("#careList").innerHTML = CARE.map(c => `
+    <div class="cat">
+      <div class="cat-head">
+        <h3>${t.cats[c.cat][0]}</h3>
+        <p>${t.cats[c.cat][1]}</p>
+        ${c.photo ? `<img loading="lazy" width="800" height="600" src="${img(c.photo,800)}" alt="${t.alts[c.cat]}">` : ""}
+      </div>
+      <ul class="rows">
+        ${c.items.map(i => `<li>
+          <div><span class="n">${t.items[i.id][0]}</span><span class="d">${t.items[i.id][1]}</span></div>
+          <span class="p">${i.min !== i.max ? `<small>${u.from}</small>` : ""}${fmt(i.min)}${u.mad}${i.tooth ? `<small>${u.tooth}</small>` : ""}</span>
+        </li>`).join("")}
+      </ul>
+    </div>`).join("");
+}
+
+/* ---------- estimator ---------- */
+const picked = new Map(); // id -> quantity
+const ITEMS = Object.fromEntries(CARE.flatMap(c => c.items.map(i => [i.id, {...i, cat:c.cat}])));
+
+function renderEst(){
+  const t = CARE_TXT[lang], u = UI[lang];
+  $("#estList").innerHTML = CARE.map(c => `
+    <fieldset>
+      <legend>${t.cats[c.cat][0]}</legend>
+      ${c.items.map(i => {
+        const on = picked.has(i.id), q = picked.get(i.id) || 1;
+        const r = i.min === i.max ? `${fmt(i.min)}${u.mad}` : `${fmt(i.min)}–${fmt(i.max)}${u.mad}`;
+        return `<div class="est-row">
+          <label><input type="checkbox" value="${i.id}" ${on ? "checked" : ""}>
+            <span class="n">${t.items[i.id][0]} <span class="r">${r}${i.tooth ? ` ${u.tooth}` : ""}</span></span></label>
+          ${i.tooth ? `<div class="qty" ${on ? "" : "hidden"} role="group" aria-label="${u.qty}, ${t.items[i.id][0]}">
+            <button type="button" data-q="-1" data-id="${i.id}" aria-label="${u.minus}" ${q <= 1 ? "disabled" : ""}>−</button>
+            <output aria-live="polite">${q}</output>
+            <button type="button" data-q="1" data-id="${i.id}" aria-label="${u.plus}" ${q >= 12 ? "disabled" : ""}>+</button>
+          </div>` : ""}
+        </div>`;
+      }).join("")}
+    </fieldset>`).join("");
+  updateTotal();
+}
+
+function totals(){
+  let min = 0, max = 0;
+  picked.forEach((q, id) => { min += ITEMS[id].min * q; max += ITEMS[id].max * q; });
+  return {min, max};
+}
+function updateTotal(){
+  const u = UI[lang], t = CARE_TXT[lang];
+  const total = $("#estTotal"), eur = $("#estEur"), lines = $("#estLines"), cta = $("#estCta");
+  if(!picked.size){
+    total.textContent = u.empty; total.classList.add("empty");
+    eur.textContent = ""; lines.innerHTML = ""; cta.disabled = true; return;
+  }
+  const {min, max} = totals();
+  total.classList.remove("empty");
+  total.textContent = u.range(fmt(min), fmt(max));
+  eur.textContent = u.eur(fmt(roundEur(min)), fmt(roundEur(max)));
+  lines.innerHTML = [...picked].map(([id,q]) => {
+    const i = ITEMS[id];
+    const r = i.min === i.max ? fmt(i.min*q) : `${fmt(i.min*q)}–${fmt(i.max*q)}`;
+    return `<li><span>${t.items[id][0]}${q > 1 ? ` × ${q}` : ""}</span><span>${r}</span></li>`;
+  }).join("");
+  cta.disabled = false;
+}
+
+$("#estList").addEventListener("change", e => {
+  const cb = e.target.closest("input[type=checkbox]"); if(!cb) return;
+  const row = cb.closest(".est-row"), qty = row.querySelector(".qty");
+  if(cb.checked){ picked.set(cb.value, Number(qty?.querySelector("output").textContent) || 1); }
+  else picked.delete(cb.value);
+  if(qty) qty.hidden = !cb.checked;
+  updateTotal();
+});
+$("#estList").addEventListener("click", e => {
+  const b = e.target.closest("button[data-q]"); if(!b) return;
+  const id = b.dataset.id, q = Math.min(12, Math.max(1, (picked.get(id) || 1) + Number(b.dataset.q)));
+  picked.set(id, q);
+  const box = b.parentElement;
+  box.querySelector("output").textContent = q;
+  box.querySelector("[data-q='-1']").disabled = q <= 1;
+  box.querySelector("[data-q='1']").disabled = q >= 12;
+  updateTotal();
+});
+$("#estCta").addEventListener("click", () => {
+  if(!picked.size) return;
+  const u = UI[lang], t = CARE_TXT[lang], {min, max} = totals();
+  const list = [...picked].map(([id,q]) => t.items[id][0] + (q > 1 ? ` × ${q}` : "")).join(", ");
+  $("#fMsg").value = u.estMsg(list, u.range(fmt(min), fmt(max)));
+  const firstCat = ITEMS[[...picked.keys()][0]].cat;
+  $("#fReason").value = picked.has("detartrage") && picked.size === 1 ? "detartrage" : CAT_REASON[firstCat];
+  clearErr($("#fReason"), "#eReason");
+  $("#rdv").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
+  setTimeout(() => $("#fName").focus({preventScroll:true}), 600);
+});
+
+/* ---------- before / after slider (pointer + keyboard) ---------- */
+const ba = $("#ba"), knob = ba.querySelector(".ba-knob");
+let baPos = 50, dragging = false;
+function setBa(v){
+  baPos = Math.max(0, Math.min(100, v));
+  ba.style.setProperty("--pos", baPos + "%");
+  knob.setAttribute("aria-valuenow", Math.round(baPos));
+  knob.setAttribute("aria-valuetext", UI[lang].ba(Math.round(baPos)));
+}
+function baFromPointer(e){ const r = ba.getBoundingClientRect(); setBa((e.clientX - r.left) / r.width * 100); }
+ba.addEventListener("pointerdown", e => {
+  if(e.pointerType === "mouse" && e.button !== 0) return;
+  dragging = true; ba.setPointerCapture(e.pointerId); baFromPointer(e);
+});
+ba.addEventListener("pointermove", e => { if(dragging) baFromPointer(e); });
+["pointerup","pointercancel","lostpointercapture"].forEach(ev => ba.addEventListener(ev, () => { dragging = false; }));
+knob.addEventListener("keydown", e => {
+  const big = 10, small = e.shiftKey ? 10 : 2;
+  const map = {ArrowLeft:-small, ArrowDown:-small, ArrowRight:small, ArrowUp:small, PageDown:-big, PageUp:big};
+  if(e.key in map){ setBa(baPos + map[e.key]); e.preventDefault(); }
+  else if(e.key === "Home"){ setBa(0); e.preventDefault(); }
+  else if(e.key === "End"){ setBa(100); e.preventDefault(); }
+});
+
+/* ---------- appointment form -> WhatsApp ---------- */
+const form = $("#rdvForm");
+const tPm = $("#tPm"), satHint = $("#satHint");
+form.addEventListener("change", e => {
+  if(e.target.name === "day"){
+    const sat = e.target.value === "sat";
+    tPm.disabled = sat; satHint.hidden = !sat;
+    if(sat && tPm.checked) form.querySelector("input[name=time][value=am]").checked = true;
+  }
+  if(e.target.id === "fReason" && e.target.value) clearErr(e.target, "#eReason");
+});
+$("#fName").addEventListener("input", e => { if(e.target.value.trim()) clearErr(e.target, "#eName"); });
+function clearErr(el, id){ el.removeAttribute("aria-invalid"); $(id).textContent = ""; }
+form.addEventListener("submit", e => {
+  e.preventDefault();
+  const u = UI[lang], f = form.elements;
+  const name = f.name.value.trim(), reason = f.reason.value;
+  let bad = null;
+  if(!name){ f.name.setAttribute("aria-invalid","true"); $("#eName").textContent = u.errName; bad = bad || f.name; }
+  if(!reason){ f.reason.setAttribute("aria-invalid","true"); $("#eReason").textContent = u.errReason; bad = bad || f.reason; }
+  if(bad){ bad.focus(); return; }
+  const text = u.msg({
+    name,
+    status: u.status[f.status.value],
+    reason: f.reason.selectedOptions[0].textContent,
+    day: u.days[f.day.value],
+    time: u.times[f.time.value],
+    msg: f.msg.value.trim()
+  });
+  window.open(waURL(text), "_blank", "noopener");
+});
+
+/* ---------- language ---------- */
+function setLang(l){
+  if(!DICT[l]) l = "fr";
+  lang = l;
+  const d = DICT[l];
+  document.documentElement.lang = l;
+  document.title = UI[l].title;
+  document.querySelector('meta[name="description"]').setAttribute("content", UI[l].desc);
+  document.querySelectorAll("[data-i18n]").forEach(el => { const v = d[el.dataset.i18n]; if(typeof v === "string") el.innerHTML = v; });
+  document.querySelectorAll("[data-i18n-attr]").forEach(el => {
+    el.dataset.i18nAttr.split("|").forEach(pair => { const [attr,key] = pair.split(":"); if(d[key]) el.setAttribute(attr, d[key]); });
+  });
+  document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === l)));
+  document.querySelectorAll(".wa-link").forEach(a => a.href = waURL(UI[l].hello));
+  ["#eName","#eReason"].forEach(id => { if($(id).textContent){ $(id).textContent = id === "#eName" ? UI[l].errName : UI[l].errReason; } });
+  renderCare(); renderEst(); setBa(baPos);
+  try{ localStorage.setItem("atlas-lang", l); }catch(e){}
+  if(window.ScrollTrigger) requestAnimationFrame(() => ScrollTrigger.refresh());
+}
+document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => setLang(b.dataset.lang)));
+
+let start = new URLSearchParams(location.search).get("lang");
+if(!start){ try{ start = localStorage.getItem("atlas-lang"); }catch(e){} }
+if(!start){ start = (navigator.language || "fr").slice(0,2) === "es" ? "es" : "fr"; }
+setLang(start);
+
+/* ---------- header hairline on scroll ---------- */
+const head = $("#head");
+const onScroll = () => head.classList.toggle("scrolled", scrollY > 8);
+addEventListener("scroll", onScroll, {passive:true}); onScroll();
+
+/* ---------- motion: one load moment + two scroll moments ---------- */
+if(window.gsap && window.ScrollTrigger){
+  gsap.registerPlugin(ScrollTrigger);
+  const mm = gsap.matchMedia();
+
+  mm.add("(prefers-reduced-motion: no-preference)", () => {
+    /* 1. the horizon draws itself, the coast appears in the mist, the headline rises from behind the line */
+    gsap.timeline({defaults:{ease:"power3.out"}})
+      .from(".horizon-line", {scaleX:0, duration:1.5, ease:"power2.inOut"})
+      .from(".coast", {opacity:0, y:6, duration:1.8}, "-=0.9")
+      .from(".hero h1", {yPercent:104, duration:1.4}, "<")
+      .from(".marks span", {opacity:0, duration:1, stagger:.15}, "-=0.8");
+
+    /* 2. the treatment room opens from a slit on the horizon */
+    const st = {trigger:".pano", start:"top 92%", end:"center 50%", scrub:.6};
+    gsap.fromTo(".pano-frame", {clipPath:"inset(46% 0% 46% 0%)"}, {clipPath:"inset(0% 0% 0% 0%)", ease:"none", scrollTrigger:st});
+    gsap.fromTo(".pano-img", {scale:1.18}, {scale:1, ease:"none", scrollTrigger:{...st}});
+  });
+
+  /* 3. first visit: pinned, a sand "sun" travels minute by minute along the horizon */
+  mm.add("(min-width: 960px) and (min-height: 640px) and (prefers-reduced-motion: no-preference)", () => {
+    const visit = $("#visite");
+    visit.classList.add("is-pinned");
+    const steps = gsap.utils.toArray("#visite .step");
+    const marks = gsap.utils.toArray("#visite .track-mark");
+    const clock = $(".track-clock");
+    const MIN = [0, 10, 25, 40], TOTAL = 45;
+    gsap.set(steps.slice(1), {opacity:0, y:18});
+    const tl = gsap.timeline({
+      defaults:{ease:"power1.inOut"},
+      scrollTrigger:{
+        trigger:visit, start:"top top", end:() => "+=" + Math.round(innerHeight * 2.6),
+        pin:true, scrub:.6, invalidateOnRefresh:true,
+        onUpdate:self => {
+          const m = self.progress * TOTAL;
+          marks.forEach((el,i) => el.classList.toggle("on", m >= MIN[i] - .05));
+          clock.textContent = Math.round(m) + " min";
+        }
+      }
+    });
+    tl.fromTo(".track-dot", {left:"0%"}, {left:"100%", ease:"none", duration:TOTAL}, 0)
+      .fromTo(".track-fill", {width:"0%"}, {width:"100%", ease:"none", duration:TOTAL}, 0);
+    MIN.slice(1).forEach((m, i) => {
+      tl.to(steps[i], {opacity:0, y:-18, duration:1.8}, m - 1.8)
+        .to(steps[i+1], {opacity:1, y:0, duration:1.8}, m - .4);
+    });
+    return () => visit.classList.remove("is-pinned");
+  });
+
+  addEventListener("load", () => ScrollTrigger.refresh());
+}
+</script>
+</body>
+</html>

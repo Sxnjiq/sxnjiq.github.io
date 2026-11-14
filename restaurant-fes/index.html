@@ -1,0 +1,979 @@
+<!doctype html>
+<!--
+  DESIGN PLAN : Lmida, restaurant, médina de Fès (Bab Boujloud)
+
+  Idée : un dîner aux chandelles dans une maison de Fès el-Bali. La nuit est couleur encre,
+  la vaisselle est la faïence bleue et blanche de Fès, les reflets sont en laiton.
+
+  Palette
+    Encre de nuit   #121A2E  fonds sombres, texte principal sur os
+    Os              #ECE7DD  fond clair (plus gris et plus froid qu'un crème)
+    Émail           #F3F1EA  blanc stannifère des assiettes
+    Bleu de Fès     #2445A6  cobalt des poteries fassies : motifs, prix, section du vendredi
+    Laiton          #B8914B  boutons, détails sur fond encre
+    Bougie          #E9BB6A  focus et petites lumières sur fond sombre
+
+  Typographie
+    Gloock (display, contraste fort, un peu gravé) pour les titres et noms de plats.
+    Hanken Grotesk pour le texte courant et les formulaires.
+    Aref Ruqaa pour un seul mot : الميدة, comme une signature calligraphiée.
+
+  Mise en page (alignement à gauche partout)
+    [en-tête encre : Lmida الميدة | Le repas  La carte  Vendredi  Horaires | Réserver]
+    [HÉRO plein cadre, photo en parallaxe ; « Lmida » énorme en bas à gauche ;
+                                   l'assiette de Fès déborde sur la section suivante ]
+    [HISTOIRE os : texte à gauche | photos à droite sous l'assiette]
+    [LE REPAS encre, épinglé : texte du service à gauche | grande assiette à droite]
+    [LA CARTE os : intro collante à gauche | onglets + plats avec points de conduite]
+    [VENDREDI cobalt : photo | couscous du vendredi midi, prix, bouton]
+    [HORAIRES encre : statut en direct + tableau + accès | carte Google]
+    [RÉSERVER os : texte + aperçu du message WhatsApp | formulaire]
+    [pied de page encre]
+
+  Élément signature : l'assiette bleue et blanche de Fès dessinée en SVG (dents, feuilles,
+  tresse, rosace à huit pointes). Dans le héros, ses anneaux tournent en sens contraires
+  au défilement. Dans « Le repas », elle s'assemble anneau par anneau puis devient un masque
+  rond : chaque service (entrées, tagines, couscous, douceurs) apparaît dans le creux de
+  l'assiette pendant que le bord tourne d'un cran.
+
+  Revue contre le générique : pas de crème + terracotta (le chaud vient du laiton, la couleur
+  vive est le cobalt), pas d'étiquettes en capitales, pas de grille de cartes ; la carte est
+  une vraie liste de restaurant avec points de conduite. La numérotation n'apparaît que dans
+  la suite des services, qui est une vraie séquence.
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lmida, cuisine de famille à Fès</title>
+<meta name="description" content="Lmida, restaurant marocain dans la médina de Fès, près de Bab Boujloud. Dîner du mardi au dimanche, couscous le vendredi midi.">
+<meta name="theme-color" content="#121A2E">
+<script>document.documentElement.classList.add('js')</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://images.unsplash.com">
+<link href="https://fonts.googleapis.com/css2?family=Gloock&family=Hanken+Grotesk:wght@400;500;600&family=Aref+Ruqaa:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#121A2E;
+  --ink-2:#18223B;
+  --bone:#ECE7DD;
+  --glaze:#F3F1EA;
+  --cobalt:#2445A6;
+  --cobalt-deep:#172F78;
+  --brass:#B8914B;
+  --candle:#E9BB6A;
+  --mute:#555B6B;        /* texte secondaire sur os */
+  --mute-ink:#AAB2C5;    /* texte secondaire sur encre */
+  --display:"Gloock", Georgia, serif;
+  --body:"Hanken Grotesk", system-ui, sans-serif;
+  --ar:"Aref Ruqaa", "Times New Roman", serif;
+  --gutter:clamp(16px,4vw,56px);
+  --max:1240px;
+  --head:64px;
+  --hp:clamp(220px,36vw,540px); /* taille de l'assiette du héros */
+  --focus:var(--cobalt);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bone);color:var(--ink);font:400 1.0625rem/1.65 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit}
+p{margin:0}
+h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;line-height:1.05;letter-spacing:-.01em}
+h2{font-size:clamp(2.3rem,5.2vw,4rem)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:3px}
+.dark{background:var(--ink);color:var(--bone);--focus:var(--candle)}
+.wrap{max-width:var(--max);margin-inline:auto;padding-inline:var(--gutter)}
+section[id]{scroll-margin-top:var(--head)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.skip{position:absolute;left:12px;top:-60px;z-index:100;background:var(--candle);color:var(--ink);padding:.7em 1em;border-radius:6px;font-weight:600}
+.skip:focus{top:12px}
+
+/* ---------- boutons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.6em;min-height:50px;padding:0 1.5em;border-radius:999px;border:0;font:600 1rem/1 var(--body);text-decoration:none;cursor:pointer;transition:background-color .2s}
+.btn svg{width:1.25em;height:1.25em;flex:none}
+.btn-brass{background:var(--brass);color:var(--ink)}
+.btn-brass:hover{background:var(--candle)}
+.btn-cobalt{background:var(--cobalt);color:var(--glaze)}
+.btn-cobalt:hover{background:var(--cobalt-deep)}
+.btn-glaze{background:var(--glaze);color:var(--cobalt-deep)}
+.btn-glaze:hover{background:#fff}
+.link{font-weight:600;text-underline-offset:5px;text-decoration-thickness:1px;display:inline-flex;align-items:center;min-height:48px}
+.link:hover{text-decoration-thickness:2px}
+
+/* ---------- motifs de l'assiette (SVG) ---------- */
+.pg{fill:var(--glaze)}
+.pk{stroke:var(--cobalt-deep);stroke-width:.8}
+.pc{fill:var(--cobalt)}
+.ps{fill:none;stroke:var(--cobalt)}
+.ps-g{stroke:var(--glaze)}
+.plate{display:block;overflow:visible}
+
+/* ---------- en-tête ---------- */
+.site-head{position:sticky;top:0;z-index:40;background:rgba(18,26,46,.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:var(--bone);--focus:var(--candle)}
+.nav{height:var(--head);display:flex;align-items:center;gap:30px}
+.logo{display:flex;align-items:center;gap:.55em;text-decoration:none;margin-right:auto;min-height:44px}
+.logo b{font:400 1.65rem/1 var(--display);letter-spacing:-.01em}
+.logo span{font:700 1.15rem/1 var(--ar);color:var(--candle)}
+.nav-links{display:flex;gap:26px}
+.nav-links a{text-decoration:none;color:#CDD3E0;font-weight:500;padding-block:12px}
+.nav-links a:hover{color:var(--bone)}
+.nav .btn{min-height:44px;padding:0 1.2em;font-size:.95rem}
+
+/* ---------- héros ---------- */
+.hero{position:relative;z-index:2;isolation:isolate;overflow-x:clip;min-height:max(600px,calc(100svh - var(--head)));display:flex;align-items:flex-end;background:var(--ink);color:var(--bone)}
+.hero-media{position:absolute;inset:0;overflow:hidden;z-index:-1}
+.hero-media img{position:absolute;left:0;top:-9%;width:100%;height:118%;object-fit:cover;object-position:50% 45%}
+.hero-media::after{content:"";position:absolute;inset:0;background:
+  linear-gradient(90deg,rgba(18,26,46,.94) 0%,rgba(18,26,46,.72) 38%,rgba(18,26,46,.2) 72%,rgba(18,26,46,.35) 100%),
+  linear-gradient(0deg,rgba(18,26,46,.9) 0%,rgba(18,26,46,0) 50%)}
+.hero-in{width:100%;padding-block:72px clamp(72px,8vw,120px)}
+.hero-title{display:flex;align-items:flex-end;gap:.25em;flex-wrap:wrap}
+.hero h1{font-size:clamp(5.2rem,17vw,13rem);line-height:.82;letter-spacing:-.03em}
+.hero-ar{font:700 clamp(2rem,5vw,3.6rem)/1 var(--ar);color:var(--candle);padding-bottom:.18em}
+.hero-sub{font:400 clamp(1.25rem,2.4vw,1.75rem)/1.25 var(--display);margin-top:.55em;max-width:24ch}
+.hero .lead{max-width:40ch;margin-top:1em;color:#D6DAE4;font-size:1.1rem}
+.hero .ctas{display:flex;flex-wrap:wrap;align-items:center;gap:10px 26px;margin-top:1.8em}
+.status{display:inline-flex;align-items:center;gap:.6em;margin-top:1.6em;font-size:.98rem;color:#D6DAE4}
+.status strong{color:var(--bone);font-weight:600}
+.status .dot{width:9px;height:9px;border-radius:50%;background:#7B8297;flex:none}
+.status[data-open="true"] .dot{background:var(--candle);box-shadow:0 0 0 4px rgba(233,187,106,.22),0 0 14px 2px rgba(233,187,106,.6)}
+.plate-hero{position:absolute;z-index:3;right:clamp(-120px,-5vw,-20px);bottom:0;width:var(--hp);height:var(--hp);translate:0 42%;filter:drop-shadow(0 24px 40px rgba(8,12,24,.45))}
+
+/* ---------- histoire ---------- */
+.story{padding-block:clamp(72px,9vw,128px)}
+.story-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(36px,6vw,96px)}
+.story h2{max-width:15ch}
+.story-text p{max-width:56ch;margin-top:1.15em}
+.story-text p:first-of-type{margin-top:1.4em;font-size:1.2rem}
+.facts{margin:2.2em 0 0;display:grid;gap:0}
+.facts div{display:grid;grid-template-columns:9.5em 1fr;gap:16px;padding-block:.9em;border-top:1px solid rgba(18,26,46,.16)}
+.facts div:last-child{border-bottom:1px solid rgba(18,26,46,.16)}
+.facts dt{font-weight:600}
+.facts dd{margin:0;color:var(--mute)}
+.story-figs{margin:calc(var(--hp) * .42 + 8px) 0 0;position:relative}
+.story-figs figure{margin:0}
+.story-figs .f1{width:84%}
+.story-figs .f1 img{width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:4px}
+.story-figs .f2{width:56%;margin:-18% 0 0 auto;position:relative}
+.story-figs .f2 img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:4px;outline:10px solid var(--bone)}
+.story-figs figcaption{font-size:.92rem;color:var(--mute);margin-top:.7em}
+
+/* ---------- le repas ---------- */
+.meal{padding-block:clamp(72px,9vw,128px);overflow:hidden}
+.meal-head h2{max-width:14ch}
+.meal-head p{color:var(--mute-ink);max-width:46ch;margin-top:1em}
+.courses{list-style:none;margin:clamp(48px,7vw,88px) 0 0;padding:0;display:grid;gap:clamp(64px,9vw,112px)}
+.course{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,80px);align-items:center}
+.course:nth-child(even) .course-fig{order:-1}
+.course-fig{position:relative;margin:0;width:100%;max-width:500px;aspect-ratio:1;justify-self:center}
+.course-fig .rim{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0 22px 34px rgba(0,0,0,.4))}
+.course-fig img{position:absolute;left:21.25%;top:21.25%;width:57.5%;height:57.5%;border-radius:50%;object-fit:cover}
+.course-n{font:400 1rem/1 var(--display);color:var(--brass);margin-bottom:.9em}
+.course h3{font-size:clamp(2.6rem,5.4vw,4.6rem);line-height:1}
+.course-text > p{color:var(--mute-ink);max-width:40ch;margin-top:1em}
+.course-text > p.course-n{color:var(--brass);margin-top:0}
+.course-dishes{list-style:none;padding:0;margin:1.5em 0 0;display:grid;gap:.55em}
+.course-dishes li{display:flex;align-items:baseline;gap:.8em}
+.course-dishes li::before{content:"";width:7px;height:7px;background:var(--brass);transform:rotate(45deg) translateY(-2px);flex:none}
+.plate-big,.meal-steps{display:none}
+
+/* état épinglé : ajouté par JS seulement sur grand écran, sans « réduire les animations » */
+.meal.is-pinned{padding-block:0}
+.meal.is-pinned .meal-stage{--P:min(calc(100vh - var(--head) - 72px),46vw,700px);height:100vh;padding-top:calc(var(--head) + 24px);padding-bottom:40px;display:grid;grid-template-columns:minmax(0,1fr) var(--P);grid-template-rows:auto 1fr auto;grid-template-areas:"head plate" "text plate" "steps plate";column-gap:clamp(40px,6vw,104px);align-items:center}
+.meal.is-pinned .meal-head{grid-area:head;align-self:end}
+.meal.is-pinned .meal-head h2{font-size:clamp(2rem,3.4vw,2.9rem);max-width:none}
+.meal.is-pinned .meal-head p{margin-top:.6em}
+.meal.is-pinned .courses,.meal.is-pinned .course{display:contents}
+.meal.is-pinned .course-text{grid-area:text;align-self:center}
+.meal.is-pinned .course h3{font-size:clamp(2.4rem,4.2vw,3.8rem)}
+.meal.is-pinned .course-fig,.meal.is-pinned .plate-big{grid-area:plate;width:var(--P);height:var(--P);max-width:none;align-self:center}
+.meal.is-pinned .course:nth-child(n) .course-fig{order:0}
+.meal.is-pinned .course-fig .rim{display:none}
+.meal.is-pinned .plate-big{display:block;filter:drop-shadow(0 34px 60px rgba(0,0,0,.5))}
+.meal.is-pinned .meal-steps{display:flex;grid-area:steps;list-style:none;margin:0;padding:0;gap:clamp(16px,2.4vw,34px)}
+.meal-steps li{color:#7F88A0;font-size:.95rem;padding-top:12px;border-top:2px solid rgba(236,231,221,.16);transition:color .3s,border-color .3s}
+.meal-steps li.on{color:var(--bone);border-color:var(--brass)}
+
+/* ---------- la carte ---------- */
+.carte{padding-block:clamp(72px,9vw,128px)}
+.carte-grid{display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.5fr);gap:clamp(36px,6vw,96px);align-items:start}
+.carte-side{position:sticky;top:calc(var(--head) + 32px)}
+.carte-side > p{color:var(--mute);margin-top:1em;max-width:36ch}
+.tasting{margin-top:2em;padding:1.3em 1.4em;border:1.5px solid var(--cobalt);border-radius:4px;max-width:34ch}
+.tasting h3{font-size:1.45rem;color:var(--cobalt-deep)}
+.tasting p{margin-top:.4em;color:var(--mute);font-size:.97rem}
+.tasting .price{display:block;margin-top:.6em;font-size:1.05rem}
+.legend{margin-top:1.4em;font-size:.92rem;color:var(--mute)}
+.legend abbr{text-decoration:none;font-weight:600;color:var(--cobalt)}
+.tablist{display:none;flex-wrap:wrap;gap:0 26px;border-bottom:1px solid rgba(18,26,46,.18);margin-bottom:clamp(28px,4vw,44px)}
+.js .tablist{display:flex}
+.tab{min-height:50px;padding:0 2px;background:none;border:0;border-bottom:3px solid transparent;margin-bottom:-1px;font:500 1.05rem/1 var(--body);color:var(--mute);cursor:pointer}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--cobalt)}
+.panel + .panel{margin-top:56px}
+.js .panel + .panel{margin-top:0}
+.panel h3{font-size:1.8rem;margin-bottom:.8em;color:var(--cobalt-deep)}
+.js .panel h3{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.panel:focus-visible{outline-offset:8px}
+.panel.fade{animation:panelIn .35s ease both}
+@keyframes panelIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.dishes{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:30px 52px}
+.dish-head{display:flex;align-items:baseline;gap:10px}
+.dish-name{font:400 1.28rem/1.25 var(--display)}
+.dish-name abbr{font:600 .8rem/1 var(--body);text-decoration:none;color:var(--cobalt);border:1.5px solid currentColor;border-radius:50%;width:1.6em;height:1.6em;display:inline-grid;place-items:center;vertical-align:.2em;margin-left:.3em}
+.leader{flex:1;min-width:14px;border-bottom:2px dotted rgba(18,26,46,.3);translate:0 -5px}
+.price{font-weight:600;color:var(--cobalt);white-space:nowrap;font-variant-numeric:tabular-nums}
+.dish p{color:var(--mute);margin-top:.3em;font-size:.98rem;max-width:44ch}
+
+/* ---------- vendredi ---------- */
+.vendredi{background:var(--cobalt);color:var(--glaze);--focus:var(--candle);position:relative}
+.vendredi::before{content:"";position:absolute;left:0;right:0;top:0;height:13px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='13'%3E%3Cpath d='M0 0h26L13 13z' fill='%23ECE7DD'/%3E%3C/svg%3E") repeat-x;background-size:26px 13px}
+.ven-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(36px,6vw,96px);align-items:center;padding-block:clamp(80px,10vw,136px)}
+.ven-photo img{width:100%;aspect-ratio:5/4;object-fit:cover;border-radius:50% 50% 4px 4px / 34% 34% 4px 4px}
+.vendredi h2{max-width:13ch}
+.vendredi p{max-width:46ch;margin-top:1.1em;color:#DCE3F4}
+.ven-menu{list-style:none;padding:0;margin:1.6em 0 0;display:grid;gap:.5em}
+.ven-menu li{padding-left:1.2em;position:relative}
+.ven-menu li::before{content:"";position:absolute;left:0;top:.62em;width:7px;height:7px;background:var(--glaze);transform:rotate(45deg)}
+.ven-price{display:flex;flex-wrap:wrap;gap:6px 28px;margin-top:1.8em;font:400 1.6rem/1.2 var(--display)}
+.ven-price small{font:400 1rem/1.4 var(--body);color:#DCE3F4;display:block}
+.vendredi .btn{margin-top:2em}
+
+/* ---------- horaires & accès ---------- */
+.infos{padding-block:clamp(72px,9vw,128px)}
+.infos-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(36px,6vw,96px);align-items:start}
+.status-lg{display:flex;align-items:center;gap:.7em;margin-top:1.2em;font-size:1.15rem;color:var(--mute-ink)}
+.status-lg strong{color:var(--bone);font:400 1.6rem/1.1 var(--display)}
+.status-lg .dot{width:12px;height:12px}
+.tz{font-size:.9rem;color:var(--mute-ink);margin-top:.4em}
+.hours{width:100%;border-collapse:collapse;margin-top:1.6em;font-variant-numeric:tabular-nums}
+.hours th,.hours td{padding:.75em 0;border-bottom:1px solid rgba(236,231,221,.14);vertical-align:top;text-align:left;font-weight:400}
+.hours td{text-align:right;color:var(--mute-ink)}
+.hours td small{font-size:.88rem}
+.hours tr.today th,.hours tr.today td{color:var(--bone)}
+.hours tr.today th{font-weight:600}
+.today-tag{display:inline-block;margin-left:.6em;font-size:.8rem;font-weight:600;color:var(--ink);background:var(--candle);border-radius:999px;padding:.15em .6em;vertical-align:.1em}
+.access{margin:2em 0 0}
+.access dt{font-weight:600;margin-top:1.1em}
+.access dd{margin:.25em 0 0;color:var(--mute-ink);max-width:48ch}
+.access a{color:var(--bone);display:inline-block;padding-block:6px}
+.map{width:100%;aspect-ratio:4/5;border:0;border-radius:4px;filter:saturate(.75) contrast(1.05);background:var(--ink-2)}
+
+/* ---------- réserver ---------- */
+.resa{padding-block:clamp(72px,9vw,128px)}
+.resa-grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(36px,6vw,96px);align-items:start}
+.resa-intro > p{color:var(--mute);margin-top:1em;max-width:42ch}
+.preview{margin-top:2.2em;max-width:400px}
+.preview-t{font-size:.92rem;color:var(--mute);margin-bottom:.6em}
+.bubble{margin:0;background:var(--glaze);border-radius:14px 14px 14px 4px;padding:1em 1.15em;font:400 .98rem/1.55 var(--body);white-space:pre-wrap;word-break:break-word;color:var(--ink);box-shadow:0 1px 0 rgba(18,26,46,.12)}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:18px 20px}
+.form label{display:grid;gap:7px;font-weight:600;font-size:.97rem}
+.form label span.opt{font-weight:400;color:var(--mute)}
+.form .full{grid-column:1/-1}
+.form input,.form select,.form textarea{width:100%;min-height:50px;padding:.7em .9em;font:400 1rem/1.3 var(--body);color:var(--ink);background:var(--glaze);border:1.5px solid rgba(18,26,46,.28);border-radius:6px;appearance:none;-webkit-appearance:none}
+.form select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23121A2E' stroke-width='1.6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+.form textarea{min-height:96px;resize:vertical}
+.form input:hover,.form select:hover,.form textarea:hover{border-color:var(--cobalt)}
+.form input:focus-visible,.form select:focus-visible,.form textarea:focus-visible{outline:3px solid var(--cobalt);outline-offset:1px;border-color:var(--cobalt)}
+.form select:disabled{opacity:.6}
+.hint{grid-column:1/-1;min-height:1.4em;font-size:.95rem;color:#8A2A1E;font-weight:500}
+.form .btn{grid-column:1/-1;min-height:56px;font-size:1.05rem}
+.sent{grid-column:1/-1;color:var(--mute);font-size:.95rem}
+
+/* ---------- pied de page ---------- */
+.foot{padding-block:48px 96px;font-size:.95rem;color:var(--mute-ink)}
+.foot-grid{display:flex;flex-wrap:wrap;gap:24px 64px;justify-content:space-between;align-items:flex-start}
+.foot .logo{margin:0 0 .4em}
+.foot a{color:var(--bone);text-underline-offset:4px}
+.foot address{font-style:normal;line-height:1.8}
+.demo-note{margin-top:28px;padding-top:20px;border-top:1px solid rgba(236,231,221,.12)}
+
+/* ---------- éléments fixes ---------- */
+.fab{position:fixed;right:16px;bottom:16px;z-index:50;width:58px;height:58px;border-radius:50%;background:#25D366;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(8,12,24,.35);--focus:var(--candle)}
+.fab svg{width:30px;height:30px}
+.demo-pill{position:fixed;left:16px;bottom:16px;z-index:50;display:inline-flex;align-items:center;min-height:44px;padding:0 1em;border-radius:999px;background:rgba(18,26,46,.88);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:var(--bone);border:1px solid rgba(184,145,75,.55);font:500 .82rem/1 var(--body);text-decoration:none;--focus:var(--candle)}
+.demo-pill:hover{border-color:var(--candle)}
+
+/* ---------- responsive ---------- */
+@media (max-width:1000px){
+  .nav-links{display:none}
+}
+@media (max-width:900px){
+  .story-grid,.carte-grid,.ven-grid,.infos-grid,.resa-grid{grid-template-columns:1fr}
+  .story{padding-top:calc(var(--hp) * .42 + 40px)}
+  .story-figs{margin-top:8px}
+  .carte-side{position:static}
+  .course{grid-template-columns:1fr}
+  .course:nth-child(even) .course-fig{order:0}
+  .course-fig{max-width:420px;justify-self:start}
+  .map{aspect-ratio:4/3}
+  .preview{max-width:none}
+}
+@media (max-width:640px){
+  :root{--hp:58vw}
+  .hero-in{padding-block:48px calc(var(--hp) * .58 + 28px)}
+  .hero .ctas .btn{flex:1 1 100%}
+  .plate-hero{right:-12vw}
+  .dishes{grid-template-columns:1fr}
+  .facts div{grid-template-columns:1fr;gap:2px}
+  .form{grid-template-columns:1fr}
+  .story-figs .f1{width:100%}
+  .story-figs .f2{width:62%;margin-top:-22%}
+  .course-fig{max-width:none;width:92%}
+  .nav{gap:14px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .panel.fade{animation:none}
+  .btn,.meal-steps li{transition:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Aller au contenu</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="rim" viewBox="-100 -100 200 200"><g class="ring ring-a"><circle r="99" class="pg pk"/><circle r="95.5" class="ps" stroke-width="1"/><path class="pc" d="M0 -95.5L7.76 -88.66L16.58 -94.05ZM16.58 -94.05L23.03 -85.97L32.66 -89.74ZM32.66 -89.74L37.61 -80.66L47.75 -82.71ZM47.75 -82.71L51.05 -72.9L61.39 -73.16ZM61.39 -73.16L62.93 -62.93L73.16 -61.39ZM73.16 -61.39L72.9 -51.05L82.71 -47.75ZM82.71 -47.75L80.66 -37.61L89.74 -32.66ZM89.74 -32.66L85.97 -23.03L94.05 -16.58ZM94.05 -16.58L88.66 -7.76L95.5 -0ZM95.5 -0L88.66 7.76L94.05 16.58ZM94.05 16.58L85.97 23.03L89.74 32.66ZM89.74 32.66L80.66 37.61L82.71 47.75ZM82.71 47.75L72.9 51.05L73.16 61.39ZM73.16 61.39L62.93 62.93L61.39 73.16ZM61.39 73.16L51.05 72.9L47.75 82.71ZM47.75 82.71L37.61 80.66L32.66 89.74ZM32.66 89.74L23.03 85.97L16.58 94.05ZM16.58 94.05L7.76 88.66L0 95.5ZM0 95.5L-7.76 88.66L-16.58 94.05ZM-16.58 94.05L-23.03 85.97L-32.66 89.74ZM-32.66 89.74L-37.61 80.66L-47.75 82.71ZM-47.75 82.71L-51.05 72.9L-61.39 73.16ZM-61.39 73.16L-62.93 62.93L-73.16 61.39ZM-73.16 61.39L-72.9 51.05L-82.71 47.75ZM-82.71 47.75L-80.66 37.61L-89.74 32.66ZM-89.74 32.66L-85.97 23.03L-94.05 16.58ZM-94.05 16.58L-88.66 7.76L-95.5 0ZM-95.5 0L-88.66 -7.76L-94.05 -16.58ZM-94.05 -16.58L-85.97 -23.03L-89.74 -32.66ZM-89.74 -32.66L-80.66 -37.61L-82.71 -47.75ZM-82.71 -47.75L-72.9 -51.05L-73.16 -61.39ZM-73.16 -61.39L-62.93 -62.93L-61.39 -73.16ZM-61.39 -73.16L-51.05 -72.9L-47.75 -82.71ZM-47.75 -82.71L-37.61 -80.66L-32.66 -89.74ZM-32.66 -89.74L-23.03 -85.97L-16.58 -94.05ZM-16.58 -94.05L-7.76 -88.66L-0 -95.5Z"/><path class="pc" d="M-1 -90.6a1 1 0 1 0 2 0a1 1 0 1 0-2 0M14.73 -89.22a1 1 0 1 0 2 0a1 1 0 1 0-2 0M29.99 -85.14a1 1 0 1 0 2 0a1 1 0 1 0-2 0M44.3 -78.46a1 1 0 1 0 2 0a1 1 0 1 0-2 0M57.24 -69.4a1 1 0 1 0 2 0a1 1 0 1 0-2 0M68.4 -58.24a1 1 0 1 0 2 0a1 1 0 1 0-2 0M77.46 -45.3a1 1 0 1 0 2 0a1 1 0 1 0-2 0M84.14 -30.99a1 1 0 1 0 2 0a1 1 0 1 0-2 0M88.22 -15.73a1 1 0 1 0 2 0a1 1 0 1 0-2 0M89.6 -0a1 1 0 1 0 2 0a1 1 0 1 0-2 0M88.22 15.73a1 1 0 1 0 2 0a1 1 0 1 0-2 0M84.14 30.99a1 1 0 1 0 2 0a1 1 0 1 0-2 0M77.46 45.3a1 1 0 1 0 2 0a1 1 0 1 0-2 0M68.4 58.24a1 1 0 1 0 2 0a1 1 0 1 0-2 0M57.24 69.4a1 1 0 1 0 2 0a1 1 0 1 0-2 0M44.3 78.46a1 1 0 1 0 2 0a1 1 0 1 0-2 0M29.99 85.14a1 1 0 1 0 2 0a1 1 0 1 0-2 0M14.73 89.22a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-1 90.6a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-16.73 89.22a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-31.99 85.14a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-46.3 78.46a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-59.24 69.4a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-70.4 58.24a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-79.46 45.3a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-86.14 30.99a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-90.22 15.73a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-91.6 0a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-90.22 -15.73a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-86.14 -30.99a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-79.46 -45.3a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-70.4 -58.24a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-59.24 -69.4a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-46.3 -78.46a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-31.99 -85.14a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-16.73 -89.22a1 1 0 1 0 2 0a1 1 0 1 0-2 0"/><circle r="87.5" class="ps" stroke-width=".8"/></g><g class="ring ring-b"><path class="pc" d="M0 -71Q-12.23 -77.24 0 -85.5Q12.23 -77.24 0 -71ZM35.5 -61.49Q28.02 -73.01 42.75 -74.05Q49.21 -60.77 35.5 -61.49ZM61.49 -35.5Q60.77 -49.21 74.05 -42.75Q73.01 -28.02 61.49 -35.5ZM71 -0Q77.24 -12.23 85.5 -0Q77.24 12.23 71 -0ZM61.49 35.5Q73.01 28.02 74.05 42.75Q60.77 49.21 61.49 35.5ZM35.5 61.49Q49.21 60.77 42.75 74.05Q28.02 73.01 35.5 61.49ZM0 71Q12.23 77.24 0 85.5Q-12.23 77.24 0 71ZM-35.5 61.49Q-28.02 73.01 -42.75 74.05Q-49.21 60.77 -35.5 61.49ZM-61.49 35.5Q-60.77 49.21 -74.05 42.75Q-73.01 28.02 -61.49 35.5ZM-71 0Q-77.24 12.23 -85.5 0Q-77.24 -12.23 -71 0ZM-61.49 -35.5Q-73.01 -28.02 -74.05 -42.75Q-60.77 -49.21 -61.49 -35.5ZM-35.5 -61.49Q-49.21 -60.77 -42.75 -74.05Q-28.02 -73.01 -35.5 -61.49Z"/><path class="ps ps-g" stroke-width=".9" d="M0 -73.5L0 -83M36.75 -63.65L41.5 -71.88M63.65 -36.75L71.88 -41.5M73.5 -0L83 -0M63.65 36.75L71.88 41.5M36.75 63.65L41.5 71.88M0 73.5L0 83M-36.75 63.65L-41.5 71.88M-63.65 36.75L-71.88 41.5M-73.5 0L-83 0M-63.65 -36.75L-71.88 -41.5M-36.75 -63.65L-41.5 -71.88"/><path class="pc" d="M21.35 -79.69L23.68 -74.63L19.15 -71.48L16.81 -76.47ZM58.34 -58.34L57.82 -52.8L52.33 -52.33L52.8 -57.82ZM79.69 -21.35L76.47 -16.81L71.48 -19.15L74.63 -23.68ZM79.69 21.35L74.63 23.68L71.48 19.15L76.47 16.81ZM58.34 58.34L52.8 57.82L52.33 52.33L57.82 52.8ZM21.35 79.69L16.81 76.47L19.15 71.48L23.68 74.63ZM-21.35 79.69L-23.68 74.63L-19.15 71.48L-16.81 76.47ZM-58.34 58.34L-57.82 52.8L-52.33 52.33L-52.8 57.82ZM-79.69 21.35L-76.47 16.81L-71.48 19.15L-74.63 23.68ZM-79.69 -21.35L-74.63 -23.68L-71.48 -19.15L-76.47 -16.81ZM-58.34 -58.34L-52.8 -57.82L-52.33 -52.33L-57.82 -52.8ZM-21.35 -79.69L-16.81 -76.47L-19.15 -71.48L-23.68 -74.63Z"/><circle r="69.5" class="ps" stroke-width=".8"/></g><g class="ring ring-c"><path class="ps" stroke-width="1.25" d="M0 -64.3L1.43 -65.47L2.9 -66.43L4.39 -67.02L5.87 -67.14L7.31 -66.76L8.68 -65.92L9.96 -64.72L11.17 -63.32L12.31 -61.9L13.44 -60.64L14.6 -59.68L15.84 -59.11L17.19 -58.98L18.68 -59.23L20.29 -59.76L21.99 -60.42L23.73 -61.03L25.45 -61.43L27.05 -61.48L28.48 -61.09L29.71 -60.24L30.7 -58.98L31.5 -57.41L32.15 -55.69L32.74 -53.96L33.37 -52.38L34.13 -51.08L35.1 -50.13L36.33 -49.54L37.81 -49.27L39.5 -49.22L41.33 -49.26L43.18 -49.24L44.92 -49.02L46.44 -48.52L47.66 -47.66L48.52 -46.44L49.02 -44.92L49.24 -43.18L49.26 -41.33L49.22 -39.5L49.27 -37.81L49.54 -36.33L50.13 -35.1L51.08 -34.13L52.38 -33.37L53.96 -32.74L55.69 -32.15L57.41 -31.5L58.98 -30.7L60.24 -29.71L61.09 -28.48L61.48 -27.05L61.43 -25.45L61.03 -23.73L60.42 -21.99L59.76 -20.29L59.23 -18.68L58.98 -17.19L59.11 -15.84L59.68 -14.6L60.64 -13.44L61.9 -12.31L63.32 -11.17L64.72 -9.96L65.92 -8.68L66.76 -7.31L67.14 -5.87L67.02 -4.39L66.43 -2.9L65.47 -1.43L64.3 -0L63.1 1.38L62.05 2.71L61.3 4.02L60.97 5.33L61.07 6.69L61.58 8.11L62.38 9.6L63.32 11.17L64.23 12.78L64.92 14.39L65.24 15.96L65.1 17.44L64.48 18.79L63.41 19.99L62.01 21.05L60.42 21.99L58.82 22.87L57.38 23.77L56.23 24.74L55.47 25.86L55.1 27.17L55.09 28.68L55.33 30.36L55.69 32.15L55.99 33.97L56.08 35.73L55.84 37.31L55.21 38.66L54.16 39.71L52.75 40.48L51.07 40.99L49.26 41.33L47.45 41.61L45.79 41.96L44.38 42.48L43.27 43.27L42.48 44.38L41.96 45.79L41.61 47.45L41.33 49.26L40.99 51.07L40.48 52.75L39.71 54.16L38.66 55.21L37.31 55.84L35.73 56.08L33.97 55.99L32.15 55.69L30.36 55.33L28.68 55.09L27.17 55.1L25.86 55.47L24.74 56.23L23.77 57.38L22.87 58.82L21.99 60.42L21.05 62.01L19.99 63.41L18.79 64.48L17.44 65.1L15.96 65.24L14.39 64.92L12.78 64.23L11.17 63.32L9.6 62.38L8.11 61.58L6.69 61.07L5.33 60.97L4.02 61.3L2.71 62.05L1.38 63.1L0 64.3L-1.43 65.47L-2.9 66.43L-4.39 67.02L-5.87 67.14L-7.31 66.76L-8.68 65.92L-9.96 64.72L-11.17 63.32L-12.31 61.9L-13.44 60.64L-14.6 59.68L-15.84 59.11L-17.19 58.98L-18.68 59.23L-20.29 59.76L-21.99 60.42L-23.73 61.03L-25.45 61.43L-27.05 61.48L-28.48 61.09L-29.71 60.24L-30.7 58.98L-31.5 57.41L-32.15 55.69L-32.74 53.96L-33.37 52.38L-34.13 51.08L-35.1 50.13L-36.33 49.54L-37.81 49.27L-39.5 49.22L-41.33 49.26L-43.18 49.24L-44.92 49.02L-46.44 48.52L-47.66 47.66L-48.52 46.44L-49.02 44.92L-49.24 43.18L-49.26 41.33L-49.22 39.5L-49.27 37.81L-49.54 36.33L-50.13 35.1L-51.08 34.13L-52.38 33.37L-53.96 32.74L-55.69 32.15L-57.41 31.5L-58.98 30.7L-60.24 29.71L-61.09 28.48L-61.48 27.05L-61.43 25.45L-61.03 23.73L-60.42 21.99L-59.76 20.29L-59.23 18.68L-58.98 17.19L-59.11 15.84L-59.68 14.6L-60.64 13.44L-61.9 12.31L-63.32 11.17L-64.72 9.96L-65.92 8.68L-66.76 7.31L-67.14 5.87L-67.02 4.39L-66.43 2.9L-65.47 1.43L-64.3 0L-63.1 -1.38L-62.05 -2.71L-61.3 -4.02L-60.97 -5.33L-61.07 -6.69L-61.58 -8.11L-62.38 -9.6L-63.32 -11.17L-64.23 -12.78L-64.92 -14.39L-65.24 -15.96L-65.1 -17.44L-64.48 -18.79L-63.41 -19.99L-62.01 -21.05L-60.42 -21.99L-58.82 -22.87L-57.38 -23.77L-56.23 -24.74L-55.47 -25.86L-55.1 -27.17L-55.09 -28.68L-55.33 -30.36L-55.69 -32.15L-55.99 -33.97L-56.08 -35.73L-55.84 -37.31L-55.21 -38.66L-54.16 -39.71L-52.75 -40.48L-51.07 -40.99L-49.26 -41.33L-47.45 -41.61L-45.79 -41.96L-44.38 -42.48L-43.27 -43.27L-42.48 -44.38L-41.96 -45.79L-41.61 -47.45L-41.33 -49.26L-40.99 -51.07L-40.48 -52.75L-39.71 -54.16L-38.66 -55.21L-37.31 -55.84L-35.73 -56.08L-33.97 -55.99L-32.15 -55.69L-30.36 -55.33L-28.68 -55.09L-27.17 -55.1L-25.86 -55.47L-24.74 -56.23L-23.77 -57.38L-22.87 -58.82L-21.99 -60.42L-21.05 -62.01L-19.99 -63.41L-18.79 -64.48L-17.44 -65.1L-15.96 -65.24L-14.39 -64.92L-12.78 -64.23L-11.17 -63.32L-9.6 -62.38L-8.11 -61.58L-6.69 -61.07L-5.33 -60.97L-4.02 -61.3L-2.71 -62.05L-1.38 -63.1L-0 -64.3Z"/><path class="ps" stroke-width="1.25" d="M0 -64.3L1.38 -63.1L2.71 -62.05L4.02 -61.3L5.33 -60.97L6.69 -61.07L8.11 -61.58L9.6 -62.38L11.17 -63.32L12.78 -64.23L14.39 -64.92L15.96 -65.24L17.44 -65.1L18.79 -64.48L19.99 -63.41L21.05 -62.01L21.99 -60.42L22.87 -58.82L23.77 -57.38L24.74 -56.23L25.86 -55.47L27.17 -55.1L28.68 -55.09L30.36 -55.33L32.15 -55.69L33.97 -55.99L35.73 -56.08L37.31 -55.84L38.66 -55.21L39.71 -54.16L40.48 -52.75L40.99 -51.07L41.33 -49.26L41.61 -47.45L41.96 -45.79L42.48 -44.38L43.27 -43.27L44.38 -42.48L45.79 -41.96L47.45 -41.61L49.26 -41.33L51.07 -40.99L52.75 -40.48L54.16 -39.71L55.21 -38.66L55.84 -37.31L56.08 -35.73L55.99 -33.97L55.69 -32.15L55.33 -30.36L55.09 -28.68L55.1 -27.17L55.47 -25.86L56.23 -24.74L57.38 -23.77L58.82 -22.87L60.42 -21.99L62.01 -21.05L63.41 -19.99L64.48 -18.79L65.1 -17.44L65.24 -15.96L64.92 -14.39L64.23 -12.78L63.32 -11.17L62.38 -9.6L61.58 -8.11L61.07 -6.69L60.97 -5.33L61.3 -4.02L62.05 -2.71L63.1 -1.38L64.3 -0L65.47 1.43L66.43 2.9L67.02 4.39L67.14 5.87L66.76 7.31L65.92 8.68L64.72 9.96L63.32 11.17L61.9 12.31L60.64 13.44L59.68 14.6L59.11 15.84L58.98 17.19L59.23 18.68L59.76 20.29L60.42 21.99L61.03 23.73L61.43 25.45L61.48 27.05L61.09 28.48L60.24 29.71L58.98 30.7L57.41 31.5L55.69 32.15L53.96 32.74L52.38 33.37L51.08 34.13L50.13 35.1L49.54 36.33L49.27 37.81L49.22 39.5L49.26 41.33L49.24 43.18L49.02 44.92L48.52 46.44L47.66 47.66L46.44 48.52L44.92 49.02L43.18 49.24L41.33 49.26L39.5 49.22L37.81 49.27L36.33 49.54L35.1 50.13L34.13 51.08L33.37 52.38L32.74 53.96L32.15 55.69L31.5 57.41L30.7 58.98L29.71 60.24L28.48 61.09L27.05 61.48L25.45 61.43L23.73 61.03L21.99 60.42L20.29 59.76L18.68 59.23L17.19 58.98L15.84 59.11L14.6 59.68L13.44 60.64L12.31 61.9L11.17 63.32L9.96 64.72L8.68 65.92L7.31 66.76L5.87 67.14L4.39 67.02L2.9 66.43L1.43 65.47L0 64.3L-1.38 63.1L-2.71 62.05L-4.02 61.3L-5.33 60.97L-6.69 61.07L-8.11 61.58L-9.6 62.38L-11.17 63.32L-12.78 64.23L-14.39 64.92L-15.96 65.24L-17.44 65.1L-18.79 64.48L-19.99 63.41L-21.05 62.01L-21.99 60.42L-22.87 58.82L-23.77 57.38L-24.74 56.23L-25.86 55.47L-27.17 55.1L-28.68 55.09L-30.36 55.33L-32.15 55.69L-33.97 55.99L-35.73 56.08L-37.31 55.84L-38.66 55.21L-39.71 54.16L-40.48 52.75L-40.99 51.07L-41.33 49.26L-41.61 47.45L-41.96 45.79L-42.48 44.38L-43.27 43.27L-44.38 42.48L-45.79 41.96L-47.45 41.61L-49.26 41.33L-51.07 40.99L-52.75 40.48L-54.16 39.71L-55.21 38.66L-55.84 37.31L-56.08 35.73L-55.99 33.97L-55.69 32.15L-55.33 30.36L-55.09 28.68L-55.1 27.17L-55.47 25.86L-56.23 24.74L-57.38 23.77L-58.82 22.87L-60.42 21.99L-62.01 21.05L-63.41 19.99L-64.48 18.79L-65.1 17.44L-65.24 15.96L-64.92 14.39L-64.23 12.78L-63.32 11.17L-62.38 9.6L-61.58 8.11L-61.07 6.69L-60.97 5.33L-61.3 4.02L-62.05 2.71L-63.1 1.38L-64.3 0L-65.47 -1.43L-66.43 -2.9L-67.02 -4.39L-67.14 -5.87L-66.76 -7.31L-65.92 -8.68L-64.72 -9.96L-63.32 -11.17L-61.9 -12.31L-60.64 -13.44L-59.68 -14.6L-59.11 -15.84L-58.98 -17.19L-59.23 -18.68L-59.76 -20.29L-60.42 -21.99L-61.03 -23.73L-61.43 -25.45L-61.48 -27.05L-61.09 -28.48L-60.24 -29.71L-58.98 -30.7L-57.41 -31.5L-55.69 -32.15L-53.96 -32.74L-52.38 -33.37L-51.08 -34.13L-50.13 -35.1L-49.54 -36.33L-49.27 -37.81L-49.22 -39.5L-49.26 -41.33L-49.24 -43.18L-49.02 -44.92L-48.52 -46.44L-47.66 -47.66L-46.44 -48.52L-44.92 -49.02L-43.18 -49.24L-41.33 -49.26L-39.5 -49.22L-37.81 -49.27L-36.33 -49.54L-35.1 -50.13L-34.13 -51.08L-33.37 -52.38L-32.74 -53.96L-32.15 -55.69L-31.5 -57.41L-30.7 -58.98L-29.71 -60.24L-28.48 -61.09L-27.05 -61.48L-25.45 -61.43L-23.73 -61.03L-21.99 -60.42L-20.29 -59.76L-18.68 -59.23L-17.19 -58.98L-15.84 -59.11L-14.6 -59.68L-13.44 -60.64L-12.31 -61.9L-11.17 -63.32L-9.96 -64.72L-8.68 -65.92L-7.31 -66.76L-5.87 -67.14L-4.39 -67.02L-2.9 -66.43L-1.43 -65.47L-0 -64.3Z"/><circle r="60.6" class="ps" stroke-width="2.2"/><circle r="58.2" class="ps" stroke-width=".7"/></g></symbol>
+  <symbol id="wa" viewBox="0 0 24 24"><path fill="currentColor" d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Zm5.8 14.03c-.24.68-1.42 1.3-1.95 1.35-.5.05-.97.23-3.26-.68-2.75-1.08-4.5-3.9-4.63-4.08-.13-.18-1.1-1.47-1.1-2.8 0-1.34.7-2 .95-2.27.24-.27.53-.34.71-.34h.51c.16 0 .39-.06.6.46.24.56.8 1.93.87 2.07.07.14.11.3.02.48-.09.18-.14.3-.27.46-.14.16-.29.36-.41.48-.14.13-.28.28-.12.55.16.27.71 1.17 1.52 1.9 1.05.93 1.93 1.22 2.2 1.36.27.13.43.11.59-.07.16-.18.68-.8.86-1.07.18-.27.36-.23.61-.14.25.09 1.58.75 1.85.88.27.14.45.2.52.32.07.11.07.66-.17 1.33Z"/></symbol>
+</svg>
+
+<header class="site-head">
+  <div class="wrap nav">
+    <a class="logo" href="#main" aria-label="Lmida, retour en haut"><b>Lmida</b><span lang="ar" aria-hidden="true">الميدة</span></a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#repas">Le repas</a>
+      <a href="#carte">La carte</a>
+      <a href="#vendredi">Vendredi</a>
+      <a href="#horaires">Horaires</a>
+    </nav>
+    <a class="btn btn-brass" href="#reserver">Réserver</a>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-media">
+      <img class="hero-img"
+        src="https://images.unsplash.com/photo-1661083098412-054431ab7112?w=1600&q=75&auto=format&fit=crop"
+        srcset="https://images.unsplash.com/photo-1661083098412-054431ab7112?w=900&q=75&auto=format&fit=crop 900w,
+                https://images.unsplash.com/photo-1661083098412-054431ab7112?w=1600&q=75&auto=format&fit=crop 1600w,
+                https://images.unsplash.com/photo-1661083098412-054431ab7112?w=2000&q=75&auto=format&fit=crop 2000w"
+        sizes="100vw" width="2000" height="1333" fetchpriority="high"
+        alt="Des mains se servent dans un tagine d'agneau aux pruneaux, posé au milieu de la table">
+    </div>
+    <div class="wrap hero-in">
+      <div class="hero-title">
+        <h1 id="hero-title">Lmida</h1>
+        <span class="hero-ar" lang="ar">الميدة</span>
+      </div>
+      <p class="hero-sub">Cuisine de famille, à deux pas de Bab Boujloud</p>
+      <p class="lead">À Fès, la lmida est la table basse et ronde où toute la maison mange dans le même plat. Cheffe Salma y sert chaque soir les recettes de sa grand-mère, revues avec les produits du marché.</p>
+      <div class="ctas">
+        <a class="btn btn-brass" href="#reserver">Réserver une table</a>
+        <a class="link" href="#carte">Voir la carte</a>
+      </div>
+      <p class="status" data-status aria-live="polite"><span class="dot" aria-hidden="true"></span><span class="status-txt">Dîner du mardi au dimanche, couscous le vendredi midi</span></p>
+    </div>
+    <svg class="plate plate-hero" viewBox="-100 -100 200 200" aria-hidden="true" focusable="false"><g class="ring ring-a"><circle r="99" class="pg pk"/><circle r="95.5" class="ps" stroke-width="1"/><path class="pc" d="M0 -95.5L7.76 -88.66L16.58 -94.05ZM16.58 -94.05L23.03 -85.97L32.66 -89.74ZM32.66 -89.74L37.61 -80.66L47.75 -82.71ZM47.75 -82.71L51.05 -72.9L61.39 -73.16ZM61.39 -73.16L62.93 -62.93L73.16 -61.39ZM73.16 -61.39L72.9 -51.05L82.71 -47.75ZM82.71 -47.75L80.66 -37.61L89.74 -32.66ZM89.74 -32.66L85.97 -23.03L94.05 -16.58ZM94.05 -16.58L88.66 -7.76L95.5 -0ZM95.5 -0L88.66 7.76L94.05 16.58ZM94.05 16.58L85.97 23.03L89.74 32.66ZM89.74 32.66L80.66 37.61L82.71 47.75ZM82.71 47.75L72.9 51.05L73.16 61.39ZM73.16 61.39L62.93 62.93L61.39 73.16ZM61.39 73.16L51.05 72.9L47.75 82.71ZM47.75 82.71L37.61 80.66L32.66 89.74ZM32.66 89.74L23.03 85.97L16.58 94.05ZM16.58 94.05L7.76 88.66L0 95.5ZM0 95.5L-7.76 88.66L-16.58 94.05ZM-16.58 94.05L-23.03 85.97L-32.66 89.74ZM-32.66 89.74L-37.61 80.66L-47.75 82.71ZM-47.75 82.71L-51.05 72.9L-61.39 73.16ZM-61.39 73.16L-62.93 62.93L-73.16 61.39ZM-73.16 61.39L-72.9 51.05L-82.71 47.75ZM-82.71 47.75L-80.66 37.61L-89.74 32.66ZM-89.74 32.66L-85.97 23.03L-94.05 16.58ZM-94.05 16.58L-88.66 7.76L-95.5 0ZM-95.5 0L-88.66 -7.76L-94.05 -16.58ZM-94.05 -16.58L-85.97 -23.03L-89.74 -32.66ZM-89.74 -32.66L-80.66 -37.61L-82.71 -47.75ZM-82.71 -47.75L-72.9 -51.05L-73.16 -61.39ZM-73.16 -61.39L-62.93 -62.93L-61.39 -73.16ZM-61.39 -73.16L-51.05 -72.9L-47.75 -82.71ZM-47.75 -82.71L-37.61 -80.66L-32.66 -89.74ZM-32.66 -89.74L-23.03 -85.97L-16.58 -94.05ZM-16.58 -94.05L-7.76 -88.66L-0 -95.5Z"/><path class="pc" d="M-1 -90.6a1 1 0 1 0 2 0a1 1 0 1 0-2 0M14.73 -89.22a1 1 0 1 0 2 0a1 1 0 1 0-2 0M29.99 -85.14a1 1 0 1 0 2 0a1 1 0 1 0-2 0M44.3 -78.46a1 1 0 1 0 2 0a1 1 0 1 0-2 0M57.24 -69.4a1 1 0 1 0 2 0a1 1 0 1 0-2 0M68.4 -58.24a1 1 0 1 0 2 0a1 1 0 1 0-2 0M77.46 -45.3a1 1 0 1 0 2 0a1 1 0 1 0-2 0M84.14 -30.99a1 1 0 1 0 2 0a1 1 0 1 0-2 0M88.22 -15.73a1 1 0 1 0 2 0a1 1 0 1 0-2 0M89.6 -0a1 1 0 1 0 2 0a1 1 0 1 0-2 0M88.22 15.73a1 1 0 1 0 2 0a1 1 0 1 0-2 0M84.14 30.99a1 1 0 1 0 2 0a1 1 0 1 0-2 0M77.46 45.3a1 1 0 1 0 2 0a1 1 0 1 0-2 0M68.4 58.24a1 1 0 1 0 2 0a1 1 0 1 0-2 0M57.24 69.4a1 1 0 1 0 2 0a1 1 0 1 0-2 0M44.3 78.46a1 1 0 1 0 2 0a1 1 0 1 0-2 0M29.99 85.14a1 1 0 1 0 2 0a1 1 0 1 0-2 0M14.73 89.22a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-1 90.6a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-16.73 89.22a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-31.99 85.14a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-46.3 78.46a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-59.24 69.4a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-70.4 58.24a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-79.46 45.3a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-86.14 30.99a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-90.22 15.73a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-91.6 0a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-90.22 -15.73a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-86.14 -30.99a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-79.46 -45.3a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-70.4 -58.24a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-59.24 -69.4a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-46.3 -78.46a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-31.99 -85.14a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-16.73 -89.22a1 1 0 1 0 2 0a1 1 0 1 0-2 0"/><circle r="87.5" class="ps" stroke-width=".8"/></g><g class="ring ring-b"><path class="pc" d="M0 -71Q-12.23 -77.24 0 -85.5Q12.23 -77.24 0 -71ZM35.5 -61.49Q28.02 -73.01 42.75 -74.05Q49.21 -60.77 35.5 -61.49ZM61.49 -35.5Q60.77 -49.21 74.05 -42.75Q73.01 -28.02 61.49 -35.5ZM71 -0Q77.24 -12.23 85.5 -0Q77.24 12.23 71 -0ZM61.49 35.5Q73.01 28.02 74.05 42.75Q60.77 49.21 61.49 35.5ZM35.5 61.49Q49.21 60.77 42.75 74.05Q28.02 73.01 35.5 61.49ZM0 71Q12.23 77.24 0 85.5Q-12.23 77.24 0 71ZM-35.5 61.49Q-28.02 73.01 -42.75 74.05Q-49.21 60.77 -35.5 61.49ZM-61.49 35.5Q-60.77 49.21 -74.05 42.75Q-73.01 28.02 -61.49 35.5ZM-71 0Q-77.24 12.23 -85.5 0Q-77.24 -12.23 -71 0ZM-61.49 -35.5Q-73.01 -28.02 -74.05 -42.75Q-60.77 -49.21 -61.49 -35.5ZM-35.5 -61.49Q-49.21 -60.77 -42.75 -74.05Q-28.02 -73.01 -35.5 -61.49Z"/><path class="ps ps-g" stroke-width=".9" d="M0 -73.5L0 -83M36.75 -63.65L41.5 -71.88M63.65 -36.75L71.88 -41.5M73.5 -0L83 -0M63.65 36.75L71.88 41.5M36.75 63.65L41.5 71.88M0 73.5L0 83M-36.75 63.65L-41.5 71.88M-63.65 36.75L-71.88 41.5M-73.5 0L-83 0M-63.65 -36.75L-71.88 -41.5M-36.75 -63.65L-41.5 -71.88"/><path class="pc" d="M21.35 -79.69L23.68 -74.63L19.15 -71.48L16.81 -76.47ZM58.34 -58.34L57.82 -52.8L52.33 -52.33L52.8 -57.82ZM79.69 -21.35L76.47 -16.81L71.48 -19.15L74.63 -23.68ZM79.69 21.35L74.63 23.68L71.48 19.15L76.47 16.81ZM58.34 58.34L52.8 57.82L52.33 52.33L57.82 52.8ZM21.35 79.69L16.81 76.47L19.15 71.48L23.68 74.63ZM-21.35 79.69L-23.68 74.63L-19.15 71.48L-16.81 76.47ZM-58.34 58.34L-57.82 52.8L-52.33 52.33L-52.8 57.82ZM-79.69 21.35L-76.47 16.81L-71.48 19.15L-74.63 23.68ZM-79.69 -21.35L-74.63 -23.68L-71.48 -19.15L-76.47 -16.81ZM-58.34 -58.34L-52.8 -57.82L-52.33 -52.33L-57.82 -52.8ZM-21.35 -79.69L-16.81 -76.47L-19.15 -71.48L-23.68 -74.63Z"/><circle r="69.5" class="ps" stroke-width=".8"/></g><g class="ring ring-c"><path class="ps" stroke-width="1.25" d="M0 -64.3L1.43 -65.47L2.9 -66.43L4.39 -67.02L5.87 -67.14L7.31 -66.76L8.68 -65.92L9.96 -64.72L11.17 -63.32L12.31 -61.9L13.44 -60.64L14.6 -59.68L15.84 -59.11L17.19 -58.98L18.68 -59.23L20.29 -59.76L21.99 -60.42L23.73 -61.03L25.45 -61.43L27.05 -61.48L28.48 -61.09L29.71 -60.24L30.7 -58.98L31.5 -57.41L32.15 -55.69L32.74 -53.96L33.37 -52.38L34.13 -51.08L35.1 -50.13L36.33 -49.54L37.81 -49.27L39.5 -49.22L41.33 -49.26L43.18 -49.24L44.92 -49.02L46.44 -48.52L47.66 -47.66L48.52 -46.44L49.02 -44.92L49.24 -43.18L49.26 -41.33L49.22 -39.5L49.27 -37.81L49.54 -36.33L50.13 -35.1L51.08 -34.13L52.38 -33.37L53.96 -32.74L55.69 -32.15L57.41 -31.5L58.98 -30.7L60.24 -29.71L61.09 -28.48L61.48 -27.05L61.43 -25.45L61.03 -23.73L60.42 -21.99L59.76 -20.29L59.23 -18.68L58.98 -17.19L59.11 -15.84L59.68 -14.6L60.64 -13.44L61.9 -12.31L63.32 -11.17L64.72 -9.96L65.92 -8.68L66.76 -7.31L67.14 -5.87L67.02 -4.39L66.43 -2.9L65.47 -1.43L64.3 -0L63.1 1.38L62.05 2.71L61.3 4.02L60.97 5.33L61.07 6.69L61.58 8.11L62.38 9.6L63.32 11.17L64.23 12.78L64.92 14.39L65.24 15.96L65.1 17.44L64.48 18.79L63.41 19.99L62.01 21.05L60.42 21.99L58.82 22.87L57.38 23.77L56.23 24.74L55.47 25.86L55.1 27.17L55.09 28.68L55.33 30.36L55.69 32.15L55.99 33.97L56.08 35.73L55.84 37.31L55.21 38.66L54.16 39.71L52.75 40.48L51.07 40.99L49.26 41.33L47.45 41.61L45.79 41.96L44.38 42.48L43.27 43.27L42.48 44.38L41.96 45.79L41.61 47.45L41.33 49.26L40.99 51.07L40.48 52.75L39.71 54.16L38.66 55.21L37.31 55.84L35.73 56.08L33.97 55.99L32.15 55.69L30.36 55.33L28.68 55.09L27.17 55.1L25.86 55.47L24.74 56.23L23.77 57.38L22.87 58.82L21.99 60.42L21.05 62.01L19.99 63.41L18.79 64.48L17.44 65.1L15.96 65.24L14.39 64.92L12.78 64.23L11.17 63.32L9.6 62.38L8.11 61.58L6.69 61.07L5.33 60.97L4.02 61.3L2.71 62.05L1.38 63.1L0 64.3L-1.43 65.47L-2.9 66.43L-4.39 67.02L-5.87 67.14L-7.31 66.76L-8.68 65.92L-9.96 64.72L-11.17 63.32L-12.31 61.9L-13.44 60.64L-14.6 59.68L-15.84 59.11L-17.19 58.98L-18.68 59.23L-20.29 59.76L-21.99 60.42L-23.73 61.03L-25.45 61.43L-27.05 61.48L-28.48 61.09L-29.71 60.24L-30.7 58.98L-31.5 57.41L-32.15 55.69L-32.74 53.96L-33.37 52.38L-34.13 51.08L-35.1 50.13L-36.33 49.54L-37.81 49.27L-39.5 49.22L-41.33 49.26L-43.18 49.24L-44.92 49.02L-46.44 48.52L-47.66 47.66L-48.52 46.44L-49.02 44.92L-49.24 43.18L-49.26 41.33L-49.22 39.5L-49.27 37.81L-49.54 36.33L-50.13 35.1L-51.08 34.13L-52.38 33.37L-53.96 32.74L-55.69 32.15L-57.41 31.5L-58.98 30.7L-60.24 29.71L-61.09 28.48L-61.48 27.05L-61.43 25.45L-61.03 23.73L-60.42 21.99L-59.76 20.29L-59.23 18.68L-58.98 17.19L-59.11 15.84L-59.68 14.6L-60.64 13.44L-61.9 12.31L-63.32 11.17L-64.72 9.96L-65.92 8.68L-66.76 7.31L-67.14 5.87L-67.02 4.39L-66.43 2.9L-65.47 1.43L-64.3 0L-63.1 -1.38L-62.05 -2.71L-61.3 -4.02L-60.97 -5.33L-61.07 -6.69L-61.58 -8.11L-62.38 -9.6L-63.32 -11.17L-64.23 -12.78L-64.92 -14.39L-65.24 -15.96L-65.1 -17.44L-64.48 -18.79L-63.41 -19.99L-62.01 -21.05L-60.42 -21.99L-58.82 -22.87L-57.38 -23.77L-56.23 -24.74L-55.47 -25.86L-55.1 -27.17L-55.09 -28.68L-55.33 -30.36L-55.69 -32.15L-55.99 -33.97L-56.08 -35.73L-55.84 -37.31L-55.21 -38.66L-54.16 -39.71L-52.75 -40.48L-51.07 -40.99L-49.26 -41.33L-47.45 -41.61L-45.79 -41.96L-44.38 -42.48L-43.27 -43.27L-42.48 -44.38L-41.96 -45.79L-41.61 -47.45L-41.33 -49.26L-40.99 -51.07L-40.48 -52.75L-39.71 -54.16L-38.66 -55.21L-37.31 -55.84L-35.73 -56.08L-33.97 -55.99L-32.15 -55.69L-30.36 -55.33L-28.68 -55.09L-27.17 -55.1L-25.86 -55.47L-24.74 -56.23L-23.77 -57.38L-22.87 -58.82L-21.99 -60.42L-21.05 -62.01L-19.99 -63.41L-18.79 -64.48L-17.44 -65.1L-15.96 -65.24L-14.39 -64.92L-12.78 -64.23L-11.17 -63.32L-9.6 -62.38L-8.11 -61.58L-6.69 -61.07L-5.33 -60.97L-4.02 -61.3L-2.71 -62.05L-1.38 -63.1L-0 -64.3Z"/><path class="ps" stroke-width="1.25" d="M0 -64.3L1.38 -63.1L2.71 -62.05L4.02 -61.3L5.33 -60.97L6.69 -61.07L8.11 -61.58L9.6 -62.38L11.17 -63.32L12.78 -64.23L14.39 -64.92L15.96 -65.24L17.44 -65.1L18.79 -64.48L19.99 -63.41L21.05 -62.01L21.99 -60.42L22.87 -58.82L23.77 -57.38L24.74 -56.23L25.86 -55.47L27.17 -55.1L28.68 -55.09L30.36 -55.33L32.15 -55.69L33.97 -55.99L35.73 -56.08L37.31 -55.84L38.66 -55.21L39.71 -54.16L40.48 -52.75L40.99 -51.07L41.33 -49.26L41.61 -47.45L41.96 -45.79L42.48 -44.38L43.27 -43.27L44.38 -42.48L45.79 -41.96L47.45 -41.61L49.26 -41.33L51.07 -40.99L52.75 -40.48L54.16 -39.71L55.21 -38.66L55.84 -37.31L56.08 -35.73L55.99 -33.97L55.69 -32.15L55.33 -30.36L55.09 -28.68L55.1 -27.17L55.47 -25.86L56.23 -24.74L57.38 -23.77L58.82 -22.87L60.42 -21.99L62.01 -21.05L63.41 -19.99L64.48 -18.79L65.1 -17.44L65.24 -15.96L64.92 -14.39L64.23 -12.78L63.32 -11.17L62.38 -9.6L61.58 -8.11L61.07 -6.69L60.97 -5.33L61.3 -4.02L62.05 -2.71L63.1 -1.38L64.3 -0L65.47 1.43L66.43 2.9L67.02 4.39L67.14 5.87L66.76 7.31L65.92 8.68L64.72 9.96L63.32 11.17L61.9 12.31L60.64 13.44L59.68 14.6L59.11 15.84L58.98 17.19L59.23 18.68L59.76 20.29L60.42 21.99L61.03 23.73L61.43 25.45L61.48 27.05L61.09 28.48L60.24 29.71L58.98 30.7L57.41 31.5L55.69 32.15L53.96 32.74L52.38 33.37L51.08 34.13L50.13 35.1L49.54 36.33L49.27 37.81L49.22 39.5L49.26 41.33L49.24 43.18L49.02 44.92L48.52 46.44L47.66 47.66L46.44 48.52L44.92 49.02L43.18 49.24L41.33 49.26L39.5 49.22L37.81 49.27L36.33 49.54L35.1 50.13L34.13 51.08L33.37 52.38L32.74 53.96L32.15 55.69L31.5 57.41L30.7 58.98L29.71 60.24L28.48 61.09L27.05 61.48L25.45 61.43L23.73 61.03L21.99 60.42L20.29 59.76L18.68 59.23L17.19 58.98L15.84 59.11L14.6 59.68L13.44 60.64L12.31 61.9L11.17 63.32L9.96 64.72L8.68 65.92L7.31 66.76L5.87 67.14L4.39 67.02L2.9 66.43L1.43 65.47L0 64.3L-1.38 63.1L-2.71 62.05L-4.02 61.3L-5.33 60.97L-6.69 61.07L-8.11 61.58L-9.6 62.38L-11.17 63.32L-12.78 64.23L-14.39 64.92L-15.96 65.24L-17.44 65.1L-18.79 64.48L-19.99 63.41L-21.05 62.01L-21.99 60.42L-22.87 58.82L-23.77 57.38L-24.74 56.23L-25.86 55.47L-27.17 55.1L-28.68 55.09L-30.36 55.33L-32.15 55.69L-33.97 55.99L-35.73 56.08L-37.31 55.84L-38.66 55.21L-39.71 54.16L-40.48 52.75L-40.99 51.07L-41.33 49.26L-41.61 47.45L-41.96 45.79L-42.48 44.38L-43.27 43.27L-44.38 42.48L-45.79 41.96L-47.45 41.61L-49.26 41.33L-51.07 40.99L-52.75 40.48L-54.16 39.71L-55.21 38.66L-55.84 37.31L-56.08 35.73L-55.99 33.97L-55.69 32.15L-55.33 30.36L-55.09 28.68L-55.1 27.17L-55.47 25.86L-56.23 24.74L-57.38 23.77L-58.82 22.87L-60.42 21.99L-62.01 21.05L-63.41 19.99L-64.48 18.79L-65.1 17.44L-65.24 15.96L-64.92 14.39L-64.23 12.78L-63.32 11.17L-62.38 9.6L-61.58 8.11L-61.07 6.69L-60.97 5.33L-61.3 4.02L-62.05 2.71L-63.1 1.38L-64.3 0L-65.47 -1.43L-66.43 -2.9L-67.02 -4.39L-67.14 -5.87L-66.76 -7.31L-65.92 -8.68L-64.72 -9.96L-63.32 -11.17L-61.9 -12.31L-60.64 -13.44L-59.68 -14.6L-59.11 -15.84L-58.98 -17.19L-59.23 -18.68L-59.76 -20.29L-60.42 -21.99L-61.03 -23.73L-61.43 -25.45L-61.48 -27.05L-61.09 -28.48L-60.24 -29.71L-58.98 -30.7L-57.41 -31.5L-55.69 -32.15L-53.96 -32.74L-52.38 -33.37L-51.08 -34.13L-50.13 -35.1L-49.54 -36.33L-49.27 -37.81L-49.22 -39.5L-49.26 -41.33L-49.24 -43.18L-49.02 -44.92L-48.52 -46.44L-47.66 -47.66L-46.44 -48.52L-44.92 -49.02L-43.18 -49.24L-41.33 -49.26L-39.5 -49.22L-37.81 -49.27L-36.33 -49.54L-35.1 -50.13L-34.13 -51.08L-33.37 -52.38L-32.74 -53.96L-32.15 -55.69L-31.5 -57.41L-30.7 -58.98L-29.71 -60.24L-28.48 -61.09L-27.05 -61.48L-25.45 -61.43L-23.73 -61.03L-21.99 -60.42L-20.29 -59.76L-18.68 -59.23L-17.19 -58.98L-15.84 -59.11L-14.6 -59.68L-13.44 -60.64L-12.31 -61.9L-11.17 -63.32L-9.96 -64.72L-8.68 -65.92L-7.31 -66.76L-5.87 -67.14L-4.39 -67.02L-2.9 -66.43L-1.43 -65.47L-0 -64.3Z"/><circle r="60.6" class="ps" stroke-width="2.2"/><circle r="58.2" class="ps" stroke-width=".7"/></g><g class="ring ring-d"><path class="pc" d="M0 -52L15.12 -36.51L36.77 -36.77L36.51 -15.12L52 -0L36.51 15.12L36.77 36.77L15.12 36.51L0 52L-15.12 36.51L-36.77 36.77L-36.51 15.12L-52 0L-36.51 -15.12L-36.77 -36.77L-15.12 -36.51Z"/><path class="pg" d="M0 -36L10.47 -25.28L25.46 -25.46L25.28 -10.47L36 -0L25.28 10.47L25.46 25.46L10.47 25.28L0 36L-10.47 25.28L-25.46 25.46L-25.28 10.47L-36 0L-25.28 -10.47L-25.46 -25.46L-10.47 -25.28Z"/><path class="pc" d="M4.59 -11.09Q4.39 -21.56 11.86 -28.64Q12.14 -18.35 4.59 -11.09ZM11.09 -4.59Q18.35 -12.14 28.64 -11.86Q21.56 -4.39 11.09 -4.59ZM11.09 4.59Q21.56 4.39 28.64 11.86Q18.35 12.14 11.09 4.59ZM4.59 11.09Q12.14 18.35 11.86 28.64Q4.39 21.56 4.59 11.09ZM-4.59 11.09Q-4.39 21.56 -11.86 28.64Q-12.14 18.35 -4.59 11.09ZM-11.09 4.59Q-18.35 12.14 -28.64 11.86Q-21.56 4.39 -11.09 4.59ZM-11.09 -4.59Q-21.56 -4.39 -28.64 -11.86Q-18.35 -12.14 -11.09 -4.59ZM-4.59 -11.09Q-12.14 -18.35 -11.86 -28.64Q-4.39 -21.56 -4.59 -11.09Z"/><circle r="10" class="pc"/><circle r="4" class="pg"/></g></svg>
+  </section>
+
+  <section class="story" aria-labelledby="story-title">
+    <div class="wrap story-grid">
+      <div class="story-text">
+        <h2 id="story-title">Une table basse, ronde, et tout le monde autour</h2>
+        <p>Salma a appris à cuisiner à côté de sa grand-mère Fatna, dans une maison de Fès el-Bali où l'on mangeait à douze autour d'une seule lmida.</p>
+        <p>Elle a gardé les recettes et changé la façon de faire : cuissons plus courtes, légumes achetés le matin au marché du R'cif, épices moulues sur place, smen préparé à la maison. Les plats arrivent au centre de la table, et chacun se sert.</p>
+        <dl class="facts">
+          <div><dt>Le soir</dt><dd>Dîner du mardi au dimanche, de 19 h à 23 h 30.</dd></div>
+          <div><dt>Le vendredi</dt><dd>Couscous à midi, comme dans les maisons fassies.</dd></div>
+          <div><dt>La maison</dt><dd>36 couverts sur deux étages et une terrasse sur les toits de la médina.</dd></div>
+        </dl>
+      </div>
+      <div class="story-figs">
+        <figure class="f1">
+          <img loading="lazy" src="https://images.unsplash.com/photo-1734113542343-fc916b32ef17?w=1100&q=75&auto=format&fit=crop" width="1100" height="733" alt="Des mains coupent des légumes frais dans un grand plat en terre cuite">
+          <figcaption>Les légumes du couscous, coupés à la main chaque matin.</figcaption>
+        </figure>
+        <figure class="f2">
+          <img loading="lazy" src="https://images.unsplash.com/photo-1761168955192-d710bf401325?w=800&q=75&auto=format&fit=crop" width="800" height="1200" alt="Des tagines en terre cuite alignés près d'un feu de braises">
+          <figcaption>Les tagines cuisent doucement sur la braise.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="meal dark" id="repas" aria-labelledby="meal-title">
+    <div class="wrap meal-stage">
+      <div class="meal-head">
+        <h2 id="meal-title">Le repas, dans l'ordre</h2>
+        <p>Comme à la maison, les plats arrivent l'un après l'autre. Voici comment se déroule un dîner chez nous.</p>
+      </div>
+
+      <svg class="plate plate-big" viewBox="-100 -100 200 200" aria-hidden="true" focusable="false"><g class="ring ring-a"><circle r="99" class="pg pk"/><circle r="95.5" class="ps" stroke-width="1"/><path class="pc" d="M0 -95.5L7.76 -88.66L16.58 -94.05ZM16.58 -94.05L23.03 -85.97L32.66 -89.74ZM32.66 -89.74L37.61 -80.66L47.75 -82.71ZM47.75 -82.71L51.05 -72.9L61.39 -73.16ZM61.39 -73.16L62.93 -62.93L73.16 -61.39ZM73.16 -61.39L72.9 -51.05L82.71 -47.75ZM82.71 -47.75L80.66 -37.61L89.74 -32.66ZM89.74 -32.66L85.97 -23.03L94.05 -16.58ZM94.05 -16.58L88.66 -7.76L95.5 -0ZM95.5 -0L88.66 7.76L94.05 16.58ZM94.05 16.58L85.97 23.03L89.74 32.66ZM89.74 32.66L80.66 37.61L82.71 47.75ZM82.71 47.75L72.9 51.05L73.16 61.39ZM73.16 61.39L62.93 62.93L61.39 73.16ZM61.39 73.16L51.05 72.9L47.75 82.71ZM47.75 82.71L37.61 80.66L32.66 89.74ZM32.66 89.74L23.03 85.97L16.58 94.05ZM16.58 94.05L7.76 88.66L0 95.5ZM0 95.5L-7.76 88.66L-16.58 94.05ZM-16.58 94.05L-23.03 85.97L-32.66 89.74ZM-32.66 89.74L-37.61 80.66L-47.75 82.71ZM-47.75 82.71L-51.05 72.9L-61.39 73.16ZM-61.39 73.16L-62.93 62.93L-73.16 61.39ZM-73.16 61.39L-72.9 51.05L-82.71 47.75ZM-82.71 47.75L-80.66 37.61L-89.74 32.66ZM-89.74 32.66L-85.97 23.03L-94.05 16.58ZM-94.05 16.58L-88.66 7.76L-95.5 0ZM-95.5 0L-88.66 -7.76L-94.05 -16.58ZM-94.05 -16.58L-85.97 -23.03L-89.74 -32.66ZM-89.74 -32.66L-80.66 -37.61L-82.71 -47.75ZM-82.71 -47.75L-72.9 -51.05L-73.16 -61.39ZM-73.16 -61.39L-62.93 -62.93L-61.39 -73.16ZM-61.39 -73.16L-51.05 -72.9L-47.75 -82.71ZM-47.75 -82.71L-37.61 -80.66L-32.66 -89.74ZM-32.66 -89.74L-23.03 -85.97L-16.58 -94.05ZM-16.58 -94.05L-7.76 -88.66L-0 -95.5Z"/><path class="pc" d="M-1 -90.6a1 1 0 1 0 2 0a1 1 0 1 0-2 0M14.73 -89.22a1 1 0 1 0 2 0a1 1 0 1 0-2 0M29.99 -85.14a1 1 0 1 0 2 0a1 1 0 1 0-2 0M44.3 -78.46a1 1 0 1 0 2 0a1 1 0 1 0-2 0M57.24 -69.4a1 1 0 1 0 2 0a1 1 0 1 0-2 0M68.4 -58.24a1 1 0 1 0 2 0a1 1 0 1 0-2 0M77.46 -45.3a1 1 0 1 0 2 0a1 1 0 1 0-2 0M84.14 -30.99a1 1 0 1 0 2 0a1 1 0 1 0-2 0M88.22 -15.73a1 1 0 1 0 2 0a1 1 0 1 0-2 0M89.6 -0a1 1 0 1 0 2 0a1 1 0 1 0-2 0M88.22 15.73a1 1 0 1 0 2 0a1 1 0 1 0-2 0M84.14 30.99a1 1 0 1 0 2 0a1 1 0 1 0-2 0M77.46 45.3a1 1 0 1 0 2 0a1 1 0 1 0-2 0M68.4 58.24a1 1 0 1 0 2 0a1 1 0 1 0-2 0M57.24 69.4a1 1 0 1 0 2 0a1 1 0 1 0-2 0M44.3 78.46a1 1 0 1 0 2 0a1 1 0 1 0-2 0M29.99 85.14a1 1 0 1 0 2 0a1 1 0 1 0-2 0M14.73 89.22a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-1 90.6a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-16.73 89.22a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-31.99 85.14a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-46.3 78.46a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-59.24 69.4a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-70.4 58.24a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-79.46 45.3a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-86.14 30.99a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-90.22 15.73a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-91.6 0a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-90.22 -15.73a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-86.14 -30.99a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-79.46 -45.3a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-70.4 -58.24a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-59.24 -69.4a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-46.3 -78.46a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-31.99 -85.14a1 1 0 1 0 2 0a1 1 0 1 0-2 0M-16.73 -89.22a1 1 0 1 0 2 0a1 1 0 1 0-2 0"/><circle r="87.5" class="ps" stroke-width=".8"/></g><g class="ring ring-b"><path class="pc" d="M0 -71Q-12.23 -77.24 0 -85.5Q12.23 -77.24 0 -71ZM35.5 -61.49Q28.02 -73.01 42.75 -74.05Q49.21 -60.77 35.5 -61.49ZM61.49 -35.5Q60.77 -49.21 74.05 -42.75Q73.01 -28.02 61.49 -35.5ZM71 -0Q77.24 -12.23 85.5 -0Q77.24 12.23 71 -0ZM61.49 35.5Q73.01 28.02 74.05 42.75Q60.77 49.21 61.49 35.5ZM35.5 61.49Q49.21 60.77 42.75 74.05Q28.02 73.01 35.5 61.49ZM0 71Q12.23 77.24 0 85.5Q-12.23 77.24 0 71ZM-35.5 61.49Q-28.02 73.01 -42.75 74.05Q-49.21 60.77 -35.5 61.49ZM-61.49 35.5Q-60.77 49.21 -74.05 42.75Q-73.01 28.02 -61.49 35.5ZM-71 0Q-77.24 12.23 -85.5 0Q-77.24 -12.23 -71 0ZM-61.49 -35.5Q-73.01 -28.02 -74.05 -42.75Q-60.77 -49.21 -61.49 -35.5ZM-35.5 -61.49Q-49.21 -60.77 -42.75 -74.05Q-28.02 -73.01 -35.5 -61.49Z"/><path class="ps ps-g" stroke-width=".9" d="M0 -73.5L0 -83M36.75 -63.65L41.5 -71.88M63.65 -36.75L71.88 -41.5M73.5 -0L83 -0M63.65 36.75L71.88 41.5M36.75 63.65L41.5 71.88M0 73.5L0 83M-36.75 63.65L-41.5 71.88M-63.65 36.75L-71.88 41.5M-73.5 0L-83 0M-63.65 -36.75L-71.88 -41.5M-36.75 -63.65L-41.5 -71.88"/><path class="pc" d="M21.35 -79.69L23.68 -74.63L19.15 -71.48L16.81 -76.47ZM58.34 -58.34L57.82 -52.8L52.33 -52.33L52.8 -57.82ZM79.69 -21.35L76.47 -16.81L71.48 -19.15L74.63 -23.68ZM79.69 21.35L74.63 23.68L71.48 19.15L76.47 16.81ZM58.34 58.34L52.8 57.82L52.33 52.33L57.82 52.8ZM21.35 79.69L16.81 76.47L19.15 71.48L23.68 74.63ZM-21.35 79.69L-23.68 74.63L-19.15 71.48L-16.81 76.47ZM-58.34 58.34L-57.82 52.8L-52.33 52.33L-52.8 57.82ZM-79.69 21.35L-76.47 16.81L-71.48 19.15L-74.63 23.68ZM-79.69 -21.35L-74.63 -23.68L-71.48 -19.15L-76.47 -16.81ZM-58.34 -58.34L-52.8 -57.82L-52.33 -52.33L-57.82 -52.8ZM-21.35 -79.69L-16.81 -76.47L-19.15 -71.48L-23.68 -74.63Z"/><circle r="69.5" class="ps" stroke-width=".8"/></g><g class="ring ring-c"><path class="ps" stroke-width="1.25" d="M0 -64.3L1.43 -65.47L2.9 -66.43L4.39 -67.02L5.87 -67.14L7.31 -66.76L8.68 -65.92L9.96 -64.72L11.17 -63.32L12.31 -61.9L13.44 -60.64L14.6 -59.68L15.84 -59.11L17.19 -58.98L18.68 -59.23L20.29 -59.76L21.99 -60.42L23.73 -61.03L25.45 -61.43L27.05 -61.48L28.48 -61.09L29.71 -60.24L30.7 -58.98L31.5 -57.41L32.15 -55.69L32.74 -53.96L33.37 -52.38L34.13 -51.08L35.1 -50.13L36.33 -49.54L37.81 -49.27L39.5 -49.22L41.33 -49.26L43.18 -49.24L44.92 -49.02L46.44 -48.52L47.66 -47.66L48.52 -46.44L49.02 -44.92L49.24 -43.18L49.26 -41.33L49.22 -39.5L49.27 -37.81L49.54 -36.33L50.13 -35.1L51.08 -34.13L52.38 -33.37L53.96 -32.74L55.69 -32.15L57.41 -31.5L58.98 -30.7L60.24 -29.71L61.09 -28.48L61.48 -27.05L61.43 -25.45L61.03 -23.73L60.42 -21.99L59.76 -20.29L59.23 -18.68L58.98 -17.19L59.11 -15.84L59.68 -14.6L60.64 -13.44L61.9 -12.31L63.32 -11.17L64.72 -9.96L65.92 -8.68L66.76 -7.31L67.14 -5.87L67.02 -4.39L66.43 -2.9L65.47 -1.43L64.3 -0L63.1 1.38L62.05 2.71L61.3 4.02L60.97 5.33L61.07 6.69L61.58 8.11L62.38 9.6L63.32 11.17L64.23 12.78L64.92 14.39L65.24 15.96L65.1 17.44L64.48 18.79L63.41 19.99L62.01 21.05L60.42 21.99L58.82 22.87L57.38 23.77L56.23 24.74L55.47 25.86L55.1 27.17L55.09 28.68L55.33 30.36L55.69 32.15L55.99 33.97L56.08 35.73L55.84 37.31L55.21 38.66L54.16 39.71L52.75 40.48L51.07 40.99L49.26 41.33L47.45 41.61L45.79 41.96L44.38 42.48L43.27 43.27L42.48 44.38L41.96 45.79L41.61 47.45L41.33 49.26L40.99 51.07L40.48 52.75L39.71 54.16L38.66 55.21L37.31 55.84L35.73 56.08L33.97 55.99L32.15 55.69L30.36 55.33L28.68 55.09L27.17 55.1L25.86 55.47L24.74 56.23L23.77 57.38L22.87 58.82L21.99 60.42L21.05 62.01L19.99 63.41L18.79 64.48L17.44 65.1L15.96 65.24L14.39 64.92L12.78 64.23L11.17 63.32L9.6 62.38L8.11 61.58L6.69 61.07L5.33 60.97L4.02 61.3L2.71 62.05L1.38 63.1L0 64.3L-1.43 65.47L-2.9 66.43L-4.39 67.02L-5.87 67.14L-7.31 66.76L-8.68 65.92L-9.96 64.72L-11.17 63.32L-12.31 61.9L-13.44 60.64L-14.6 59.68L-15.84 59.11L-17.19 58.98L-18.68 59.23L-20.29 59.76L-21.99 60.42L-23.73 61.03L-25.45 61.43L-27.05 61.48L-28.48 61.09L-29.71 60.24L-30.7 58.98L-31.5 57.41L-32.15 55.69L-32.74 53.96L-33.37 52.38L-34.13 51.08L-35.1 50.13L-36.33 49.54L-37.81 49.27L-39.5 49.22L-41.33 49.26L-43.18 49.24L-44.92 49.02L-46.44 48.52L-47.66 47.66L-48.52 46.44L-49.02 44.92L-49.24 43.18L-49.26 41.33L-49.22 39.5L-49.27 37.81L-49.54 36.33L-50.13 35.1L-51.08 34.13L-52.38 33.37L-53.96 32.74L-55.69 32.15L-57.41 31.5L-58.98 30.7L-60.24 29.71L-61.09 28.48L-61.48 27.05L-61.43 25.45L-61.03 23.73L-60.42 21.99L-59.76 20.29L-59.23 18.68L-58.98 17.19L-59.11 15.84L-59.68 14.6L-60.64 13.44L-61.9 12.31L-63.32 11.17L-64.72 9.96L-65.92 8.68L-66.76 7.31L-67.14 5.87L-67.02 4.39L-66.43 2.9L-65.47 1.43L-64.3 0L-63.1 -1.38L-62.05 -2.71L-61.3 -4.02L-60.97 -5.33L-61.07 -6.69L-61.58 -8.11L-62.38 -9.6L-63.32 -11.17L-64.23 -12.78L-64.92 -14.39L-65.24 -15.96L-65.1 -17.44L-64.48 -18.79L-63.41 -19.99L-62.01 -21.05L-60.42 -21.99L-58.82 -22.87L-57.38 -23.77L-56.23 -24.74L-55.47 -25.86L-55.1 -27.17L-55.09 -28.68L-55.33 -30.36L-55.69 -32.15L-55.99 -33.97L-56.08 -35.73L-55.84 -37.31L-55.21 -38.66L-54.16 -39.71L-52.75 -40.48L-51.07 -40.99L-49.26 -41.33L-47.45 -41.61L-45.79 -41.96L-44.38 -42.48L-43.27 -43.27L-42.48 -44.38L-41.96 -45.79L-41.61 -47.45L-41.33 -49.26L-40.99 -51.07L-40.48 -52.75L-39.71 -54.16L-38.66 -55.21L-37.31 -55.84L-35.73 -56.08L-33.97 -55.99L-32.15 -55.69L-30.36 -55.33L-28.68 -55.09L-27.17 -55.1L-25.86 -55.47L-24.74 -56.23L-23.77 -57.38L-22.87 -58.82L-21.99 -60.42L-21.05 -62.01L-19.99 -63.41L-18.79 -64.48L-17.44 -65.1L-15.96 -65.24L-14.39 -64.92L-12.78 -64.23L-11.17 -63.32L-9.6 -62.38L-8.11 -61.58L-6.69 -61.07L-5.33 -60.97L-4.02 -61.3L-2.71 -62.05L-1.38 -63.1L-0 -64.3Z"/><path class="ps" stroke-width="1.25" d="M0 -64.3L1.38 -63.1L2.71 -62.05L4.02 -61.3L5.33 -60.97L6.69 -61.07L8.11 -61.58L9.6 -62.38L11.17 -63.32L12.78 -64.23L14.39 -64.92L15.96 -65.24L17.44 -65.1L18.79 -64.48L19.99 -63.41L21.05 -62.01L21.99 -60.42L22.87 -58.82L23.77 -57.38L24.74 -56.23L25.86 -55.47L27.17 -55.1L28.68 -55.09L30.36 -55.33L32.15 -55.69L33.97 -55.99L35.73 -56.08L37.31 -55.84L38.66 -55.21L39.71 -54.16L40.48 -52.75L40.99 -51.07L41.33 -49.26L41.61 -47.45L41.96 -45.79L42.48 -44.38L43.27 -43.27L44.38 -42.48L45.79 -41.96L47.45 -41.61L49.26 -41.33L51.07 -40.99L52.75 -40.48L54.16 -39.71L55.21 -38.66L55.84 -37.31L56.08 -35.73L55.99 -33.97L55.69 -32.15L55.33 -30.36L55.09 -28.68L55.1 -27.17L55.47 -25.86L56.23 -24.74L57.38 -23.77L58.82 -22.87L60.42 -21.99L62.01 -21.05L63.41 -19.99L64.48 -18.79L65.1 -17.44L65.24 -15.96L64.92 -14.39L64.23 -12.78L63.32 -11.17L62.38 -9.6L61.58 -8.11L61.07 -6.69L60.97 -5.33L61.3 -4.02L62.05 -2.71L63.1 -1.38L64.3 -0L65.47 1.43L66.43 2.9L67.02 4.39L67.14 5.87L66.76 7.31L65.92 8.68L64.72 9.96L63.32 11.17L61.9 12.31L60.64 13.44L59.68 14.6L59.11 15.84L58.98 17.19L59.23 18.68L59.76 20.29L60.42 21.99L61.03 23.73L61.43 25.45L61.48 27.05L61.09 28.48L60.24 29.71L58.98 30.7L57.41 31.5L55.69 32.15L53.96 32.74L52.38 33.37L51.08 34.13L50.13 35.1L49.54 36.33L49.27 37.81L49.22 39.5L49.26 41.33L49.24 43.18L49.02 44.92L48.52 46.44L47.66 47.66L46.44 48.52L44.92 49.02L43.18 49.24L41.33 49.26L39.5 49.22L37.81 49.27L36.33 49.54L35.1 50.13L34.13 51.08L33.37 52.38L32.74 53.96L32.15 55.69L31.5 57.41L30.7 58.98L29.71 60.24L28.48 61.09L27.05 61.48L25.45 61.43L23.73 61.03L21.99 60.42L20.29 59.76L18.68 59.23L17.19 58.98L15.84 59.11L14.6 59.68L13.44 60.64L12.31 61.9L11.17 63.32L9.96 64.72L8.68 65.92L7.31 66.76L5.87 67.14L4.39 67.02L2.9 66.43L1.43 65.47L0 64.3L-1.38 63.1L-2.71 62.05L-4.02 61.3L-5.33 60.97L-6.69 61.07L-8.11 61.58L-9.6 62.38L-11.17 63.32L-12.78 64.23L-14.39 64.92L-15.96 65.24L-17.44 65.1L-18.79 64.48L-19.99 63.41L-21.05 62.01L-21.99 60.42L-22.87 58.82L-23.77 57.38L-24.74 56.23L-25.86 55.47L-27.17 55.1L-28.68 55.09L-30.36 55.33L-32.15 55.69L-33.97 55.99L-35.73 56.08L-37.31 55.84L-38.66 55.21L-39.71 54.16L-40.48 52.75L-40.99 51.07L-41.33 49.26L-41.61 47.45L-41.96 45.79L-42.48 44.38L-43.27 43.27L-44.38 42.48L-45.79 41.96L-47.45 41.61L-49.26 41.33L-51.07 40.99L-52.75 40.48L-54.16 39.71L-55.21 38.66L-55.84 37.31L-56.08 35.73L-55.99 33.97L-55.69 32.15L-55.33 30.36L-55.09 28.68L-55.1 27.17L-55.47 25.86L-56.23 24.74L-57.38 23.77L-58.82 22.87L-60.42 21.99L-62.01 21.05L-63.41 19.99L-64.48 18.79L-65.1 17.44L-65.24 15.96L-64.92 14.39L-64.23 12.78L-63.32 11.17L-62.38 9.6L-61.58 8.11L-61.07 6.69L-60.97 5.33L-61.3 4.02L-62.05 2.71L-63.1 1.38L-64.3 0L-65.47 -1.43L-66.43 -2.9L-67.02 -4.39L-67.14 -5.87L-66.76 -7.31L-65.92 -8.68L-64.72 -9.96L-63.32 -11.17L-61.9 -12.31L-60.64 -13.44L-59.68 -14.6L-59.11 -15.84L-58.98 -17.19L-59.23 -18.68L-59.76 -20.29L-60.42 -21.99L-61.03 -23.73L-61.43 -25.45L-61.48 -27.05L-61.09 -28.48L-60.24 -29.71L-58.98 -30.7L-57.41 -31.5L-55.69 -32.15L-53.96 -32.74L-52.38 -33.37L-51.08 -34.13L-50.13 -35.1L-49.54 -36.33L-49.27 -37.81L-49.22 -39.5L-49.26 -41.33L-49.24 -43.18L-49.02 -44.92L-48.52 -46.44L-47.66 -47.66L-46.44 -48.52L-44.92 -49.02L-43.18 -49.24L-41.33 -49.26L-39.5 -49.22L-37.81 -49.27L-36.33 -49.54L-35.1 -50.13L-34.13 -51.08L-33.37 -52.38L-32.74 -53.96L-32.15 -55.69L-31.5 -57.41L-30.7 -58.98L-29.71 -60.24L-28.48 -61.09L-27.05 -61.48L-25.45 -61.43L-23.73 -61.03L-21.99 -60.42L-20.29 -59.76L-18.68 -59.23L-17.19 -58.98L-15.84 -59.11L-14.6 -59.68L-13.44 -60.64L-12.31 -61.9L-11.17 -63.32L-9.96 -64.72L-8.68 -65.92L-7.31 -66.76L-5.87 -67.14L-4.39 -67.02L-2.9 -66.43L-1.43 -65.47L-0 -64.3Z"/><circle r="60.6" class="ps" stroke-width="2.2"/><circle r="58.2" class="ps" stroke-width=".7"/></g></svg>
+
+      <ol class="courses">
+        <li class="course">
+          <div class="course-text">
+            <p class="course-n">Premier service</p>
+            <h3>Les entrées</h3>
+            <p>Des petites assiettes à partager avec le khobz qui sort du four : on goûte un peu de tout avant le plat.</p>
+            <ul class="course-dishes">
+              <li>Zaalouk fumé au feu de bois</li>
+              <li>Briouates à la kefta et citron confit</li>
+              <li>Pastilla fassia au pigeon et amandes</li>
+            </ul>
+          </div>
+          <figure class="course-fig">
+            <svg class="rim" aria-hidden="true" focusable="false"><use href="#rim"/></svg>
+            <img loading="lazy" src="https://images.unsplash.com/photo-1748540459503-19efc015143b?w=900&h=900&q=75&auto=format&fit=crop" width="900" height="900" alt="Vue d'en haut de plusieurs petites assiettes peintes, salades, pain et brochettes">
+          </figure>
+        </li>
+        <li class="course">
+          <div class="course-text">
+            <p class="course-n">Deuxième service</p>
+            <h3>Les tagines</h3>
+            <p>Cuits lentement sur la braise et servis dans leur terre. L'agneau aux pruneaux est la recette de Fatna, sans rien changer.</p>
+            <ul class="course-dishes">
+              <li>Agneau aux pruneaux et amandes grillées</li>
+              <li>Poulet beldi, citron confit et olives violettes</li>
+              <li>M'qualli de veau aux coings</li>
+            </ul>
+          </div>
+          <figure class="course-fig">
+            <svg class="rim" aria-hidden="true" focusable="false"><use href="#rim"/></svg>
+            <img loading="lazy" src="https://images.unsplash.com/photo-1643019237176-8ae0859f1123?w=900&h=900&q=75&auto=format&fit=crop" width="900" height="900" alt="Tagine aux pruneaux et œufs vu d'en haut, sur une table en carreaux de ciment">
+          </figure>
+        </li>
+        <li class="course">
+          <div class="course-text">
+            <p class="course-n">Troisième service</p>
+            <h3>Le couscous</h3>
+            <p>Roulé à la main le matin et cuit trois fois à la vapeur. Le vendredi midi, il arrive dans la grande gsaa à partager.</p>
+            <ul class="course-dishes">
+              <li>Couscous aux sept légumes</li>
+              <li>Tfaya à l'agneau, oignons et raisins confits</li>
+              <li>Seffa medfouna au poulet et à la cannelle</li>
+            </ul>
+          </div>
+          <figure class="course-fig">
+            <svg class="rim" aria-hidden="true" focusable="false"><use href="#rim"/></svg>
+            <img loading="lazy" src="https://images.unsplash.com/photo-1541518763669-27fef04b14ea?w=900&h=900&q=75&auto=format&fit=crop" width="900" height="900" alt="Couscous aux légumes servi dans une assiette bleue et blanche de Fès, vu d'en haut">
+          </figure>
+        </li>
+        <li class="course">
+          <div class="course-text">
+            <p class="course-n">Quatrième service</p>
+            <h3>Les douceurs</h3>
+            <p>Cannelle, fleur d'oranger, amande et miel. Le repas se termine avec le thé à la menthe, versé de haut.</p>
+            <ul class="course-dishes">
+              <li>Pastilla au lait et fleur d'oranger</li>
+              <li>Mhencha aux amandes et au miel</li>
+              <li>Oranges à la cannelle et eau de rose</li>
+            </ul>
+          </div>
+          <figure class="course-fig">
+            <svg class="rim" aria-hidden="true" focusable="false"><use href="#rim"/></svg>
+            <img loading="lazy" src="https://images.unsplash.com/photo-1758745464235-ccb8c1253074?w=900&h=900&q=75&auto=format&fit=crop" width="900" height="900" alt="Étal d'épices au souk : cannelle, boutons de rose et amandes">
+          </figure>
+        </li>
+      </ol>
+
+      <ol class="meal-steps" aria-hidden="true">
+        <li class="on">Entrées</li><li>Tagines</li><li>Couscous</li><li>Douceurs</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="carte" id="carte" aria-labelledby="carte-title">
+    <div class="wrap carte-grid">
+      <div class="carte-side">
+        <h2 id="carte-title">La carte</h2>
+        <p>Prix en dirhams, service compris. Viandes halal, pas d'alcool. Les tagines et les couscous sont servis pour une personne, ou à partager à partir de deux.</p>
+        <div class="tasting">
+          <h3>Menu Lmida</h3>
+          <p>Le repas en quatre temps : entrées à partager, un tagine, un couscous, les douceurs et le thé.</p>
+          <span class="price">420 MAD par personne</span>
+        </div>
+        <p class="legend"><abbr title="végétarien">v</abbr> : plat végétarien</p>
+      </div>
+
+      <div class="carte-main">
+        <div class="tablist" role="tablist" aria-label="Catégories de la carte">
+          <button class="tab" type="button" role="tab" id="t-entrees" aria-controls="p-entrees" aria-selected="true">Entrées</button>
+          <button class="tab" type="button" role="tab" id="t-tagines" aria-controls="p-tagines" aria-selected="false" tabindex="-1">Tagines</button>
+          <button class="tab" type="button" role="tab" id="t-couscous" aria-controls="p-couscous" aria-selected="false" tabindex="-1">Couscous</button>
+          <button class="tab" type="button" role="tab" id="t-desserts" aria-controls="p-desserts" aria-selected="false" tabindex="-1">Desserts</button>
+          <button class="tab" type="button" role="tab" id="t-boissons" aria-controls="p-boissons" aria-selected="false" tabindex="-1">Boissons</button>
+        </div>
+
+        <section class="panel" role="tabpanel" id="p-entrees" aria-labelledby="t-entrees" tabindex="0">
+          <h3>Entrées</h3>
+          <ul class="dishes">
+            <li class="dish"><div class="dish-head"><span class="dish-name">Zaalouk fumé <abbr title="végétarien">v</abbr></span><span class="leader" aria-hidden="true"></span><span class="price">55 MAD</span></div><p>Aubergine brûlée au feu de bois, tomate, ail et huile d'olive de Meknès.</p></li>
+            <li class="dish"><div class="dish-head"><span class="dish-name">Taktouka <abbr title="végétarien">v</abbr></span><span class="leader" aria-hidden="true"></span><span class="price">50 MAD</span></div><p>Poivrons grillés et tomates confites au cumin, servis tièdes.</p></li>
+            <li class="dish"><div class="dish-head"><span class="dish-name">Harira de la maison</span><span class="leader" aria-hidden="true"></span><span class="price">45 MAD</span></div><p>Soupe de tomate, lentilles et pois chiches, avec dattes et chebakia.</p></li>
+            <li class="dish"><div class="dish-head"><span class="dish-name">Briouates kefta</span><span class="leader" aria-hidden="true"></span><span class="price">70 MAD</span></div><p>Feuilles de warqa croustillantes, viande hachée aux herbes et citron confit.</p></li>
+            <li class="dish"><div class="dish-head"><span class="dish-name">Salade d'orange à la cannelle <abbr title="végétarien">v</abbr></span><span class="leader" aria-hidden="true"></span><span class="price">50 MAD</span></div><p>Orange, radis noir, olives et eau de fleur d'oranger.</p></li>
+            <li class="dish"><div class="dish-head"><span class="dish-name">Pastilla fassia au pigeon</span><span class="leader" aria-hidden="true"></span><span class="price">150 MAD</span></div><p>La grande spécialité de Fès : pigeon, amandes, œufs et cannelle, sucre glace. Pour deux.</p></li>
+          </ul>
+        </section>
+
+        <section class="panel" role="tabpanel" id="p-tagines" aria-labelledby="t-tagines" tabindex="0">
+          <h3>Tagines</h3>
+          <ul class="dishes">
+            <li class="dish"><div class="dish-head"><span class="dish-name">Agneau aux pruneaux</span><span class="leader" aria-hidden="true"></span><span class="price">185 MAD</span></div><p>Épaule confite, pruneaux au miel, amandes grillées et sésame. La recette de Fatna.</p></li>
+            <li class="dish"><div class="dish-head"><span class="dish-name">Poulet beldi au citron</span><span class="leader" aria-hidden="true"></span><span class="price">160 MAD</span></div><p>Poulet fermier, citron confit, olives violettes et gingembre.</p></li>
+            <li class="dish"><div class="dish-head"><span class="dish-name">M'qualli de veau aux coings</span><span class="leader" aria-hidden="true"></span><span class="price">195 MAD</span></div><p>Sauce au safran et au smen, coings caramélisés à la cannelle.</p></li>
+            <li class="dish"><div class="dish-head"><span class="dish-name">Kefta aux œufs</span><span class="leader" aria-hidden="true"></span><span class="price">130 MAD</span></div><p>Boulettes au cumin dans une sauce tomate, œufs cuits dans le tagine.</p></li>
+            <li class="dish"><div class="dish-head"><span class="dish-name">Poisson à la chermoula</span><span class="leader" aria-hidden="true"></span><span class="price">175 MAD</span></div><p>Poisson du jour, pommes de terre, poivrons et chermoula à la coriandre.</p></li>
+            <li class="dish"><div class="dish-head"><span class="dish-name">Légumes du marché <abbr title="végétarien">v</abbr></span><span class="leader" aria-hidden="true"></span><span class="price">120 MAD</span></div><p>Selon la saison : carottes, courgettes, fèves, artichauts et ras el-hanout.</p></li>
+          </ul>
+        </section>
+
+        <section class="panel" role="tabpanel" id="p-couscous" aria-labelledby="t-couscous" tabindex="0">
+          <h3>Couscous</h3>
+          <ul class="dishes">
+            <li class="dish"><div class="dish-head"><span class="dish-name">Sept légumes <abbr title="végétarien">v</abbr></span><span class="leader" aria-hidden="true"></span><span class="price">150 MAD</span></div><p>Semoule roulée à la main, bouillon parfumé, sept légumes de saison.</p></li>
+            <li class="dish"><div class="dish-head"><span class="dish-name">Sept légumes et agneau</span><span class="leader" aria-hidden="true"></span><span class="price">180 MAD</span></div><p>Le même, avec une souris d'agneau mijotée dans le bouillon.</p></li>
+            <li class="dish"><div class="dish-head"><span class="dish-name">Tfaya à l'agneau</span><span class="leader" aria-hidden="true"></span><span class="price">195 MAD</span></div><p>Oignons et raisins secs confits à la cannelle, pois chiches et amandes.</p></li>
+            <li class="dish"><div class="dish-head"><span class="dish-name">Seffa medfouna</span><span class="leader" aria-hidden="true"></span><span class="price">165 MAD</span></div><p>Vermicelles vapeur, poulet caché dessous, cannelle et sucre glace.</p></li>
+            <li class="dish"><div class="dish-head"><span class="dish-name">Couscous au lben <abbr title="végétarien">v</abbr></span><span class="leader" aria-hidden="true"></span><span class="price">90 MAD</span></div><p>Semoule au beurre servie avec un bol de lben frais, comme au goûter chez Fatna.</p></li>
+          </ul>
+        </section>
+
+        <section class="panel" role="tabpanel" id="p-desserts" aria-labelledby="t-desserts" tabindex="0">
+          <h3>Desserts</h3>
+          <ul class="dishes">
+            <li class="dish"><div class="dish-head"><span class="dish-name">Pastilla au lait <abbr title="végétarien">v</abbr></span><span class="leader" aria-hidden="true"></span><span class="price">65 MAD</span></div><p>Feuilles croustillantes, crème à la fleur d'oranger, amandes grillées.</p></li>
+            <li class="dish"><div class="dish-head"><span class="dish-name">Mhencha <abbr title="végétarien">v</abbr></span><span class="leader" aria-hidden="true"></span><span class="price">60 MAD</span></div><p>Le « serpent » aux amandes et au miel, tiède, glace à l'amlou.</p></li>
+            <li class="dish"><div class="dish-head"><span class="dish-name">Oranges à la cannelle <abbr title="végétarien">v</abbr></span><span class="leader" aria-hidden="true"></span><span class="price">45 MAD</span></div><p>Tranches d'orange, cannelle et quelques gouttes d'eau de rose.</p></li>
+            <li class="dish"><div class="dish-head"><span class="dish-name">Plateau de gâteaux <abbr title="végétarien">v</abbr></span><span class="leader" aria-hidden="true"></span><span class="price">70 MAD</span></div><p>Cornes de gazelle, ghriba et chebakia, avec une théière à la menthe.</p></li>
+          </ul>
+        </section>
+
+        <section class="panel" role="tabpanel" id="p-boissons" aria-labelledby="t-boissons" tabindex="0">
+          <h3>Boissons</h3>
+          <ul class="dishes">
+            <li class="dish"><div class="dish-head"><span class="dish-name">Thé à la menthe</span><span class="leader" aria-hidden="true"></span><span class="price">35 MAD</span></div><p>La théière pour deux, menthe fraîche ou absinthe (chiba) en hiver.</p></li>
+            <li class="dish"><div class="dish-head"><span class="dish-name">Café nous-nous</span><span class="leader" aria-hidden="true"></span><span class="price">22 MAD</span></div><p>Moitié café, moitié lait, servi dans un verre.</p></li>
+            <li class="dish"><div class="dish-head"><span class="dish-name">Jus d'orange pressé</span><span class="leader" aria-hidden="true"></span><span class="price">30 MAD</span></div><p>Oranges de Berkane, pressées à la commande.</p></li>
+            <li class="dish"><div class="dish-head"><span class="dish-name">Citronnade au gingembre</span><span class="leader" aria-hidden="true"></span><span class="price">35 MAD</span></div><p>Citron, gingembre frais et feuilles de verveine.</p></li>
+            <li class="dish"><div class="dish-head"><span class="dish-name">Lben ou raïb</span><span class="leader" aria-hidden="true"></span><span class="price">25 MAD</span></div><p>Lait fermenté maison, nature ou à la fleur d'oranger.</p></li>
+            <li class="dish"><div class="dish-head"><span class="dish-name">Eau minérale</span><span class="leader" aria-hidden="true"></span><span class="price">20 MAD</span></div><p>Plate ou gazeuse, la bouteille d'un litre.</p></li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <section class="vendredi" id="vendredi" aria-labelledby="ven-title">
+    <div class="wrap ven-grid">
+      <div class="ven-photo">
+        <img loading="lazy" src="https://images.unsplash.com/photo-1661081988119-58e40ee39201?w=1100&q=75&auto=format&fit=crop" width="1100" height="733" alt="Table basse dressée de plats et de pain, entourée de banquettes et de coussins">
+      </div>
+      <div>
+        <h2 id="ven-title">Le vendredi, couscous à midi</h2>
+        <p>Dans toutes les maisons de Fès, le vendredi on mange le couscous ensemble. Chez nous aussi : de 12 h 30 à 15 h 30, une seule formule, servie dans la grande gsaa au milieu de la table.</p>
+        <ul class="ven-menu">
+          <li>Salades marocaines et khobz chaud</li>
+          <li>Couscous aux sept légumes, à l'agneau ou au poulet tfaya</li>
+          <li>Lben frais, fruits de saison et thé à la menthe</li>
+        </ul>
+        <div class="ven-price">
+          <div>180 MAD<small>par personne</small></div>
+          <div>90 MAD<small>enfants de moins de 10 ans</small></div>
+        </div>
+        <a class="btn btn-glaze" href="#reserver" data-friday>Réserver un vendredi</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="infos dark" id="horaires" aria-labelledby="infos-title">
+    <div class="wrap infos-grid">
+      <div>
+        <h2 id="infos-title">Horaires et accès</h2>
+        <p class="status status-lg" data-status aria-live="polite"><span class="dot" aria-hidden="true"></span><span class="status-txt">Ouvert le soir du mardi au dimanche</span></p>
+        <p class="tz">Selon l'heure de Fès.</p>
+        <table class="hours">
+          <caption class="sr-only">Horaires d'ouverture</caption>
+          <tbody>
+            <tr data-day="1"><th scope="row">Lundi</th><td>Fermé</td></tr>
+            <tr data-day="2"><th scope="row">Mardi</th><td>19 h – 23 h 30</td></tr>
+            <tr data-day="3"><th scope="row">Mercredi</th><td>19 h – 23 h 30</td></tr>
+            <tr data-day="4"><th scope="row">Jeudi</th><td>19 h – 23 h 30</td></tr>
+            <tr data-day="5"><th scope="row">Vendredi</th><td>12 h 30 – 15 h 30 <small>(couscous)</small><br>19 h – 23 h 30</td></tr>
+            <tr data-day="6"><th scope="row">Samedi</th><td>19 h – minuit</td></tr>
+            <tr data-day="0"><th scope="row">Dimanche</th><td>19 h – 23 h 30</td></tr>
+          </tbody>
+        </table>
+        <dl class="access">
+          <dt>Adresse</dt>
+          <dd>12, derb Lmida, Talâa Sghira, Fès el-Bali</dd>
+          <dt>Depuis Bab Boujloud</dt>
+          <dd>Passez la porte bleue et descendez la Talâa Sghira sur 150 mètres : c'est la deuxième ruelle à droite, porte en cèdre avec un heurtoir en laiton.</dd>
+          <dt>En taxi</dt>
+          <dd>Les voitures s'arrêtent place Boujloud. Appelez-nous en arrivant, quelqu'un vient vous chercher.</dd>
+          <dt>Contact</dt>
+          <dd><a href="tel:+212600000000">+212 6 00 00 00 00</a><br><a href="mailto:contact@example.com">contact@example.com</a></dd>
+        </dl>
+      </div>
+      <iframe class="map" title="Carte : Bab Boujloud, Fès" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+        src="https://www.google.com/maps?q=Bab+Boujloud,+Fes&z=16&output=embed"></iframe>
+    </div>
+  </section>
+
+  <section class="resa" id="reserver" aria-labelledby="resa-title">
+    <div class="wrap resa-grid">
+      <div class="resa-intro">
+        <h2 id="resa-title">Réserver une table</h2>
+        <p>Remplissez le formulaire : WhatsApp s'ouvre avec votre message déjà écrit, il ne reste qu'à l'envoyer. Nous confirmons en général dans l'heure.</p>
+        <div class="preview">
+          <p class="preview-t" id="preview-label">Votre message</p>
+          <pre class="bubble" id="preview" aria-labelledby="preview-label">Bonjour Lmida,
+Je souhaite réserver une table.</pre>
+        </div>
+      </div>
+      <form class="form" id="resaForm">
+        <label>Date
+          <input type="date" name="date" required>
+        </label>
+        <label>Heure
+          <select name="slot" required>
+            <option value="">Choisissez une date</option>
+          </select>
+        </label>
+        <label>Couverts
+          <select name="guests">
+            <option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
+            <option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option>
+            <option value="13+">Plus de 12</option>
+          </select>
+        </label>
+        <label>Occasion
+          <select name="occasion">
+            <option value="">Pas d'occasion particulière</option>
+            <option>Anniversaire</option>
+            <option>Dîner en amoureux</option>
+            <option>Repas de famille</option>
+            <option>Repas d'affaires</option>
+            <option>Fiançailles ou demande en mariage</option>
+          </select>
+        </label>
+        <label class="full">Votre nom
+          <input type="text" name="name" autocomplete="name" required>
+        </label>
+        <label class="full">Une précision ? <span class="opt">(facultatif)</span>
+          <textarea name="note" rows="3" placeholder="Allergie, chaise haute, table en terrasse…"></textarea>
+        </label>
+        <p class="hint" id="hint" aria-live="polite"></p>
+        <button class="btn btn-cobalt" type="submit"><svg aria-hidden="true"><use href="#wa"/></svg>Envoyer la demande sur WhatsApp</button>
+        <p class="sent" id="sent" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="foot dark">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="logo" href="#main" aria-label="Lmida, retour en haut"><b>Lmida</b><span lang="ar" aria-hidden="true">الميدة</span></a>
+        <address>12, derb Lmida, Talâa Sghira<br>Fès el-Bali, près de Bab Boujloud</address>
+      </div>
+      <div>
+        <p>Dîner du mardi au dimanche</p>
+        <p>Couscous le vendredi midi</p>
+      </div>
+      <div>
+        <p><a href="tel:+212600000000">+212 6 00 00 00 00</a></p>
+        <p><a href="mailto:contact@example.com">contact@example.com</a></p>
+      </div>
+    </div>
+    <p class="demo-note">Site de démonstration : entreprise fictive. Photos Unsplash.</p>
+  </div>
+</footer>
+
+<a href="../" class="demo-pill">Démo réalisée par Ghali</a>
+<a class="fab wa-link" href="https://wa.me/212600000000" target="_blank" rel="noopener" aria-label="Écrire à Lmida sur WhatsApp"><svg aria-hidden="true"><use href="#wa"/></svg></a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<script>
+/* ============ CONFIG ============ */
+const WHATSAPP = "212600000000"; // Numéro WhatsApp du restaurant : format international, sans « + » ni espaces
+const NAME = "Lmida";
+const TZ = "Africa/Casablanca";
+/* Horaires en minutes depuis minuit (0 = dimanche ... 6 = samedi). 1440 = minuit. */
+const HOURS = {
+  0: [[1140, 1410]],
+  1: [],
+  2: [[1140, 1410]],
+  3: [[1140, 1410]],
+  4: [[1140, 1410]],
+  5: [[750, 930], [1140, 1410]],
+  6: [[1140, 1440]]
+};
+const DAYS = ["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"];
+
+const waURL = t => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(t)}`;
+document.querySelectorAll(".wa-link").forEach(a => { a.href = waURL(`Bonjour ${NAME}, je voudrais réserver une table.`); });
+
+/* ---------- heure de Fès ---------- */
+function nowInFes(){
+  const p = {};
+  new Intl.DateTimeFormat("en-GB", {timeZone:TZ, year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hourCycle:"h23", weekday:"short"})
+    .formatToParts(new Date()).forEach(x => { p[x.type] = x.value; });
+  const day = {Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6}[p.weekday];
+  return {day, min: (+p.hour % 24) * 60 + (+p.minute), ymd: `${p.year}-${p.month}-${p.day}`};
+}
+const fmt = m => {
+  if (m >= 1440) return "minuit";
+  const h = Math.floor(m / 60), mm = m % 60;
+  return `${h} h${mm ? " " + String(mm).padStart(2, "0") : ""}`;
+};
+
+function updateStatus(){
+  const n = nowInFes();
+  const cur = HOURS[n.day].find(([a, b]) => n.min >= a && n.min < b);
+  let open = false, title, detail;
+  if (cur){
+    open = true;
+    title = "Ouvert maintenant";
+    detail = cur[1] - n.min <= 30 ? `ferme à ${fmt(cur[1])}` : `jusqu'à ${fmt(cur[1])}`;
+  } else {
+    title = "Fermé";
+    detail = "";
+    search:
+    for (let d = 0; d < 8; d++){
+      const day = (n.day + d) % 7;
+      for (const [a] of HOURS[day]){
+        if (d === 0 && a <= n.min) continue;
+        const when = d === 0 ? (a >= 1020 ? "ce soir" : "aujourd'hui") : d === 1 ? (a >= 1020 ? "demain soir" : "demain midi") : DAYS[day];
+        detail = `ouvre ${when} à ${fmt(a)}`;
+        break search;
+      }
+    }
+  }
+  document.querySelectorAll("[data-status]").forEach(el => {
+    const html = `<strong>${title}</strong>${detail ? ", " + detail : ""}`;
+    if (el.dataset.txt === html) return;
+    el.dataset.txt = html;
+    el.dataset.open = open;
+    el.querySelector(".status-txt").innerHTML = html;
+  });
+  document.querySelectorAll(".hours tr").forEach(tr => {
+    const isToday = +tr.dataset.day === n.day;
+    tr.classList.toggle("today", isToday);
+    if (isToday) tr.setAttribute("aria-current", "date"); else tr.removeAttribute("aria-current");
+    const th = tr.querySelector("th");
+    const tag = th.querySelector(".today-tag");
+    if (isToday && !tag) th.insertAdjacentHTML("beforeend", ' <span class="today-tag">aujourd’hui</span>');
+    if (!isToday && tag) tag.remove();
+  });
+}
+updateStatus();
+setInterval(updateStatus, 30000);
+
+/* ---------- onglets de la carte ---------- */
+const tabs = [...document.querySelectorAll('[role="tab"]')];
+const panels = tabs.map(t => document.getElementById(t.getAttribute("aria-controls")));
+function selectTab(i, focus){
+  tabs.forEach((t, k) => {
+    const on = k === i;
+    t.setAttribute("aria-selected", on);
+    t.tabIndex = on ? 0 : -1;
+    panels[k].hidden = !on;
+    panels[k].classList.toggle("fade", on);
+  });
+  if (focus) tabs[i].focus();
+}
+tabs.forEach((t, i) => {
+  t.addEventListener("click", () => selectTab(i));
+  t.addEventListener("keydown", e => {
+    const k = {ArrowRight:1, ArrowLeft:-1, Home:"first", End:"last"}[e.key];
+    if (k === undefined) return;
+    e.preventDefault();
+    const next = k === "first" ? 0 : k === "last" ? tabs.length - 1 : (i + k + tabs.length) % tabs.length;
+    selectTab(next, true);
+  });
+});
+selectTab(0);
+panels.forEach(p => p.classList.remove("fade"));
+
+/* ---------- réservation -> WhatsApp ---------- */
+const form = document.getElementById("resaForm");
+const f = form.elements;
+const hint = document.getElementById("hint");
+const preview = document.getElementById("preview");
+const sent = document.getElementById("sent");
+
+function addDays(ymd, n){
+  const [y, m, d] = ymd.split("-").map(Number);
+  const dt = new Date(Date.UTC(y, m - 1, d + n));
+  return dt.toISOString().slice(0, 10);
+}
+const weekday = ymd => { const [y, m, d] = ymd.split("-").map(Number); return new Date(Date.UTC(y, m - 1, d)).getUTCDay(); };
+const longDate = ymd => { const [y, m, d] = ymd.split("-").map(Number); return new Date(y, m - 1, d).toLocaleDateString("fr-FR", {weekday:"long", day:"numeric", month:"long", year:"numeric"}); };
+
+function slotsFor(ymd){
+  const day = weekday(ymd), s = [];
+  if (day === 5) for (let m = 750; m <= 870; m += 30) s.push({m, meal:"lunch"});
+  if (day !== 1){ const last = day === 6 ? 1380 : 1350; for (let m = 1140; m <= last; m += 30) s.push({m, meal:"dinner"}); }
+  const n = nowInFes();
+  return ymd === n.ymd ? s.filter(x => x.m >= n.min + 45) : s;
+}
+
+function fillSlots(){
+  const ymd = f.date.value, prev = f.slot.value;
+  f.slot.innerHTML = "";
+  f.date.setCustomValidity("");
+  hint.textContent = "";
+  if (!ymd){ f.slot.add(new Option("Choisissez une date", "")); return; }
+  const slots = slotsFor(ymd);
+  if (weekday(ymd) === 1){
+    f.date.setCustomValidity("Le restaurant est fermé le lundi. Choisissez un autre jour.");
+    hint.textContent = "Le restaurant est fermé le lundi. Choisissez un autre jour.";
+  } else if (!slots.length){
+    f.date.setCustomValidity("Il n'y a plus de créneau aujourd'hui. Choisissez une autre date.");
+    hint.textContent = "Il n'y a plus de créneau aujourd'hui. Choisissez une autre date.";
+  }
+  if (!slots.length){ f.slot.add(new Option("Aucun créneau", "")); f.slot.disabled = true; return; }
+  f.slot.disabled = false;
+  f.slot.add(new Option("Choisissez une heure", ""));
+  const groups = {lunch:"Déjeuner couscous", dinner:"Dîner"};
+  ["lunch", "dinner"].forEach(meal => {
+    const list = slots.filter(x => x.meal === meal);
+    if (!list.length) return;
+    const g = document.createElement("optgroup");
+    g.label = groups[meal];
+    list.forEach(x => g.appendChild(new Option(fmt(x.m), x.m)));
+    f.slot.appendChild(g);
+  });
+  if ([...f.slot.options].some(o => o.value === prev)) f.slot.value = prev;
+}
+
+function message(forPreview){
+  const blank = forPreview ? "à préciser" : "";
+  const lines = [`Bonjour ${NAME},`, "Je souhaite réserver une table."];
+  const name = f.name.value.trim();
+  if (name || forPreview) lines.push(`Nom : ${name || blank}`);
+  lines.push(`Date : ${f.date.value ? longDate(f.date.value) : blank}`);
+  const m = +f.slot.value;
+  lines.push(`Heure : ${f.slot.value ? fmt(m) + (m < 1000 ? " (couscous du vendredi)" : "") : blank}`);
+  lines.push(`Couverts : ${f.guests.value === "13+" ? "plus de 12 personnes" : f.guests.value}`);
+  if (f.occasion.value) lines.push(`Occasion : ${f.occasion.value}`);
+  const note = f.note.value.trim();
+  if (note) lines.push(`Précision : ${note}`);
+  lines.push("Merci de me confirmer la réservation.");
+  return lines.filter(l => !/ : $/.test(l)).join("\n");
+}
+const refresh = () => { preview.textContent = message(true); };
+
+const today = nowInFes().ymd;
+f.date.min = today;
+f.date.max = addDays(today, 90);
+f.date.addEventListener("change", () => { fillSlots(); refresh(); });
+form.addEventListener("input", refresh);
+form.addEventListener("change", refresh);
+form.addEventListener("submit", e => {
+  e.preventDefault();
+  const url = waURL(message(false));
+  const w = window.open(url, "_blank", "noopener");
+  if (!w) location.href = url;
+  sent.textContent = "WhatsApp s'ouvre avec votre message. Envoyez-le pour que nous puissions confirmer.";
+});
+fillSlots();
+refresh();
+
+/* bouton « Réserver un vendredi » : prochain vendredi, 13 h */
+document.querySelectorAll("[data-friday]").forEach(a => a.addEventListener("click", () => {
+  const n = nowInFes();
+  let ymd = n.ymd;
+  for (let i = 0; i < 8; i++){
+    const c = addDays(n.ymd, i);
+    if (weekday(c) === 5 && (i > 0 || n.min < 780 - 45)){ ymd = c; break; }
+  }
+  f.date.value = ymd;
+  fillSlots();
+  if ([...f.slot.options].some(o => o.value === "780")) f.slot.value = "780";
+  refresh();
+}));
+
+/* ---------- mouvements au défilement (GSAP) ---------- */
+function initMotion(){
+  if (!window.gsap || !window.ScrollTrigger) return;
+  gsap.registerPlugin(ScrollTrigger);
+  const mm = gsap.matchMedia();
+
+  /* 1. héros : photo en parallaxe et anneaux de l'assiette qui tournent en sens contraires */
+  mm.add("(prefers-reduced-motion: no-preference)", () => {
+    gsap.to(".hero-img", {yPercent:14, ease:"none", scrollTrigger:{trigger:".hero", start:"top top", end:"bottom top", scrub:true}});
+    const hp = ".plate-hero";
+    gsap.set(`${hp} .ring`, {svgOrigin:"0 0"});
+    const st = {trigger:".hero", start:"top top", end:"bottom+=60% top", scrub:0.8};
+    gsap.to(`${hp} .ring-a`, {rotation:50, ease:"none", scrollTrigger:{...st}});
+    gsap.to(`${hp} .ring-b`, {rotation:-80, ease:"none", scrollTrigger:{...st}});
+    gsap.to(`${hp} .ring-c`, {rotation:110, ease:"none", scrollTrigger:{...st}});
+    gsap.to(`${hp} .ring-d`, {rotation:-45, ease:"none", scrollTrigger:{...st}});
+  });
+
+  /* 2. « Le repas » épinglé : l'assiette s'assemble puis chaque service apparaît dans son creux */
+  mm.add("(min-width: 900px) and (min-height: 600px) and (prefers-reduced-motion: no-preference)", () => {
+    const sec = document.querySelector(".meal");
+    sec.classList.add("is-pinned");
+    const imgs = gsap.utils.toArray(".meal .course-fig img");
+    const texts = gsap.utils.toArray(".meal .course-text");
+    const steps = gsap.utils.toArray(".meal-steps li");
+    const plate = ".plate-big";
+    const A = `${plate} .ring-a`, B = `${plate} .ring-b`, C = `${plate} .ring-c`;
+    gsap.set(`${plate} .ring`, {svgOrigin:"0 0"});
+    gsap.set(A, {rotation:-120, scale:1.18, opacity:0});
+    gsap.set(B, {rotation:150, scale:.72, opacity:0});
+    gsap.set(C, {rotation:-90, scale:.6, opacity:0});
+    gsap.set(imgs, {clipPath:"circle(0% at 50% 50%)"});
+    gsap.set(texts, {autoAlpha:0, y:36});
+
+    const marks = [];
+    const tl = gsap.timeline({
+      defaults:{ease:"power2.inOut"},
+      scrollTrigger:{
+        trigger:".meal-stage", start:"top top", end:() => "+=" + window.innerHeight * 4.2,
+        pin:true, scrub:0.6, anticipatePin:1, invalidateOnRefresh:true,
+        onUpdate(){ const t = tl.time(); let k = 0; marks.forEach((m, i) => { if (t >= m) k = i; }); steps.forEach((s, i) => s.classList.toggle("on", i === k)); }
+      }
+    });
+    tl.to(A, {rotation:0, scale:1, opacity:1, duration:1.1, ease:"power3.out"})
+      .to(B, {rotation:0, scale:1, opacity:1, duration:1.1, ease:"power3.out"}, "<0.15")
+      .to(C, {rotation:0, scale:1, opacity:1, duration:1.1, ease:"power3.out"}, "<0.15");
+    marks.push(tl.duration());
+    tl.to(imgs[0], {clipPath:"circle(50% at 50% 50%)", duration:.9}, "-=0.3")
+      .to(texts[0], {autoAlpha:1, y:0, duration:.6}, "<0.2")
+      .to({}, {duration:.7});
+    for (let i = 1; i < imgs.length; i++){
+      marks.push(tl.duration());
+      tl.to(texts[i - 1], {autoAlpha:0, y:-30, duration:.4})
+        .to(A, {rotation:`+=${30}`, duration:1}, "<")
+        .to(B, {rotation:`-=${45}`, duration:1}, "<")
+        .to(C, {rotation:`+=${60}`, duration:1}, "<")
+        .to(imgs[i], {clipPath:"circle(50% at 50% 50%)", duration:.9}, "<0.05")
+        .to(texts[i], {autoAlpha:1, y:0, duration:.6}, "<0.35")
+        .to({}, {duration:.7});
+    }
+    return () => { sec.classList.remove("is-pinned"); steps.forEach((s, i) => s.classList.toggle("on", i === 0)); };
+  });
+
+  /* sur mobile : le bord de chaque assiette tourne doucement au passage */
+  mm.add("(max-width: 899px) and (prefers-reduced-motion: no-preference), (max-height: 599px) and (prefers-reduced-motion: no-preference)", () => {
+    gsap.utils.toArray(".course-fig .rim").forEach(rim => {
+      gsap.fromTo(rim, {rotation:-35}, {rotation:35, ease:"none", scrollTrigger:{trigger:rim, start:"top bottom", end:"bottom top", scrub:true}});
+    });
+  });
+
+  window.addEventListener("load", () => ScrollTrigger.refresh());
+}
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initMotion); else initMotion();
+</script>
+</body>
+</html>
